@@ -49,7 +49,10 @@ public final class SnzDresdenScenario extends AbstractModule {
 	/**
 	 * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
 	 */
-	public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
+	// public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
+
+
+	public static final Path INPUT = Path.of("/home/abhishek/Desktop/episim-dresden/dresden-data");
 
 	/**
 	 * Empty constructor is needed for running scenario from command line.
@@ -210,7 +213,6 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		// Test 10% of persons doing these activities
 		testingConfigGroup.getParams(TestType.RAPID_TEST).setTestingRate(0.1);
-
 		// All households can get tested
 		testingConfigGroup.setHouseholdCompliance(1.0);
 
