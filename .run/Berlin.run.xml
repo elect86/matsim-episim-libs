@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Berlin" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.matsim.run.RunEpisim" />
+    <module name="matsim-episim" />
+    <option name="PROGRAM_PARAMETERS" value="--modules OpenBerlinScenario --iterations 100" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

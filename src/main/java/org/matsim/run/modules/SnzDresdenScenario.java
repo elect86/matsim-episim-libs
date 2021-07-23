@@ -46,7 +46,8 @@ public final class SnzDresdenScenario extends AbstractModule {
 	/**
 	 * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
 	 */
-	public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
+//	public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
+	public static final Path INPUT = EpisimUtils.resolveInputPath("dresden");
 
 	/**
 	 * Empty constructor is needed for running scenario from command line.
@@ -76,7 +77,7 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		// Input files
 
-		config.plans().setInputFile(INPUT.resolve("dresden_snz_entirePopulation_emptyPlans_withDistricts_100pt_split.xml.gz").toString());
+		config.plans().setInputFile(INPUT.resolve("dresden_snz_entirePopulation_emptyPlans_withDistricts_100pt_split_noCoord.xml.gz").toString());
 
 		episimConfig.addInputEventsFile(INPUT.resolve("dresden_snz_episim_events_wt_100pt_split.xml.gz").toString())
 				.addDays(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
