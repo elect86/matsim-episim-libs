@@ -62,7 +62,7 @@ dependencies {
 group = "com.github.matsim-org"
 version = "21.5"
 description = "MATSim Episim"
-java.sourceCompatibility = JavaVersion.VERSION_11
+//java.sourceCompatibility = JavaVersion.VERSION_11
 
 java {
     withSourcesJar()
