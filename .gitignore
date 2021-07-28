@@ -292,3 +292,5 @@ dresden
 
 .gradle
 build
+# there is a `.jar` above
+!gradle-wrapper.jar
