@@ -8,15 +8,17 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
+    mavenCentral().content {
+        excludeModule("javax.media", "jai_core")
+    }
     maven("https://repo.matsim.org/repository/matsim")
     maven("https://jitpack.io")
     maven("https://repo.osgeo.org/repository/release/")
-//    maven("https://oss.jfrog.org/libs-snapshot")
+    maven("https://oss.jfrog.org/libs-snapshot")
     maven("https://mvn.topobyte.de")
     maven("https://mvn.slimjars.com")
     maven("https://mvnrepository.com/artifact/tech.tablesaw/tablesaw-core")
-    maven("https://repo.maven.apache.org/maven2/")
+    maven("https://dl.bintray.com/matsim/matsim")
 }
 
 val matsimVersion = "13.0"
@@ -35,7 +37,10 @@ dependencies {
     implementation("org.jgrapht:jgrapht-io:1.5.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.2")
-    implementation("org.matsim.contrib:vsp:$matsimVersion")
+    implementation("org.matsim.contrib:vsp:$matsimVersion") {
+        exclude("org.jogamp.gluegen", "gluegen-rt")
+        exclude("org.jogamp.jogl", "jogl-all")
+    }
     implementation("tech.tablesaw:tablesaw-core:0.38.1")
     implementation("tech.tablesaw:tablesaw-jsplot:0.38.1")
     implementation("org.apache.poi:poi:4.1.2")
@@ -66,5 +71,13 @@ java {
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
+    }
+}
+
+tasks {
+    register<JavaExec>("berlin") {
+        classpath = sourceSets.main.get().runtimeClasspath
+        mainClass.set("org.matsim.run.RunEpisim")
+        args = listOf("--modules OpenBerlinScenario", "--iterations", "1")
     }
 }
