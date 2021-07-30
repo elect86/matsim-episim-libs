@@ -73,20 +73,20 @@ publishing {
 }
 
 tasks {
-    create("berlin").doFirst {
-        val typed = Scanner(System.`in`).nextLine()
-        val parsed = typed.split(' ')
-        println ("Arguments received: " + parsed.joinToString())
-    }
-    //    register<JavaExec>("berlin") {
-    //        classpath = sourceSets.main.get().runtimeClasspath
-    //        mainClass.set("org.matsim.run.RunEpisim")
-    //        args = listOf("--modules OpenBerlinScenario", "--iterations", "1")
+    //    create("berlin").doFirst {
+    //        val typed = Scanner(System.`in`).nextLine()
+    //        val parsed = typed.split(' ')
+    //        println ("Arguments received: " + parsed.joinToString())
     //    }
-    addRule("run") {
-        println(this)
-//        maybeCreate("berlin").doLast {
-//            println("running")
-//        }
+    register<JavaExec>("berlin") {
+        classpath = sourceSets.main.get().runtimeClasspath
+        mainClass.set("org.matsim.run.RunEpisim")
+        args = listOf("--modules", "OpenBerlinScenario", "--iterations", "365")
     }
+    //    addRule("run") {
+    //        println(this)
+    ////        maybeCreate("berlin").doLast {
+    ////            println("running")
+    ////        }
+    //    }
 }
