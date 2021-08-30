@@ -159,7 +159,7 @@ abstract class Hemera : DefaultTask() {
     @set:Option(option = "jobName", description = "the job name")
     var jobName: String = "single"
 
-    @Optional
+//    @Optional
     @get:Input
     @set:Option(option = "perfStat", description = "performance statistics")
     var perfStat: Boolean = true
