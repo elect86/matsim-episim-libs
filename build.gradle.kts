@@ -1,4 +1,4 @@
-import java.util.Scanner
+import java.io.ByteArrayOutputStream
 
 plugins {
     java
@@ -17,6 +17,7 @@ repositories {
     maven("https://mvn.slimjars.com")
     maven("https://mvnrepository.com/artifact/tech.tablesaw/tablesaw-core")
     maven("https://dl.bintray.com/matsim/matsim")
+    maven("https://raw.githubusercontent.com/kotlin-graphics/mary/master")
 }
 
 val matsimVersion = "13.0"
@@ -78,10 +79,13 @@ tasks {
     //        val parsed = typed.split(' ')
     //        println ("Arguments received: " + parsed.joinToString())
     //    }
-    register<JavaExec>("berlin") {
-        classpath = sourceSets.main.get().runtimeClasspath
-        mainClass.set("org.matsim.run.RunEpisim")
-        args = listOf("--modules", "OpenBerlinScenario", "--iterations", "365")
+    //    register<JavaExec>("berlin") {
+    //        classpath = sourceSets.main.get().runtimeClasspath
+    //        mainClass.set("org.matsim.run.RunEpisim")
+    //        args = listOf("--modules", "OpenBerlinScenario", "--iterations", "365")
+    //    }
+    register<Berlin>("berlin") {
+        //        iterations = "1"
     }
     //    addRule("run") {
     //        println(this)
@@ -89,4 +93,93 @@ tasks {
     ////            println("running")
     ////        }
     //    }
+
+    register<Dresden>("Dresden") {
+
+    }
 }
+
+open class Berlin : JavaExec() {
+
+    // JVM Args
+
+    @Optional
+    @get:Input
+    @set:Option(option = "jvm parallelism", description = "-Djava.util.concurrent.ForkJoinPool.common.parallelism")
+    var jvmParallelism: String? = null
+
+
+    // Matsim args
+
+    @get:Input
+    @set:Option(option = "iterations", description = "number of days the simulation should run for")
+    var iterations = "10"
+
+    @get:Input
+    @set:Option(option = "output", description = "the output folder where the results will be written")
+    var output = "output-berlin"
+
+    @Optional
+    @get:Input
+    @set:Option(option = "random seed", description = "the global random seed")
+    var randomSeed: String? = null
+
+    init {
+        //        allJvmArgs = allJvmArgs + "-Xms160G" + "-Xmx160G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
+        allJvmArgs = allJvmArgs + "-Xms10G" + "-Xmx10G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
+        jvmParallelism?.let { allJvmArgs = allJvmArgs + "-Djava.util.concurrent.ForkJoinPool.common.parallelism=$it" }
+        println(allJvmArgs)
+        classpath = project.extensions.getByName<SourceSetContainer>("sourceSets").main.get().runtimeClasspath
+        mainClass.set("org.matsim.run.RunEpisim")
+    }
+
+    override fun exec() {
+        args = mutableListOf("--modules", "OpenBerlinScenario",
+                             "--iterations", iterations,
+                             "--config:controler.outputDirectory", output)
+        randomSeed?.let { args = args!! + "--config:global.randomSeed" + it }
+        super.exec()
+    }
+}
+
+abstract class Hemera : DefaultTask() {
+
+    @Optional
+    @get:Input
+    @set:Option(option = "nodes", description = "number of nodes to run on")
+    var nodes: String = "1"
+
+    @Optional
+    @get:Input
+    @set:Option(option = "time", description = "max time allowed")
+    var time: String = "01:00:00"
+
+    @Optional
+    @get:Input
+    @set:Option(option = "name", description = "the job name")
+    var name: String = "single"
+
+    @Optional
+    @get:Input
+    @set:Option(option = "perfStat", description = "performance statistics")
+    var perfStat: Boolean = true
+
+    @TaskAction
+    fun exec() {
+        //store the output instead of printing to the console:
+        val output = ByteArrayOutputStream()
+
+        project.exec {
+
+            workingDir = File("/bigdata/casus/matsim/matsim-episim-libs")
+
+//            commandLine("./gradlew")
+            commandLine("ls", "-la")
+
+            standardOutput = output
+        }
+        println(output)
+    }
+}
+
+open class Dresden : Hemera()
