@@ -85,7 +85,7 @@ tasks {
     //        args = listOf("--modules", "OpenBerlinScenario", "--iterations", "365")
     //    }
     register<Berlin>("berlin") {
-        //        iterations = "1"
+                iterations = "1"
     }
     //    addRule("run") {
     //        println(this)
@@ -99,7 +99,14 @@ tasks {
     }
 }
 
-open class Berlin : JavaExec() {
+open class Berlin : Scenario("OpenBerlinScenario")
+open class Dresden : Scenario("SnzDresdenScenario")
+
+abstract class Scenario(@Internal val scenarioName: String) : JavaExec() {
+
+    init {
+        group = "scenario"
+    }
 
     // JVM Args
 
@@ -134,7 +141,7 @@ open class Berlin : JavaExec() {
     }
 
     override fun exec() {
-        args = mutableListOf("--modules", "OpenBerlinScenario",
+        args = mutableListOf("--modules", scenarioName,
                              "--iterations", iterations,
                              "--config:controler.outputDirectory", output)
         randomSeed?.let { args = args!! + "--config:global.randomSeed" + it }
@@ -186,5 +193,3 @@ abstract class Hemera : DefaultTask() {
         println(output)
     }
 }
-
-open class Dresden : Hemera()
