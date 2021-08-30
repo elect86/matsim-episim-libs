@@ -85,7 +85,7 @@ tasks {
     //        args = listOf("--modules", "OpenBerlinScenario", "--iterations", "365")
     //    }
     register<Berlin>("berlin") {
-                iterations = "1"
+        iterations = "1"
     }
     //    addRule("run") {
     //        println(this)
@@ -132,8 +132,8 @@ abstract class Scenario(@Internal val scenarioName: String) : JavaExec() {
     var randomSeed: String? = null
 
     init {
-        //        allJvmArgs = allJvmArgs + "-Xms160G" + "-Xmx160G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
-        allJvmArgs = allJvmArgs + "-Xms10G" + "-Xmx10G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
+        allJvmArgs = allJvmArgs + "-Xms160G" + "-Xmx160G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
+        //        allJvmArgs = allJvmArgs + "-Xms10G" + "-Xmx10G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
         jvmParallelism?.let { allJvmArgs = allJvmArgs + "-Djava.util.concurrent.ForkJoinPool.common.parallelism=$it" }
         println(allJvmArgs)
         classpath = project.extensions.getByName<SourceSetContainer>("sourceSets").main.get().runtimeClasspath
@@ -166,7 +166,7 @@ abstract class Hemera : DefaultTask() {
     @set:Option(option = "jobName", description = "the job name")
     var jobName: String = "single"
 
-//    @Optional
+    //    @Optional
     @get:Input
     @set:Option(option = "perfStat", description = "performance statistics")
     var perfStat: Boolean = true
@@ -186,7 +186,7 @@ abstract class Hemera : DefaultTask() {
                 args += "stat"
             }
             commandLine(args + "./gradlew" + "berlin")
-//            commandLine("ls", "-la")
+            //            commandLine("ls", "-la")
 
             standardOutput = output
         }
