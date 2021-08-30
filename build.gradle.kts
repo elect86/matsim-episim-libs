@@ -173,8 +173,13 @@ abstract class Hemera : DefaultTask() {
 
             workingDir = File("/bigdata/casus/matsim/matsim-episim-libs")
 
-//            commandLine("./gradlew")
-            commandLine("ls", "-la")
+            val args = arrayListOf("srun", "-n", nodes, "-t", time, "--job-name=$jobName")
+            if (perfStat) {
+                args += "perf"
+                args += "stat"
+            }
+            commandLine(args + "./gradlew" + "berlin")
+//            commandLine("ls", "-la")
 
             standardOutput = output
         }
