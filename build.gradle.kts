@@ -94,7 +94,7 @@ tasks {
     ////        }
     //    }
 
-    register<Dresden>("Dresden") {
+    register<Dresden>("dresden") {
 
     }
 }
@@ -156,8 +156,8 @@ abstract class Hemera : DefaultTask() {
 
     @Optional
     @get:Input
-    @set:Option(option = "name", description = "the job name")
-    var name: String = "single"
+    @set:Option(option = "jobName", description = "the job name")
+    var jobName: String = "single"
 
     @Optional
     @get:Input
