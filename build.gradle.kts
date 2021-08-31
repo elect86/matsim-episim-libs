@@ -132,7 +132,7 @@ abstract class Scenario(@Internal val scenarioName: String) : JavaExec() {
     var randomSeed: String? = null
 
     init {
-        allJvmArgs = allJvmArgs + "-Xms160G" + "-Xmx160G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
+        allJvmArgs = allJvmArgs + "-Xms16G" + "-Xmx16G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
         //        allJvmArgs = allJvmArgs + "-Xms10G" + "-Xmx10G" + "-XX:+UnlockExperimentalVMOptions" + "-XX:+UseParallelGC"
         jvmParallelism?.let { allJvmArgs = allJvmArgs + "-Djava.util.concurrent.ForkJoinPool.common.parallelism=$it" }
         println(allJvmArgs)
