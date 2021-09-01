@@ -95,7 +95,7 @@ tasks {
     //    }
 
     register<Dresden>("dresden") {
-
+        iterations = "15"
     }
 }
 

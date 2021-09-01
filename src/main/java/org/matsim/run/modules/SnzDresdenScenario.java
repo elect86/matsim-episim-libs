@@ -209,9 +209,6 @@ public final class SnzDresdenScenario extends AbstractModule {
 		vaccinations.put(LocalDate.parse("2021-08-02"), (int) (13450/ 7));
 
 
-
-
-
 		// int population =862987;  // Berlin: 4_800_000;
 //		vaccinations.put(LocalDate.parse("2020-01-01"), 0);
 //		vaccinations.put(LocalDate.parse("2020-12-27"), (int) (0.003 * population / 6));
