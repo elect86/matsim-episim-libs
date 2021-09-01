@@ -96,8 +96,17 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		// Calibration parameter
 
-		episimConfig.setCalibrationParameter(1.7E-5 * 0.8); // TODO
-		episimConfig.setStartDate("2020-02-25");
+		episimConfig.setCalibrationParameter(1.65E-5 * 0.8); // TODO  //2.5E-5 * 0.8(calibrated)
+		episimConfig.setStartDate("2020-03-01");
+
+		//snapshot
+
+		// episimConfig.setSnapshotInterval(100); // At every 100 days it will create a snapshot
+
+		 // episimConfig.setStartFromSnapshot();  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
+
+		 // episimConfig.setSnapshotInterval();
+
 
 
 		// Progression config
@@ -151,6 +160,7 @@ public final class SnzDresdenScenario extends AbstractModule {
 				LocalDate.of(2020, 6, 15), tracingCapacity
 		));
 
+
 		// Vaccination capacity
 
 		VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
@@ -159,10 +169,95 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		Map<LocalDate, Integer> vaccinations = new HashMap<>();
 
-		int population = 4_800_000;
+		int population =862987;  // Berlin: 4_800_000;
 
-		vaccinations.put(LocalDate.parse("2020-01-01"), 0);
-		vaccinations.put(LocalDate.parse("2020-12-27"), (int) (0.003 * population / 6));
+		//vaccinations.put(LocalDate.parse("2020-01-01"), 0);
+		vaccinations.put(LocalDate.parse("2020-12-28"), (int)  (823/7));
+// the following is for Berlin; if we have data we can change it for dresden
+		vaccinations.put(LocalDate.parse("2021-01-04"), (int) (2310/ 7));
+		vaccinations.put(LocalDate.parse("2021-01-11"), (int) ( 4155/ 7));
+		vaccinations.put(LocalDate.parse("2021-01-18"), (int) (4400/ 7));
+		vaccinations.put(LocalDate.parse("2021-01-25"), (int) (4567/ 7));
+		vaccinations.put(LocalDate.parse("2021-02-01"), (int) (6304/ 7));
+		vaccinations.put(LocalDate.parse("2021-02-08"), (int) (5937/ 7));
+		vaccinations.put(LocalDate.parse("2021-02-15"), (int) ( 6780 / 7));
+		vaccinations.put(LocalDate.parse("2021-02-22"), (int) ( 9034 / 7));
+		vaccinations.put(LocalDate.parse("2021-03-01"), (int) (9871/ 7));
+		vaccinations.put(LocalDate.parse("2021-03-08"), (int) (7900 / 7));
+		vaccinations.put(LocalDate.parse("2021-03-15"), (int) (7627 / 7));
+		vaccinations.put(LocalDate.parse("2021-03-22"), (int) (10898 / 7));
+		vaccinations.put(LocalDate.parse("2021-03-29"), (int) (8464/ 7));
+		vaccinations.put(LocalDate.parse("2021-04-05"), (int) (17411/ 7));
+		vaccinations.put(LocalDate.parse("2021-04-12"), (int) (21983 / 7));
+		vaccinations.put(LocalDate.parse("2021-04-19"), (int) (19564 / 7));
+     	vaccinations.put(LocalDate.parse("2021-04-26"), (int) (25340/ 7));
+		vaccinations.put(LocalDate.parse("2021-05-03"), (int) (27635 / 7));
+		vaccinations.put(LocalDate.parse("2021-05-10"), (int) (25711 / 7));
+		vaccinations.put(LocalDate.parse("2021-05-17"), (int) ( 27500/ 7));
+		vaccinations.put(LocalDate.parse("2021-05-24"), (int) (25708 / 7));
+		vaccinations.put(LocalDate.parse("2021-05-31"), (int) (28428/ 7));
+		vaccinations.put(LocalDate.parse("2021-06-07"), (int) (28296/ 7));
+		vaccinations.put(LocalDate.parse("2021-06-14"), (int) (30633/ 7));
+		vaccinations.put(LocalDate.parse("2021-06-21"), (int) (29838/ 7));
+		vaccinations.put(LocalDate.parse("2021-06-28"), (int) (28438/ 7));
+		vaccinations.put(LocalDate.parse("2021-07-05"), (int) (26057/ 7));
+		vaccinations.put(LocalDate.parse("2021-07-12"), (int) (22527/ 7));
+		vaccinations.put(LocalDate.parse("2021-07-19"), (int) (20560/ 7));
+		vaccinations.put(LocalDate.parse("2021-07-26"), (int) (20779/ 7));
+		vaccinations.put(LocalDate.parse("2021-08-02"), (int) (13450/ 7));
+
+
+
+
+
+		// int population =862987;  // Berlin: 4_800_000;
+//		vaccinations.put(LocalDate.parse("2020-01-01"), 0);
+//		vaccinations.put(LocalDate.parse("2020-12-27"), (int) (0.003 * population / 6));
+//// the following is for Berlin; if we have data we can change it for dresden
+//		vaccinations.put(LocalDate.parse("2021-01-02"), (int) ((0.007 - 0.004) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-01-09"), (int) ((0.013 - 0.007) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-01-16"), (int) ((0.017 - 0.013) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-01-23"), (int) ((0.024 - 0.017) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-01-30"), (int) ((0.030 - 0.024) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-02-06"), (int) ((0.034 - 0.030) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-02-13"), (int) ((0.039 - 0.034) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-02-20"), (int) ((0.045 - 0.039) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-02-27"), (int) ((0.057 - 0.045) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-03-06"), (int) ((0.071 - 0.057) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-03-13"), (int) ((0.088 - 0.071) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-03-20"), (int) ((0.105 - 0.088) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-03-27"), (int) ((0.120 - 0.105) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-04-03"), (int) ((0.140 - 0.120) * population / 7));
+//		vaccinations.put(LocalDate.parse("2021-04-10"), (int) ((0.183 - 0.140) * population / 7));
+
+
+
+		//mutations and vaccinations
+		Map<LocalDate, Integer> infPerDayB117 = new HashMap<>();
+		infPerDayB117.put(LocalDate.parse("2020-01-01"), 0);
+		infPerDayB117.put(LocalDate.parse("2020-10-01"), 1);  // "2020-11-30")
+		episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117);
+
+		// VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
+		double vaccineEffectiveness = vaccinationConfig.getEffectiveness();
+
+		VirusStrainConfigGroup virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup.class);
+
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setInfectiousness(1.8); // 1.8
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setVaccineEffectiveness(1.0);
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setFactorSeriouslySick(1.5);
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setFactorSeriouslySickVaccinated(0.05 / (1-vaccineEffectiveness));
+
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.SARS_CoV_2).setFactorSeriouslySickVaccinated(0.05 / (1-vaccineEffectiveness));
+
+		Map<LocalDate, Integer> infPerDayMUTB = new HashMap<>();
+		infPerDayMUTB.put(LocalDate.parse("2020-01-01"), 0);
+		infPerDayMUTB.put(LocalDate.parse("2021-02-01"), 1); // 1 person  //2021-04-07
+		episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB);
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).setInfectiousness(2.5);
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).setVaccineEffectiveness(0.8); // we can tweak it
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).setReVaccineEffectiveness(1.0);
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).setFactorSeriouslySickVaccinated(0.05 / (1- 0.8));
 
 		// Vaccination compliance by age
 		Map<Integer, Double> vaccinationCompliance = new HashMap<>();
@@ -187,7 +282,6 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		// Set compliance rate of 90% for cloth masks
 		policy.restrict(LocalDate.parse("2020-04-01"), Restriction.ofMask(FaceMask.CLOTH, 0.9), "pt");
-
 
 		// Testing rates
 
