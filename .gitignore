@@ -287,3 +287,10 @@ testoutput*
 theta*
 2020-*
 triang*
+
+dresden
+
+.gradle
+build
+# there is a `.jar` above
+!gradle-wrapper.jar
