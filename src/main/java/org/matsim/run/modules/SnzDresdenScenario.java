@@ -51,8 +51,10 @@ public final class SnzDresdenScenario extends AbstractModule {
 	 */
 	// public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
 
+	 public static final Path INPUT = EpisimUtils.resolveInputPath("dresden");
 
-	public static final Path INPUT = Path.of("/home/abhishek/Desktop/episim-dresden/dresden-data");
+
+	// public static final Path INPUT = Path.of("/home/abhishek/Desktop/episim-dresden-libs/dresden-data");
 
 	/**
 	 * Empty constructor is needed for running scenario from command line.
