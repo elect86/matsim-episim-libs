@@ -124,7 +124,7 @@ abstract class Scenario(@Internal val scenarioName: String) : JavaExec() {
 
     @get:Input
     @set:Option(option = "output", description = "the output folder where the results will be written")
-    var output = "output-berlin"
+    var output = "output-$scenarioName"
 
     @Optional
     @get:Input
