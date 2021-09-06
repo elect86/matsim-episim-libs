@@ -98,8 +98,8 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		// Calibration parameter
 
-		episimConfig.setCalibrationParameter(1.65E-5 * 0.8); // TODO  //2.5E-5 * 0.8(calibrated)
-		episimConfig.setStartDate("2020-03-01");
+		episimConfig.setCalibrationParameter(4.0E-5 * 0.8); // TODO  //2.5E-5 * 0.8(calibrated)
+		episimConfig.setStartDate("2020-03-02");
 
 		//snapshot
 
