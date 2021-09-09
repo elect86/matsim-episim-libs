@@ -81,7 +81,6 @@ public final class SnzDresdenScenario extends AbstractModule {
 		EpisimConfigGroup episimConfig = ConfigUtils.addOrGetModule(config, EpisimConfigGroup.class);
 		episimConfig.setFacilitiesHandling(EpisimConfigGroup.FacilitiesHandling.snz);
 		episimConfig.setSampleSize(1);
-
 		// Input files
 
 		config.plans().setInputFile(INPUT.resolve("dresden_snz_entirePopulation_emptyPlans_withDistricts_100pt_split_noCoord.xml.gz").toString());
@@ -98,7 +97,7 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		// Calibration parameter
 
-		episimConfig.setCalibrationParameter(4.0E-5 * 0.8); // TODO  //2.5E-5 * 0.8(calibrated)
+		episimConfig.setCalibrationParameter(2.5E-5 * 0.8); // TODO  //2.5E-5 * 0.8(calibrated)
 		episimConfig.setStartDate("2020-03-02");
 
 		//snapshot
@@ -119,7 +118,7 @@ public final class SnzDresdenScenario extends AbstractModule {
 		// Initial infections and import
 
 		episimConfig.setInitialInfections(Integer.MAX_VALUE);
-		episimConfig.setInfections_pers_per_day(Map.of(LocalDate.EPOCH, 1));
+		episimConfig.setInfections_pers_per_day(Map.of(LocalDate.EPOCH, 1)); // base case import
 
 		// Contact intensities
 
@@ -242,7 +241,7 @@ public final class SnzDresdenScenario extends AbstractModule {
 
 		VirusStrainConfigGroup virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup.class);
 
-		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setInfectiousness(1.8); // 1.8
+		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setInfectiousness(1.2); // 1.8
 		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setVaccineEffectiveness(1.0);
 		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setFactorSeriouslySick(1.5);
 		virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).setFactorSeriouslySickVaccinated(0.05 / (1-vaccineEffectiveness));
@@ -263,7 +262,8 @@ public final class SnzDresdenScenario extends AbstractModule {
 		vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations);
 
 		// Vaccinate everybody with age above 0
-		vaccinationCompliance.put(0, 1d);
+		vaccinationCompliance.put(0, 1d);   // Age group wise vaccination?
+
 
 		vaccinationConfig.setCompliancePerAge(vaccinationCompliance);
 
@@ -317,5 +317,9 @@ public final class SnzDresdenScenario extends AbstractModule {
 		config.controler().setOutputDirectory("output-snz-dresden");
 
 		return config;
+	}
+
+	private EpisimConfigGroup getEpisimConfig(EpisimConfigGroup episimConfig) {
+		return episimConfig;
 	}
 }
