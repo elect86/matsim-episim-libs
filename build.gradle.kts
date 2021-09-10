@@ -3,6 +3,7 @@ import java.io.ByteArrayOutputStream
 plugins {
     java
     `maven-publish`
+    kotlin("jvm") version embeddedKotlinVersion
 }
 
 repositories {
@@ -23,6 +24,15 @@ repositories {
 val matsimVersion = "13.0"
 
 dependencies {
+
+    // Align versions of all Kotlin components
+    implementation(platform(kotlin("bom")))
+
+    // Use the Kotlin JDK 8 standard library.
+    implementation(kotlin("stdlib-jdk8"))
+
+    // Use the Kotlin test library.
+    testImplementation(kotlin("test"))
 
     implementation("org.matsim:matsim:$matsimVersion")
     implementation("com.typesafe:config:1.4.0")
@@ -49,6 +59,10 @@ dependencies {
     implementation("com.sun.xml.bind:jaxb-impl:2.3.0.1")
 
     implementation("com.opencsv:opencsv:4.1")
+
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.1.0") //for JVM platform
+
+    implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.5.0")
 
     testImplementation("junit:junit:4.13.1")
     testImplementation("org.matsim:matsim:$matsimVersion")
@@ -97,6 +111,23 @@ tasks {
     register<Dresden>("dresden") {
         iterations = "500"
         output = "output-snz-dresden"
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+
+    register("ls") {
+        doLast {
+            val out = ByteArrayOutputStream()
+            project.exec {
+                commandLine("git", "--version")
+                standardOutput = out
+            }
+            println(out.toString())
+        }
     }
 }
 
