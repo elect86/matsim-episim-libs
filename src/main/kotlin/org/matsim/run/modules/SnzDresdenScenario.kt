@@ -142,8 +142,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         val population = 862987 // Berlin: 4_800_000;
 
         val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv"
-        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14612" }
-// add filtering on dose 1
+        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14612" && it[3] == "1" }
+
         var startDate = LocalDate.parse("2020-12-28")
         var endDate = startDate.plusDays(7)
         var cumulative = 0
