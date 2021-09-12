@@ -160,6 +160,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             }
         }
 
+
         //vaccinations.put(LocalDate.parse("2020-01-01"), 0);
         //        vaccinations[LocalDate.parse("2020-12-28")] = (823 / 7)
         //        // the following is for Berlin; if we have data we can change it for dresden

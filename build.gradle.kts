@@ -4,6 +4,7 @@ plugins {
     java
     `maven-publish`
     kotlin("jvm") version embeddedKotlinVersion
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
