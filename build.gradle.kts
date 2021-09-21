@@ -89,6 +89,9 @@ publishing {
 }
 
 tasks {
+    shadowJar {
+        isZip64 = true
+    }
     //    create("berlin").doFirst {
     //        val typed = Scanner(System.`in`).nextLine()
     //        val parsed = typed.split(' ')

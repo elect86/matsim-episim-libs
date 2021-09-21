@@ -78,10 +78,12 @@ public class CreateBatteryForCluster<T> implements Callable<Integer> {
 	@CommandLine.Option(names = "--run-version", description = "Run version", defaultValue = "v16")
 	private String runVersion;
 
-	@CommandLine.Option(names = "--step-size", description = "Step size of the job array", defaultValue = "32") // 350 GB
+	// around 10GB per simulation, but better to test and see on
+	@CommandLine.Option(names = "--step-size", description = "Step size of the job array", defaultValue = "20") // RealMemory=257860
 	private int stepSize;
 
-	@CommandLine.Option(names = "--jvm-opts", description = "Additional options for JVM", defaultValue = "-Xms82G -Xmx82G -XX:+UseParallelGC") // total ram per node / 2 - some guard space
+	// we need to divide RealMemory by the number of sockets per board, in our case 257860/2 (we set Xms to reserve memory)
+	@CommandLine.Option(names = "--jvm-opts", description = "Additional options for JVM", defaultValue = "-Xms110G -Xmx110G -XX:+UseParallelGC") // total ram per node / 2 - some guard space
 	private String jvmOpts;
 
 	@CommandLine.Option(names = "--setup", defaultValue = "org.matsim.run.batch.DresdenCalibration")
