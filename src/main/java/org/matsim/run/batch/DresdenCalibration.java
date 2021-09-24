@@ -59,12 +59,12 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 
 	public static final class Params {
 
-		@GenerateSeeds(2)
+		@GenerateSeeds(5)
 		public long seed;
 
 		//@Parameter({0.5, 0.6/*, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5*/})
 
-		@Parameter({0.5, 0.6, 0.7, 0.8, 0.9, 1.0})
+		@Parameter({/*0.5, 0.6, 0.7, 0.8, 0.9,*/ 1.0})
 		double thetaFactor;
 
 	}
@@ -74,7 +74,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 				RunParallel.OPTION_SETUP, DresdenCalibration.class.getName(),
 				RunParallel.OPTION_PARAMS, Params.class.getName(),
 				RunParallel.OPTION_THREADS, Integer.toString(1),
-				RunParallel.OPTION_ITERATIONS, Integer.toString(5),
+				RunParallel.OPTION_ITERATIONS, Integer.toString(500),
 				RunParallel.OPTION_METADATA
 		};
 

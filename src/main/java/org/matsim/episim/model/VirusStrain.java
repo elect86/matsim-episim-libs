@@ -20,7 +20,12 @@ public enum VirusStrain {
 	 * South-african variant also known as auch 501Y.V2.
 	 */
 	B1351,
-	
+
+	/**
+	 * Delta variant (need to check the arrival time in Germany)
+	 */
+
+ DELTA,
 	/**
 	 * unknown mutation
 	 */

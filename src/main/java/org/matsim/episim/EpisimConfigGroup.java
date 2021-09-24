@@ -275,7 +275,7 @@ public final class EpisimConfigGroup extends ReflectiveConfigGroup {
 	}
 
 	/**
-	 * @param infectionsPerDay -- From each given date, this will be the number of infections.  Until {@link #setInitialInfections(int)} are used up.
+	 * @param infectionsPerDay -- From each given date, this will be the number of infections.  Until { @link #setInitialInfections(int)} are used up.
 	 */
 	public void setInfections_pers_per_day(Map<LocalDate, Integer> infectionsPerDay) {
 		this.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infectionsPerDay);
