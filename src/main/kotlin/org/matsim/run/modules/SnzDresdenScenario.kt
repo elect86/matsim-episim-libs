@@ -275,7 +275,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         }
         val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
             LocalDate.parse("2020-01-01") to 0,
-            LocalDate.parse("2021-02-07") to 1) // 1 person  //2021-02-01
+            LocalDate.parse("2021-02-07") to 1, // 1 person  //2021-02-01
+                LocalDate.parse("2021-07-01") to 0) // Added
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness = 2.3   // 2.5
@@ -293,7 +294,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             infectiousness = 2.0   // 2.5
             vaccineEffectiveness = 0.8 // we can tweak it
             reVaccineEffectiveness = 1.0
-            factorSeriouslySick = 1.3
+            factorSeriouslySick = 1.2
             factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
         }
 

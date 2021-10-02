@@ -64,7 +64,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 
 		//@Parameter({0.5, 0.6/*, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5*/})
 
-		@Parameter({0.5, 0.6, 0.7, 0.8, 0.9,1.0, 1.1, 1.2, 1.3})
+		@Parameter({1})
 		double thetaFactor;
 
 	}
