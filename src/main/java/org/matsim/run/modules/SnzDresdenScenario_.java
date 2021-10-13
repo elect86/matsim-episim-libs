@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * Scenario for Dresden using Senozon data.
  */
-public final class SnzDresdenScenario extends AbstractModule {
+public final class SnzDresdenScenario_ extends AbstractModule {
 
 	/**
 	 * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
@@ -57,7 +57,7 @@ public final class SnzDresdenScenario extends AbstractModule {
 	 * Empty constructor is needed for running scenario from command line.
 	 */
 	@SuppressWarnings("unused")
-	public SnzDresdenScenario() {
+	public SnzDresdenScenario_() {
 	}
 
 	@Override

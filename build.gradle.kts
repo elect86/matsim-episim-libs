@@ -42,7 +42,7 @@ dependencies {
     implementation("com.github.ClickerMonkey:TrieHard:1.0")
     implementation("commons-io:commons-io:2.7")
     implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("it.unimi.dsi:fastutil:8.3.1")
+    implementation("it.unimi.dsi:fastutil:8.5.4")
     implementation("org.jgrapht:jgrapht-core:1.5.0")
     implementation("org.jgrapht:jgrapht-io:1.5.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.2")

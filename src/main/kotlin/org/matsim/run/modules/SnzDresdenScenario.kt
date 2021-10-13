@@ -28,10 +28,11 @@ import org.matsim.episim.*
 import org.matsim.episim.TracingConfigGroup.CapacityType
 import org.matsim.episim.model.*
 import org.matsim.episim.model.input.CreateRestrictionsFromCSV
+import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionModel
+import org.matsim.episim.model.progression.DiseaseStatusTransitionModel
 import org.matsim.episim.model.testing.TestType
 import org.matsim.episim.policy.FixedPolicy
 import org.matsim.episim.policy.Restriction
-import org.matsim.run.modules.SnzBerlinProductionScenario.DiseaseImport
 import org.matsim.run.modules.SnzBerlinScenario25pct2020.BasePolicyBuilder
 import java.net.URL
 import java.time.DayOfWeek
@@ -48,7 +49,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
     : KotlinModule() {
     override fun configure() {
         bind<ContactModel>().to<SymmetricContactModel>().`in`<Singleton>()
-        bind<ProgressionModel>().to<AgeDependentProgressionModel>().`in`<Singleton>()
+        bind<DiseaseStatusTransitionModel>().to<AgeDependentDiseaseStatusTransitionModel>().`in`<Singleton>()
         bind<InfectionModel>().to<AgeDependentInfectionModelWithSeasonality>().`in`<Singleton>()
         bind<VaccinationModel>().to<VaccinationByAge>().`in`<Singleton>()
     }
@@ -88,45 +89,45 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
             // Initial infections and import
             initialInfections = Int.MAX_VALUE
-           // setInfections_pers_per_day(mapOf(LocalDate.EPOCH to 1)) // base case import
+            // setInfections_pers_per_day(mapOf(LocalDate.EPOCH to 1)) // base case import
 
 
             val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                    LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
-                    LocalDate.parse("2020-03-02") to 1,
-                    LocalDate.parse("2020-10-01") to 2,
-                    LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
+                LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-03-02") to 1,
+                LocalDate.parse("2020-10-01") to 2,
+                LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
             episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
 
             //inital infections and import
 
-          /*  val imprtFctMult = 1.0
-            val importFactorBeforeJune = 4.0
-            val importFactorAfterJune = 0.5
-            val importOffset = 0
-            episimConfig.initialInfections = Int.MAX_VALUE
-            //if (this.diseaseImport != DiseaseImport.no) {
-                episimConfig.initialInfectionDistrict = null
-                val importMap: Map<LocalDate, Int> = java.util.HashMap()
-                SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-02-24").plusDays(importOffset.toLong()),
-                        LocalDate.parse("2020-03-09").plusDays(importOffset.toLong()), 0.9, 23.1)
-                SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-09").plusDays(importOffset.toLong()),
-                        LocalDate.parse("2020-03-23").plusDays(importOffset.toLong()), 23.1, 3.9)
-                SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-23").plusDays(importOffset.toLong()),
-                        LocalDate.parse("2020-04-13").plusDays(importOffset.toLong()), 3.9, 0.1)
-             //   if (this.diseaseImport == DiseaseImport.yes) {
-                    SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-06-08").plusDays(importOffset.toLong()),
-                            LocalDate.parse("2020-07-13").plusDays(importOffset.toLong()), 0.1, 2.7)
-                    SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-07-13").plusDays(importOffset.toLong()),
-                            LocalDate.parse("2020-08-10").plusDays(importOffset.toLong()), 2.7, 17.9)
-                    SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-08-10").plusDays(importOffset.toLong()),
-                            LocalDate.parse("2020-09-07").plusDays(importOffset.toLong()), 17.9, 6.1)
-                    SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-10-26").plusDays(importOffset.toLong()),
-                            LocalDate.parse("2020-12-21").plusDays(importOffset.toLong()), 6.1, 1.1)
-             //   }
-                episimConfig.setInfections_pers_per_day(importMap)*/
-           // }
+            /*  val imprtFctMult = 1.0
+              val importFactorBeforeJune = 4.0
+              val importFactorAfterJune = 0.5
+              val importOffset = 0
+              episimConfig.initialInfections = Int.MAX_VALUE
+              //if (this.diseaseImport != DiseaseImport.no) {
+                  episimConfig.initialInfectionDistrict = null
+                  val importMap: Map<LocalDate, Int> = java.util.HashMap()
+                  SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-02-24").plusDays(importOffset.toLong()),
+                          LocalDate.parse("2020-03-09").plusDays(importOffset.toLong()), 0.9, 23.1)
+                  SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-09").plusDays(importOffset.toLong()),
+                          LocalDate.parse("2020-03-23").plusDays(importOffset.toLong()), 23.1, 3.9)
+                  SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-23").plusDays(importOffset.toLong()),
+                          LocalDate.parse("2020-04-13").plusDays(importOffset.toLong()), 3.9, 0.1)
+               //   if (this.diseaseImport == DiseaseImport.yes) {
+                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-06-08").plusDays(importOffset.toLong()),
+                              LocalDate.parse("2020-07-13").plusDays(importOffset.toLong()), 0.1, 2.7)
+                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-07-13").plusDays(importOffset.toLong()),
+                              LocalDate.parse("2020-08-10").plusDays(importOffset.toLong()), 2.7, 17.9)
+                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-08-10").plusDays(importOffset.toLong()),
+                              LocalDate.parse("2020-09-07").plusDays(importOffset.toLong()), 17.9, 6.1)
+                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-10-26").plusDays(importOffset.toLong()),
+                              LocalDate.parse("2020-12-21").plusDays(importOffset.toLong()), 6.1, 1.1)
+               //   }
+                  episimConfig.setInfections_pers_per_day(importMap)*/
+            // }
 
 
             // Contact intensities
@@ -172,7 +173,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
         // Vaccination capacity
-        val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java).apply {
+        val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
+        val vaccinationParams = vaccinationConfig.getParams(VaccinationType.generic).apply {
             effectiveness = 0.9
             daysBeforeFullEffect = 28
         }
@@ -263,7 +265,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)
 
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
-        val vaccineEff = vaccinationConfig.effectiveness
+        val vaccineEff = vaccinationParams.effectiveness
         val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).apply {
             getOrAddParams(VirusStrain.B117).apply {
                 infectiousness = 1.45 // 1.8
@@ -276,7 +278,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
             LocalDate.parse("2020-01-01") to 0,
             LocalDate.parse("2021-02-07") to 1, // 1 person  //2021-02-01
-                LocalDate.parse("2021-07-01") to 0) // Added
+            LocalDate.parse("2021-07-01") to 0) // Added
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness = 2.3   // 2.5
@@ -287,8 +289,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         }
 
         val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
-                LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
+            LocalDate.parse("2020-01-01") to 0,
+            LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
         episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.DELTA).apply {
             infectiousness = 2.0   // 2.5
@@ -297,7 +299,6 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             factorSeriouslySick = 1.2
             factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
         }
-
 
 
         // Vaccination compliance by age
@@ -319,7 +320,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         // Using the same base policy as berlin
         val builder = BasePolicyBuilder(episimConfig)
         builder.activityParticipation = restrictions
-        val policy = builder.build()
+        val policy = builder.buildFixed()
 
         // Set compliance rate of 90% for cloth masks
         policy.restrict(LocalDate.parse("2020-04-01"), Restriction.ofMask(FaceMask.CLOTH, 0.9), "pt")
