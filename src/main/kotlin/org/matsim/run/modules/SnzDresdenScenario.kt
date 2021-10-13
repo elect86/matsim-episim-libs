@@ -39,6 +39,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import javax.inject.Singleton
 
+
 /**
  * Scenario for Dresden using Senozon data.
  */
@@ -345,6 +346,137 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         config.controler().outputDirectory = "output-snz-dresden"
         return config
     }
+
+    fun configureVaccines(vaccinationConfig: VaccinationConfigGroup, population: Int) {
+        val effectivnessMRNA = 0.7
+        val factorShowingSymptomsMRNA = 0.05 / (1 - effectivnessMRNA) //95% protection against symptoms
+        val factorSeriouslySickMRNA = 0.02 / ((1 - effectivnessMRNA) * factorShowingSymptomsMRNA) //98% protection against severe disease
+        val fullEffectMRNA = 7 * 7 //second shot after 6 weeks, full effect one week after second shot
+        vaccinationConfig.getOrAddParams(VaccinationType.mRNA).apply {
+            daysBeforeFullEffect = fullEffectMRNA
+            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                                 .atDay(1, 0.0)
+                                 .atFullEffect(effectivnessMRNA)
+                                 .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                                 .atDay(1, 0.0)
+                                 .atFullEffect(effectivnessMRNA)
+                                 .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                                         .atDay(1, 1.0)
+                                         .atFullEffect(factorShowingSymptomsMRNA)
+                                         .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                                              .atDay(1, 1.0)
+                                              .atFullEffect(factorShowingSymptomsMRNA)
+                                              .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                                            .atDay(1, 1.0)
+                                            .atFullEffect(factorSeriouslySickMRNA)
+                                            .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                                            .atDay(1, 1.0)
+                                            .atFullEffect(factorSeriouslySickMRNA)
+                                            .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+        }
+        val effectivnessVector = 0.5
+        val factorShowingSymptomsVector = 0.25 / (1 - effectivnessVector) //75% protection against symptoms
+        val factorSeriouslySickVector = 0.15 / ((1 - effectivnessVector) * factorShowingSymptomsVector) //85% protection against severe disease
+        val fullEffectVector = 10 * 7 //second shot after 9 weeks, full effect one week after second shot
+        vaccinationConfig.getOrAddParams(VaccinationType.vector).apply {
+            daysBeforeFullEffect = fullEffectVector
+            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                                  .atDay(1, 0.0)
+                                  .atFullEffect(effectivnessVector)
+                                  .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                                  .atDay(1, 0.0)
+                                  .atFullEffect(effectivnessVector)
+                                  .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                                          .atDay(1, 1.0)
+                                          .atFullEffect(factorShowingSymptomsVector)
+                                          .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                                          .atDay(1, 1.0)
+                                          .atFullEffect(factorShowingSymptomsVector)
+                                          .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                                        .atDay(1, 1.0)
+                                        .atFullEffect(factorSeriouslySickVector)
+                                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                                        .atDay(1, 1.0)
+                                        .atFullEffect(factorSeriouslySickVector)
+                                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+        }
+
+        // Based on https://experience.arcgis.com/experience/db557289b13c42e4ac33e46314457adc
+        val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = HashMap()
+        share[LocalDate.parse("2020-01-01")] = java.util.Map.of(VaccinationType.mRNA, 1.0, VaccinationType.vector, 0.0)
+        share[LocalDate.parse("2020-12-28")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        share[LocalDate.parse("2021-01-04")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        share[LocalDate.parse("2021-01-11")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        share[LocalDate.parse("2021-01-18")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        share[LocalDate.parse("2021-01-25")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        share[LocalDate.parse("2021-02-01")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        share[LocalDate.parse("2021-02-08")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        share[LocalDate.parse("2021-02-15")] = java.util.Map.of(VaccinationType.mRNA, 0.75, VaccinationType.vector, 0.25)
+        share[LocalDate.parse("2021-02-22")] = java.util.Map.of(VaccinationType.mRNA, 0.63, VaccinationType.vector, 0.37)
+        share[LocalDate.parse("2021-03-01")] = java.util.Map.of(VaccinationType.mRNA, 0.52, VaccinationType.vector, 0.48)
+        share[LocalDate.parse("2021-03-08")] = java.util.Map.of(VaccinationType.mRNA, 0.45, VaccinationType.vector, 0.55)
+        share[LocalDate.parse("2021-03-15")] = java.util.Map.of(VaccinationType.mRNA, 0.75, VaccinationType.vector, 0.25)
+        share[LocalDate.parse("2021-03-22")] = java.util.Map.of(VaccinationType.mRNA, 0.55, VaccinationType.vector, 0.45)
+        share[LocalDate.parse("2021-03-29")] = java.util.Map.of(VaccinationType.mRNA, 0.71, VaccinationType.vector, 0.29)
+        share[LocalDate.parse("2021-04-05")] = java.util.Map.of(VaccinationType.mRNA, 0.77, VaccinationType.vector, 0.23)
+        share[LocalDate.parse("2021-04-12")] = java.util.Map.of(VaccinationType.mRNA, 0.76, VaccinationType.vector, 0.24)
+        share[LocalDate.parse("2021-04-19")] = java.util.Map.of(VaccinationType.mRNA, 0.70, VaccinationType.vector, 0.30)
+        share[LocalDate.parse("2021-04-26")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
+        share[LocalDate.parse("2021-05-03")] = java.util.Map.of(VaccinationType.mRNA, 0.78, VaccinationType.vector, 0.22)
+        share[LocalDate.parse("2021-05-10")] = java.util.Map.of(VaccinationType.mRNA, 0.81, VaccinationType.vector, 0.19)
+        share[LocalDate.parse("2021-05-17")] = java.util.Map.of(VaccinationType.mRNA, 0.70, VaccinationType.vector, 0.30)
+        share[LocalDate.parse("2021-05-24")] = java.util.Map.of(VaccinationType.mRNA, 0.67, VaccinationType.vector, 0.33)
+        share[LocalDate.parse("2021-05-31")] = java.util.Map.of(VaccinationType.mRNA, 0.72, VaccinationType.vector, 0.28)
+        share[LocalDate.parse("2021-06-07")] = java.util.Map.of(VaccinationType.mRNA, 0.74, VaccinationType.vector, 0.26)
+        share[LocalDate.parse("2021-06-14")] = java.util.Map.of(VaccinationType.mRNA, 0.79, VaccinationType.vector, 0.21)
+        share[LocalDate.parse("2021-06-21")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        share[LocalDate.parse("2021-06-28")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
+        share[LocalDate.parse("2021-07-05")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
+        share[LocalDate.parse("2021-07-12")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        share[LocalDate.parse("2021-07-19")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        share[LocalDate.parse("2021-07-26")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
+        share[LocalDate.parse("2021-08-02")] = java.util.Map.of(VaccinationType.mRNA, 0.85, VaccinationType.vector, 0.15)
+        share[LocalDate.parse("2021-08-09")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
+        vaccinationConfig.setVaccinationShare(share)
+        val vaccinations: MutableMap<LocalDate, Int> = HashMap()
+        vaccinations[LocalDate.parse("2020-01-01")] = 0
+        vaccinations[LocalDate.parse("2020-12-27")] = (0.003 * population / 6).toInt()
+        vaccinations[LocalDate.parse("2021-01-02")] = ((0.007 - 0.004) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-01-09")] = ((0.013 - 0.007) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-01-16")] = ((0.017 - 0.013) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-01-23")] = ((0.024 - 0.017) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-01-30")] = ((0.030 - 0.024) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-02-06")] = ((0.034 - 0.030) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-02-13")] = ((0.039 - 0.034) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-02-20")] = ((0.045 - 0.039) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-02-27")] = ((0.057 - 0.045) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-03-06")] = ((0.071 - 0.057) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-03-13")] = ((0.088 - 0.071) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-03-20")] = ((0.105 - 0.088) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-03-27")] = ((0.120 - 0.105) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-04-03")] = ((0.140 - 0.120) * population / 7).toInt()
+        vaccinations[LocalDate.parse("2021-04-10")] = ((0.183 - 0.140) * population / 7).toInt()
+        //extrapolated from 5.4. until 22.4.
+        vaccinations[LocalDate.parse("2021-04-17")] = ((0.207 - 0.123) * population / 17).toInt()
+        vaccinations[LocalDate.parse("2021-04-22")] = ((0.279 - 0.207) * population / 13).toInt()
+        vaccinations[LocalDate.parse("2021-05-05")] = ((0.404 - 0.279) * population / 23).toInt()
+        vaccinations[LocalDate.parse("2021-05-28")] = ((0.484 - 0.404) * population / 14).toInt()
+        vaccinations[LocalDate.parse("2021-06-11")] = ((0.535 - 0.484) * population / 14).toInt()
+        vaccinations[LocalDate.parse("2021-06-25")] = ((0.583 - 0.535) * population / 19).toInt()
+        vaccinations[LocalDate.parse("2021-07-14")] = ((0.605 - 0.583) * population / 14).toInt() // until 07-28
+        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
+    }
+
 
     companion object {
         /**
