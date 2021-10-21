@@ -448,32 +448,27 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         share[LocalDate.parse("2021-08-02")] = java.util.Map.of(VaccinationType.mRNA, 0.85, VaccinationType.vector, 0.15)
         share[LocalDate.parse("2021-08-09")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
         vaccinationConfig.setVaccinationShare(share)
+
         val vaccinations: MutableMap<LocalDate, Int> = HashMap()
-        vaccinations[LocalDate.parse("2020-01-01")] = 0
-        vaccinations[LocalDate.parse("2020-12-27")] = (0.003 * population / 6).toInt()
-        vaccinations[LocalDate.parse("2021-01-02")] = ((0.007 - 0.004) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-01-09")] = ((0.013 - 0.007) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-01-16")] = ((0.017 - 0.013) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-01-23")] = ((0.024 - 0.017) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-01-30")] = ((0.030 - 0.024) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-02-06")] = ((0.034 - 0.030) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-02-13")] = ((0.039 - 0.034) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-02-20")] = ((0.045 - 0.039) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-02-27")] = ((0.057 - 0.045) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-03-06")] = ((0.071 - 0.057) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-03-13")] = ((0.088 - 0.071) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-03-20")] = ((0.105 - 0.088) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-03-27")] = ((0.120 - 0.105) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-04-03")] = ((0.140 - 0.120) * population / 7).toInt()
-        vaccinations[LocalDate.parse("2021-04-10")] = ((0.183 - 0.140) * population / 7).toInt()
-        //extrapolated from 5.4. until 22.4.
-        vaccinations[LocalDate.parse("2021-04-17")] = ((0.207 - 0.123) * population / 17).toInt()
-        vaccinations[LocalDate.parse("2021-04-22")] = ((0.279 - 0.207) * population / 13).toInt()
-        vaccinations[LocalDate.parse("2021-05-05")] = ((0.404 - 0.279) * population / 23).toInt()
-        vaccinations[LocalDate.parse("2021-05-28")] = ((0.484 - 0.404) * population / 14).toInt()
-        vaccinations[LocalDate.parse("2021-06-11")] = ((0.535 - 0.484) * population / 14).toInt()
-        vaccinations[LocalDate.parse("2021-06-25")] = ((0.583 - 0.535) * population / 19).toInt()
-        vaccinations[LocalDate.parse("2021-07-14")] = ((0.605 - 0.583) * population / 14).toInt() // until 07-28
+
+        val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv"
+        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14612" && it[3] == "1" }
+
+        var startDate = LocalDate.parse("2020-12-28")
+        var endDate = startDate.plusDays(7)
+        var cumulative = 0
+        for (row in rows) {
+            val date = LocalDate.parse(row[0])
+            if (date.isBefore(endDate))
+                cumulative += row[4].toInt()
+            else {
+                //                println("$startDate, $cumulative")
+                vaccinations[startDate] = cumulative / 7
+                startDate = endDate
+                endDate = startDate.plusDays(7)
+                cumulative = 0
+            }
+        }
         vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
     }
 
