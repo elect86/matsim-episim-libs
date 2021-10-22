@@ -275,7 +275,7 @@ public abstract class SnzProductionScenario extends AbstractModule {
 							.atDay(fullEffectVector + 5 * 365, 1.0) //10% reduction every 6 months (source: TC)
 					);
 		}
-		
+
 		//delta
 		{
 			double effectivnessMRNA = 0.7;
@@ -332,7 +332,7 @@ public abstract class SnzProductionScenario extends AbstractModule {
 				;
 
 		}
-		
+
 
 		// Based on https://experience.arcgis.com/experience/db557289b13c42e4ac33e46314457adc
 

@@ -73,13 +73,13 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
             // Calibration parameter
             calibrationParameter = 1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
-            setStartDate("2020-02-24")
+            //setStartDate("2020-02-24")
 
             //snapshot
 
-            // episimConfig.setSnapshotInterval(100); // At every 100 days it will create a snapshot
+            // episimConfig.setSnapshotInterval(350); // At every 100 days it will create a snapshot
 
-            // episimConfig.setStartFromSnapshot();  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
+            episimConfig.setStartFromSnapshot("output-snz-dresden/episim-snapshot-350-2021-02-07.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
             // episimConfig.setSnapshotInterval();
 
@@ -173,137 +173,55 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         }
 
 
-        // Vaccination capacity
         val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
-        val vaccinationParams = vaccinationConfig.getParams(VaccinationType.generic).apply {
-            effectiveness = 0.9
-            daysBeforeFullEffect = 28
-        }
-        val vaccinations: MutableMap<LocalDate, Int> = HashMap()
-        val population = 862987 // Berlin: 4_800_000;
 
-        val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv"
-        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14612" && it[3] == "1" }
-
-        var startDate = LocalDate.parse("2020-12-28")
-        var endDate = startDate.plusDays(7)
-        var cumulative = 0
-        for (row in rows) {
-            val date = LocalDate.parse(row[0])
-            if (date.isBefore(endDate))
-                cumulative += row[4].toInt()
-            else {
-                //                println("$startDate, $cumulative")
-                vaccinations[startDate] = cumulative / 7
-                startDate = endDate
-                endDate = startDate.plusDays(7)
-                cumulative = 0
-            }
-        }
-
-
-        //vaccinations.put(LocalDate.parse("2020-01-01"), 0);
-        //        vaccinations[LocalDate.parse("2020-12-28")] = (823 / 7)
-        //        // the following is for Berlin; if we have data we can change it for dresden
-        //        vaccinations[LocalDate.parse("2021-01-04")] = (2310 / 7)
-        //        vaccinations[LocalDate.parse("2021-01-11")] = (4155 / 7)
-        //        vaccinations[LocalDate.parse("2021-01-18")] = (4400 / 7)
-        //        vaccinations[LocalDate.parse("2021-01-25")] = (4567 / 7)
-        //        vaccinations[LocalDate.parse("2021-02-01")] = (6304 / 7)
-        //        vaccinations[LocalDate.parse("2021-02-08")] = (5937 / 7)
-        //        vaccinations[LocalDate.parse("2021-02-15")] = (6780 / 7)
-        //        vaccinations[LocalDate.parse("2021-02-22")] = (9034 / 7)
-        //        vaccinations[LocalDate.parse("2021-03-01")] = (9871 / 7)
-        //        vaccinations[LocalDate.parse("2021-03-08")] = (7900 / 7)
-        //        vaccinations[LocalDate.parse("2021-03-15")] = (7627 / 7)
-        //        vaccinations[LocalDate.parse("2021-03-22")] = (10898 / 7)
-        //        vaccinations[LocalDate.parse("2021-03-29")] = (8464 / 7)
-        //        vaccinations[LocalDate.parse("2021-04-05")] = (17411 / 7)
-        //        vaccinations[LocalDate.parse("2021-04-12")] = (21983 / 7)
-        //        vaccinations[LocalDate.parse("2021-04-19")] = (19564 / 7)
-        //        vaccinations[LocalDate.parse("2021-04-26")] = (25340 / 7)
-        //        vaccinations[LocalDate.parse("2021-05-03")] = (27635 / 7)
-        //        vaccinations[LocalDate.parse("2021-05-10")] = (25711 / 7)
-        //        vaccinations[LocalDate.parse("2021-05-17")] = (27500 / 7)
-        //        vaccinations[LocalDate.parse("2021-05-24")] = (25708 / 7)
-        //        vaccinations[LocalDate.parse("2021-05-31")] = (28428 / 7)
-        //        vaccinations[LocalDate.parse("2021-06-07")] = (28296 / 7)
-        //        vaccinations[LocalDate.parse("2021-06-14")] = (30633 / 7)
-        //        vaccinations[LocalDate.parse("2021-06-21")] = (29838 / 7)
-        //        vaccinations[LocalDate.parse("2021-06-28")] = (28438 / 7)
-        //        vaccinations[LocalDate.parse("2021-07-05")] = (26057 / 7)
-        //        vaccinations[LocalDate.parse("2021-07-12")] = (22527 / 7)
-        //        vaccinations[LocalDate.parse("2021-07-19")] = (20560 / 7)
-        //        vaccinations[LocalDate.parse("2021-07-26")] = (20779 / 7)
-        //        vaccinations[LocalDate.parse("2021-08-02")] = (13450 / 7)
-
-
-        // int population =862987;  // Berlin: 4_800_000;
-        //		vaccinations.put(LocalDate.parse("2020-01-01"), 0);
-        //		vaccinations.put(LocalDate.parse("2020-12-27"), (int) (0.003 * population / 6));
-        //// the following is for Berlin; if we have data we can change it for dresden
-        //		vaccinations.put(LocalDate.parse("2021-01-02"), (int) ((0.007 - 0.004) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-01-09"), (int) ((0.013 - 0.007) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-01-16"), (int) ((0.017 - 0.013) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-01-23"), (int) ((0.024 - 0.017) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-01-30"), (int) ((0.030 - 0.024) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-02-06"), (int) ((0.034 - 0.030) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-02-13"), (int) ((0.039 - 0.034) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-02-20"), (int) ((0.045 - 0.039) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-02-27"), (int) ((0.057 - 0.045) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-03-06"), (int) ((0.071 - 0.057) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-03-13"), (int) ((0.088 - 0.071) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-03-20"), (int) ((0.105 - 0.088) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-03-27"), (int) ((0.120 - 0.105) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-04-03"), (int) ((0.140 - 0.120) * population / 7));
-        //		vaccinations.put(LocalDate.parse("2021-04-10"), (int) ((0.183 - 0.140) * population / 7));
-
+        configureVaccines(vaccinationConfig)
 
         //mutations and vaccinations
         val infPerDayB117: MutableMap<LocalDate, Int> = hashMapOf(
-            LocalDate.parse("2020-01-01") to 0,
-            LocalDate.parse("2020-09-21") to 1) // "2020-09-21")
-        episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)
+                LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-09-21") to 1) // "2020-09-21")
+        episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
-        val vaccineEff = vaccinationParams.effectiveness
-        val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).apply {
-            getOrAddParams(VirusStrain.B117).apply {
-                infectiousness = 1.45 // 1.8
-                vaccineEffectiveness = 1.0
-                factorSeriouslySick = 1.5
-                factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
-            }
-            getOrAddParams(VirusStrain.SARS_CoV_2).factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
-        }
-        val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
-            LocalDate.parse("2020-01-01") to 0,
-            LocalDate.parse("2021-02-07") to 1, // 1 person  //2021-02-01
-            LocalDate.parse("2021-07-01") to 0) // Added
-        episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
-        virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-            infectiousness = 2.3   // 2.5
-            vaccineEffectiveness = 0.8 // we can tweak it
-            reVaccineEffectiveness = 1.0
-            factorSeriouslySick = 1.5
-            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
-        }
-
-        val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
-            LocalDate.parse("2020-01-01") to 0,
-            LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
-        episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
-        virusStrainConfigGroup.getOrAddParams(VirusStrain.DELTA).apply {
-            infectiousness = 2.0   // 2.5
-            vaccineEffectiveness = 0.8 // we can tweak it
-            reVaccineEffectiveness = 1.0
-            factorSeriouslySick = 1.2
-            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
-        }
-
-
-        // Vaccination compliance by age
-        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
+//        val vaccineEff = vaccinationParams.effectiveness
+//        val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).apply {
+//            getOrAddParams(VirusStrain.B117).apply {
+//                infectiousness = 1.45 // 1.8
+//                vaccineEffectiveness = 1.0
+//                factorSeriouslySick = 1.5
+//                factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
+//            }
+//            getOrAddParams(VirusStrain.SARS_CoV_2).factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
+//        }
+//        val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
+//                LocalDate.parse("2020-01-01") to 0,
+//                LocalDate.parse("2021-02-07") to 1) // 1 person  //2021-02-01
+//        //    LocalDate.parse("2021-07-01") to 0) // Added
+//        episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
+//        virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
+//            infectiousness = 2.3   // 2.5
+//            vaccineEffectiveness = 0.8 // we can tweak it
+//            reVaccineEffectiveness = 1.0
+//            factorSeriouslySick = 1.5
+//            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
+//        }
+//
+//        /*val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
+//            LocalDate.parse("2020-01-01") to 0,
+//            LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
+//        episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
+//        virusStrainConfigGroup.getOrAddParams(VirusStrain.DELTA).apply {
+//            infectiousness = 2.0   // 2.5
+//            vaccineEffectiveness = 0.8 // we can tweak it
+//            reVaccineEffectiveness = 1.0
+//            factorSeriouslySick = 1.2
+//            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
+//        }*/
+//
+//
+//        // Vaccination compliance by age
+//        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
 
         // Vaccinate everybody with age above 0
         val vaccinationCompliance: MutableMap<Int, Double> = hashMapOf(0 to 1.0) // Age group wise vaccination?
@@ -347,11 +265,16 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         return config
     }
 
-    fun configureVaccines(vaccinationConfig: VaccinationConfigGroup, population: Int) {
-        val effectivnessMRNA = 0.7
+    fun configureVaccines(vaccinationConfig: VaccinationConfigGroup) {
+        // Vaccination capacity
+
+        // https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv  Information about the share of different types of vaccination // NEED to automate this (Giuseppe)
+
+
+        val effectivnessMRNA = 0.9 // 0.7
         val factorShowingSymptomsMRNA = 0.05 / (1 - effectivnessMRNA) //95% protection against symptoms
         val factorSeriouslySickMRNA = 0.02 / ((1 - effectivnessMRNA) * factorShowingSymptomsMRNA) //98% protection against severe disease
-        val fullEffectMRNA = 7 * 7 //second shot after 6 weeks, full effect one week after second shot
+        val fullEffectMRNA = 28// 7 * 7 //second shot after 6 weeks, full effect one week after second shot
         vaccinationConfig.getOrAddParams(VaccinationType.mRNA).apply {
             daysBeforeFullEffect = fullEffectMRNA
             setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
