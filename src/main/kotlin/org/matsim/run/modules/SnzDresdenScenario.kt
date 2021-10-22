@@ -55,7 +55,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         bind<VaccinationModel>().to<VaccinationByAge>().`in`<Singleton>()
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun config(): Config {
         val config = ConfigUtils.createConfig(EpisimConfigGroup())
         val episimConfig = ConfigUtils.addOrGetModule(config, EpisimConfigGroup::class.java)
@@ -94,10 +95,10 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
             val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2020-03-02") to 1,
-                LocalDate.parse("2020-10-01") to 2,
-                LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
+                    LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
+                    LocalDate.parse("2020-03-02") to 1,
+                    LocalDate.parse("2020-10-01") to 2,
+                    LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
             episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
 
@@ -168,8 +169,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             capacityType = CapacityType.PER_PERSON
             val tracingCapacity = 200
             setTracingCapacity_pers_per_day(mapOf(
-                LocalDate.of(2020, 4, 1) to (tracingCapacity * 0.2).toInt(),
-                LocalDate.of(2020, 6, 15) to tracingCapacity))
+                    LocalDate.of(2020, 4, 1) to (tracingCapacity * 0.2).toInt(),
+                    LocalDate.of(2020, 6, 15) to tracingCapacity))
         }
 
 
@@ -278,29 +279,29 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         vaccinationConfig.getOrAddParams(VaccinationType.mRNA).apply {
             daysBeforeFullEffect = fullEffectMRNA
             setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                 .atDay(1, 0.0)
-                                 .atFullEffect(effectivnessMRNA)
-                                 .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 0.0)
+                    .atFullEffect(effectivnessMRNA)
+                    .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
             setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                 .atDay(1, 0.0)
-                                 .atFullEffect(effectivnessMRNA)
-                                 .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 0.0)
+                    .atFullEffect(effectivnessMRNA)
+                    .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
             setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                         .atDay(1, 1.0)
-                                         .atFullEffect(factorShowingSymptomsMRNA)
-                                         .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorShowingSymptomsMRNA)
+                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
             setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                              .atDay(1, 1.0)
-                                              .atFullEffect(factorShowingSymptomsMRNA)
-                                              .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorShowingSymptomsMRNA)
+                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
             setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                            .atDay(1, 1.0)
-                                            .atFullEffect(factorSeriouslySickMRNA)
-                                            .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorSeriouslySickMRNA)
+                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
             setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                            .atDay(1, 1.0)
-                                            .atFullEffect(factorSeriouslySickMRNA)
-                                            .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorSeriouslySickMRNA)
+                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
         }
         val effectivnessVector = 0.5
         val factorShowingSymptomsVector = 0.25 / (1 - effectivnessVector) //75% protection against symptoms
@@ -309,100 +310,119 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         vaccinationConfig.getOrAddParams(VaccinationType.vector).apply {
             daysBeforeFullEffect = fullEffectVector
             setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                  .atDay(1, 0.0)
-                                  .atFullEffect(effectivnessVector)
-                                  .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 0.0)
+                    .atFullEffect(effectivnessVector)
+                    .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
             setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                  .atDay(1, 0.0)
-                                  .atFullEffect(effectivnessVector)
-                                  .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 0.0)
+                    .atFullEffect(effectivnessVector)
+                    .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
             setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                          .atDay(1, 1.0)
-                                          .atFullEffect(factorShowingSymptomsVector)
-                                          .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorShowingSymptomsVector)
+                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
             setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                          .atDay(1, 1.0)
-                                          .atFullEffect(factorShowingSymptomsVector)
-                                          .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorShowingSymptomsVector)
+                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
             setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                        .atDay(1, 1.0)
-                                        .atFullEffect(factorSeriouslySickVector)
-                                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorSeriouslySickVector)
+                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
             setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                        .atDay(1, 1.0)
-                                        .atFullEffect(factorSeriouslySickVector)
-                                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                    .atDay(1, 1.0)
+                    .atFullEffect(factorSeriouslySickVector)
+                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
         }
 
         // Based on https://experience.arcgis.com/experience/db557289b13c42e4ac33e46314457adc
-        val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = HashMap()
-        share[LocalDate.parse("2020-01-01")] = java.util.Map.of(VaccinationType.mRNA, 1.0, VaccinationType.vector, 0.0)
-        share[LocalDate.parse("2020-12-28")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
-        share[LocalDate.parse("2021-01-04")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
-        share[LocalDate.parse("2021-01-11")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
-        share[LocalDate.parse("2021-01-18")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
-        share[LocalDate.parse("2021-01-25")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
-        share[LocalDate.parse("2021-02-01")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
-        share[LocalDate.parse("2021-02-08")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
-        share[LocalDate.parse("2021-02-15")] = java.util.Map.of(VaccinationType.mRNA, 0.75, VaccinationType.vector, 0.25)
-        share[LocalDate.parse("2021-02-22")] = java.util.Map.of(VaccinationType.mRNA, 0.63, VaccinationType.vector, 0.37)
-        share[LocalDate.parse("2021-03-01")] = java.util.Map.of(VaccinationType.mRNA, 0.52, VaccinationType.vector, 0.48)
-        share[LocalDate.parse("2021-03-08")] = java.util.Map.of(VaccinationType.mRNA, 0.45, VaccinationType.vector, 0.55)
-        share[LocalDate.parse("2021-03-15")] = java.util.Map.of(VaccinationType.mRNA, 0.75, VaccinationType.vector, 0.25)
-        share[LocalDate.parse("2021-03-22")] = java.util.Map.of(VaccinationType.mRNA, 0.55, VaccinationType.vector, 0.45)
-        share[LocalDate.parse("2021-03-29")] = java.util.Map.of(VaccinationType.mRNA, 0.71, VaccinationType.vector, 0.29)
-        share[LocalDate.parse("2021-04-05")] = java.util.Map.of(VaccinationType.mRNA, 0.77, VaccinationType.vector, 0.23)
-        share[LocalDate.parse("2021-04-12")] = java.util.Map.of(VaccinationType.mRNA, 0.76, VaccinationType.vector, 0.24)
-        share[LocalDate.parse("2021-04-19")] = java.util.Map.of(VaccinationType.mRNA, 0.70, VaccinationType.vector, 0.30)
-        share[LocalDate.parse("2021-04-26")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
-        share[LocalDate.parse("2021-05-03")] = java.util.Map.of(VaccinationType.mRNA, 0.78, VaccinationType.vector, 0.22)
-        share[LocalDate.parse("2021-05-10")] = java.util.Map.of(VaccinationType.mRNA, 0.81, VaccinationType.vector, 0.19)
-        share[LocalDate.parse("2021-05-17")] = java.util.Map.of(VaccinationType.mRNA, 0.70, VaccinationType.vector, 0.30)
-        share[LocalDate.parse("2021-05-24")] = java.util.Map.of(VaccinationType.mRNA, 0.67, VaccinationType.vector, 0.33)
-        share[LocalDate.parse("2021-05-31")] = java.util.Map.of(VaccinationType.mRNA, 0.72, VaccinationType.vector, 0.28)
-        share[LocalDate.parse("2021-06-07")] = java.util.Map.of(VaccinationType.mRNA, 0.74, VaccinationType.vector, 0.26)
-        share[LocalDate.parse("2021-06-14")] = java.util.Map.of(VaccinationType.mRNA, 0.79, VaccinationType.vector, 0.21)
-        share[LocalDate.parse("2021-06-21")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
-        share[LocalDate.parse("2021-06-28")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
-        share[LocalDate.parse("2021-07-05")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
-        share[LocalDate.parse("2021-07-12")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
-        share[LocalDate.parse("2021-07-19")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
-        share[LocalDate.parse("2021-07-26")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
-        share[LocalDate.parse("2021-08-02")] = java.util.Map.of(VaccinationType.mRNA, 0.85, VaccinationType.vector, 0.15)
-        share[LocalDate.parse("2021-08-09")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
-        vaccinationConfig.setVaccinationShare(share)
+        val shareOld: MutableMap<LocalDate, Map<VaccinationType, Double>> = HashMap()
+        shareOld[LocalDate.parse("2020-01-01")] = java.util.Map.of(VaccinationType.mRNA, 1.0, VaccinationType.vector, 0.0)
+        shareOld[LocalDate.parse("2020-12-28")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        shareOld[LocalDate.parse("2021-01-04")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        shareOld[LocalDate.parse("2021-01-11")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        shareOld[LocalDate.parse("2021-01-18")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        shareOld[LocalDate.parse("2021-01-25")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        shareOld[LocalDate.parse("2021-02-01")] = java.util.Map.of(VaccinationType.mRNA, 1.00, VaccinationType.vector, 0.00)
+        shareOld[LocalDate.parse("2021-02-08")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        shareOld[LocalDate.parse("2021-02-15")] = java.util.Map.of(VaccinationType.mRNA, 0.75, VaccinationType.vector, 0.25)
+        shareOld[LocalDate.parse("2021-02-22")] = java.util.Map.of(VaccinationType.mRNA, 0.63, VaccinationType.vector, 0.37)
+        shareOld[LocalDate.parse("2021-03-01")] = java.util.Map.of(VaccinationType.mRNA, 0.52, VaccinationType.vector, 0.48)
+        shareOld[LocalDate.parse("2021-03-08")] = java.util.Map.of(VaccinationType.mRNA, 0.45, VaccinationType.vector, 0.55)
+        shareOld[LocalDate.parse("2021-03-15")] = java.util.Map.of(VaccinationType.mRNA, 0.75, VaccinationType.vector, 0.25)
+        shareOld[LocalDate.parse("2021-03-22")] = java.util.Map.of(VaccinationType.mRNA, 0.55, VaccinationType.vector, 0.45)
+        shareOld[LocalDate.parse("2021-03-29")] = java.util.Map.of(VaccinationType.mRNA, 0.71, VaccinationType.vector, 0.29)
+        shareOld[LocalDate.parse("2021-04-05")] = java.util.Map.of(VaccinationType.mRNA, 0.77, VaccinationType.vector, 0.23)
+        shareOld[LocalDate.parse("2021-04-12")] = java.util.Map.of(VaccinationType.mRNA, 0.76, VaccinationType.vector, 0.24)
+        shareOld[LocalDate.parse("2021-04-19")] = java.util.Map.of(VaccinationType.mRNA, 0.70, VaccinationType.vector, 0.30)
+        shareOld[LocalDate.parse("2021-04-26")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
+        shareOld[LocalDate.parse("2021-05-03")] = java.util.Map.of(VaccinationType.mRNA, 0.78, VaccinationType.vector, 0.22)
+        shareOld[LocalDate.parse("2021-05-10")] = java.util.Map.of(VaccinationType.mRNA, 0.81, VaccinationType.vector, 0.19)
+        shareOld[LocalDate.parse("2021-05-17")] = java.util.Map.of(VaccinationType.mRNA, 0.70, VaccinationType.vector, 0.30)
+        shareOld[LocalDate.parse("2021-05-24")] = java.util.Map.of(VaccinationType.mRNA, 0.67, VaccinationType.vector, 0.33)
+        shareOld[LocalDate.parse("2021-05-31")] = java.util.Map.of(VaccinationType.mRNA, 0.72, VaccinationType.vector, 0.28)
+        shareOld[LocalDate.parse("2021-06-07")] = java.util.Map.of(VaccinationType.mRNA, 0.74, VaccinationType.vector, 0.26)
+        shareOld[LocalDate.parse("2021-06-14")] = java.util.Map.of(VaccinationType.mRNA, 0.79, VaccinationType.vector, 0.21)
+        shareOld[LocalDate.parse("2021-06-21")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        shareOld[LocalDate.parse("2021-06-28")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
+        shareOld[LocalDate.parse("2021-07-05")] = java.util.Map.of(VaccinationType.mRNA, 0.91, VaccinationType.vector, 0.09)
+        shareOld[LocalDate.parse("2021-07-12")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        shareOld[LocalDate.parse("2021-07-19")] = java.util.Map.of(VaccinationType.mRNA, 0.87, VaccinationType.vector, 0.13)
+        shareOld[LocalDate.parse("2021-07-26")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
+        shareOld[LocalDate.parse("2021-08-02")] = java.util.Map.of(VaccinationType.mRNA, 0.85, VaccinationType.vector, 0.15)
+        shareOld[LocalDate.parse("2021-08-09")] = java.util.Map.of(VaccinationType.mRNA, 0.86, VaccinationType.vector, 0.14)
+        vaccinationConfig.setVaccinationShare(shareOld)
 
-        val vaccinations: MutableMap<LocalDate, Int> = HashMap()
-
-        val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv"
-        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14612" && it[3] == "1" }
-
-        var startDate = LocalDate.parse("2020-12-28")
-        var endDate = startDate.plusDays(7)
+        val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Bundeslaender_COVID-19-Impfungen.csv"
+        val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = mutableMapOf()
+        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14" }
+        var startDate = LocalDate.parse(rows[0][0])
+        var endDate = LocalDate.MIN//startDate.plusDays(7)
         var cumulative = 0
         for (row in rows) {
             val date = LocalDate.parse(row[0])
             if (date.isBefore(endDate))
                 cumulative += row[4].toInt()
             else {
-                //                println("$startDate, $cumulative")
-                vaccinations[startDate] = cumulative / 7
+                println("$startDate, $cumulative")
+//                vaccinations[startDate] = cumulative / 7
                 startDate = endDate
                 endDate = startDate.plusDays(7)
-                cumulative = 0
+//                cumulative = 0
+//            }
             }
         }
-        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
+
+//        val vaccinations: MutableMap<LocalDate, Int> = HashMap()
+//        val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv"
+//        val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14612" && it[3] == "1" }
+//
+//        var startDate = LocalDate.parse("2020-12-28")
+//        var endDate = startDate.plusDays(7)
+//        var cumulative = 0
+//        for (row in rows) {
+//            val date = LocalDate.parse(row[0])
+//            if (date.isBefore(endDate))
+//                cumulative += row[4].toInt()
+//            else {
+//                //                println("$startDate, $cumulative")
+//                vaccinations[startDate] = cumulative / 7
+//                startDate = endDate
+//                endDate = startDate.plusDays(7)
+//                cumulative = 0
+//            }
+//        }
+//        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
+        }
+
+
+        companion object {
+            /**
+             * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
+             */
+            // public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
+            val INPUT = EpisimUtils.resolveInputPath("dresden")
+        }
+
+        private fun getEpisimConfig(episimConfig: EpisimConfigGroup): EpisimConfigGroup = episimConfig
     }
-
-
-    companion object {
-        /**
-         * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
-         */
-        // public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
-        val INPUT = EpisimUtils.resolveInputPath("dresden")
-    }
-
-    private fun getEpisimConfig(episimConfig: EpisimConfigGroup): EpisimConfigGroup = episimConfig
-}
