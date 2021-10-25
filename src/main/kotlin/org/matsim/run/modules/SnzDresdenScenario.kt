@@ -80,7 +80,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
             // episimConfig.setSnapshotInterval(350); // At every 100 days it will create a snapshot
 
-            episimConfig.setStartFromSnapshot("output-snz-dresden/episim-snapshot-350-2021-02-07.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
+//            episimConfig.setStartFromSnapshot("output-snz-dresden/episim-snapshot-350-2021-02-07.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
             // episimConfig.setSnapshotInterval();
 

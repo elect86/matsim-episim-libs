@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Dresden" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.matsim.run.RunEpisim" />
+    <module name="matsim-episim.main" />
+    <option name="PROGRAM_PARAMETERS" value="--modules SnzDresdenScenario --iterations 10 --config:episim.threads 8" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

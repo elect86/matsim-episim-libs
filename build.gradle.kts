@@ -113,7 +113,7 @@ tasks {
     //    }
 
     register<Dresden>("dresden") {
-        iterations = "400"
+        iterations = "4"
         output = "output-snz-dresden"
     }
 
