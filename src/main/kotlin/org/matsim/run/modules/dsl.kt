@@ -61,12 +61,18 @@ fun main() {
             val type = row[2].vaxType
             week[type] = week.getOrDefault(type, 0.0) + row[4].toDouble()
         } else {
+            val mRna = week.getOrDefault(VaccinationType.mRNA, 0.0)
+            val vector = week.getOrDefault(VaccinationType.vector, 0.0)
+            val total = mRna + vector
+            week[VaccinationType.mRNA] = mRna / total
+            week[VaccinationType.vector] = vector / total
             share[startDate] = week
             week = mutableMapOf()
             startDate = endDate
             endDate = startDate.plusDays(7)
         }
     }
+    println()
 }
 
 val String.vaxType: VaccinationType
