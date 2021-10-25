@@ -45,7 +45,7 @@ object InfectionParamsBuilder {
     lateinit var config: EpisimConfigGroup
 
     inline operator fun String.invoke(vararg mappedNames: String, block: InfectionParams.() -> Unit) =
-            config.getOrAddContainerParams(this, *mappedNames).block()
+        config.getOrAddContainerParams(this, *mappedNames).block()
 }
 
 fun main() {
@@ -53,22 +53,18 @@ fun main() {
     val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = mutableMapOf()
     val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14" && it[3] == "1" }
     var week = mutableMapOf<VaccinationType, Double>()
-    var startDate = LocalDate.parse(rows[0][0])
-    var endDate = LocalDate.MIN//startDate.plusDays(7)
-    var cumulative = 0
+    var startDate = LocalDate.parse(rows.first()[0])
+    var endDate = startDate.plusDays(7)
     for (row in rows) {
-        println(row)
         val date = LocalDate.parse(row[0])
-        if (date.isBefore(startDate.plusDays(7))) {
+        if (date.isBefore(endDate)) {
             val type = row[2].vaxType
             week[type] = week.getOrDefault(type, 0.0) + row[4].toDouble()
         } else {
             share[startDate] = week
-//            println("$startDate, $cumulative")
-////                vaccinations[startDate] = cumulative / 7
-//            startDate = endDate
-//            endDate = startDate.plusDays(7)
-////                cumulative = 0
+            week = mutableMapOf()
+            startDate = endDate
+            endDate = startDate.plusDays(7)
         }
     }
 }
