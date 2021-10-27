@@ -74,7 +74,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
             // Calibration parameter
             calibrationParameter = 1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
-            //setStartDate("2020-02-24")
+            setStartDate("2020-02-24")
 
             //snapshot
 
@@ -184,45 +184,56 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             LocalDate.parse("2020-09-21") to 1) // "2020-09-21")
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
+
+        ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).getOrAddParams(VirusStrain.B117).apply {
+            infectiousness = 1.45 // 1.8
+        }
+
+
+        val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
+                LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
+        episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
+
+
+        ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).getOrAddParams(VirusStrain.DELTA).apply {
+            infectiousness = 2.0 // 1.8
+        }
+
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
         //        val vaccineEff = vaccinationParams.effectiveness
-        //        val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).apply {
-        //            getOrAddParams(VirusStrain.B117).apply {
-        //                infectiousness = 1.45 // 1.8
+
+
         //                vaccineEffectiveness = 1.0
         //                factorSeriouslySick = 1.5
         //                factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
         //            }
         //            getOrAddParams(VirusStrain.SARS_CoV_2).factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
         //        }
-        //        val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
-        //                LocalDate.parse("2020-01-01") to 0,
-        //                LocalDate.parse("2021-02-07") to 1) // 1 person  //2021-02-01
-        //        //    LocalDate.parse("2021-07-01") to 0) // Added
-        //        episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
-        //        virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-        //            infectiousness = 2.3   // 2.5
-        //            vaccineEffectiveness = 0.8 // we can tweak it
-        //            reVaccineEffectiveness = 1.0
-        //            factorSeriouslySick = 1.5
-        //            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
-        //        }
-        //
-        //        /*val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
-        //            LocalDate.parse("2020-01-01") to 0,
-        //            LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
-        //        episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
-        //        virusStrainConfigGroup.getOrAddParams(VirusStrain.DELTA).apply {
-        //            infectiousness = 2.0   // 2.5
-        //            vaccineEffectiveness = 0.8 // we can tweak it
-        //            reVaccineEffectiveness = 1.0
-        //            factorSeriouslySick = 1.2
-        //            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
-        //        }*/
-        //
-        //
-        //        // Vaccination compliance by age
-        //        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
+        /*  val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
+                  LocalDate.parse("2020-01-01") to 0,
+                  LocalDate.parse("2021-02-07") to 1) // 1 person  //2021-02-01
+          //    LocalDate.parse("2021-07-01") to 0) // Added
+         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB) */
+
+//            vaccineEffectiveness = 0.8 // we can tweak it
+//            reVaccineEffectiveness = 1.0
+//            factorSeriouslySick = 1.5
+//            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
+//        }
+//
+
+
+//            vaccineEffectiveness = 0.8 // we can tweak it
+//            reVaccineEffectiveness = 1.0
+
+//            factorSeriouslySick = 1.2
+//            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
+//        }
+//
+//
+//        // Vaccination compliance by age
+//        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
 
         // Vaccinate everybody with age above 0
         val vaccinationCompliance: MutableMap<Int, Double> = hashMapOf(0 to 1.0) // Age group wise vaccination?

@@ -72,7 +72,6 @@ fun main() {
             endDate = startDate.plusDays(7)
         }
     }
-    println()
 }
 
 val String.vaxType: VaccinationType
