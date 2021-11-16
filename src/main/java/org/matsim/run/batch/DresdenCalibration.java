@@ -5,6 +5,7 @@ import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.episim.*;
 import org.matsim.run.RunParallel;
+import org.matsim.run.modules.SnzDresdenScenario;
 import org.matsim.run.modules.SnzDresdenScenario_;
 
 import javax.annotation.Nullable;
@@ -17,7 +18,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 
 	@Override
 	public AbstractModule getBindings(int id, @Nullable Params params) {
-		return new SnzDresdenScenario_();
+		return new SnzDresdenScenario();
 	}
 
 	@Override
@@ -33,7 +34,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 	@Override
 	public Config prepareConfig(int id, Params params) {
 
-		SnzDresdenScenario_ module = new SnzDresdenScenario_();
+		SnzDresdenScenario module = new SnzDresdenScenario();
 
 		Config config = module.config();
 		config.global().setRandomSeed(params.seed);
@@ -64,7 +65,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 				RunParallel.OPTION_SETUP, DresdenCalibration.class.getName(),
 				RunParallel.OPTION_PARAMS, Params.class.getName(),
 				RunParallel.OPTION_TASKS, Integer.toString(1),
-				RunParallel.OPTION_ITERATIONS, Integer.toString(40),
+				RunParallel.OPTION_ITERATIONS, Integer.toString(50),
 				RunParallel.OPTION_METADATA
 		};
 
