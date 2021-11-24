@@ -35,6 +35,8 @@ import org.matsim.episim.model.input.CreateRestrictionsFromCSV;
 import org.matsim.episim.model.listener.HouseholdSusceptibility;
 import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionModel;
 import org.matsim.episim.model.progression.DiseaseStatusTransitionModel;
+import org.matsim.episim.model.vaccination.VaccinationFromData;
+import org.matsim.episim.model.vaccination.VaccinationModel;
 import org.matsim.episim.policy.FixedPolicy;
 import org.matsim.episim.policy.FixedPolicy.ConfigBuilder;
 import org.matsim.episim.policy.Restriction;
@@ -55,7 +57,7 @@ import java.util.function.BiFunction;
  */
 public final class SnzCologneProductionScenario extends SnzProductionScenario {
 
-	public static class Builder extends SnzProductionScenario.Builder<SnzCologneProductionScenario>{
+	public static class Builder extends SnzProductionScenario.Builder<SnzCologneProductionScenario> {
 
 		private double leisureOffset = 0.0;
 		private double scale = 1.0;
@@ -63,6 +65,9 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 		private double leisureNightlyScale = 1.0;
 		private double householdSusc = 1.0;
 
+		public Builder() {
+			this.vaccinationModel = VaccinationFromData.class;
+		}
 
 		@Override
 		public SnzCologneProductionScenario build() {
@@ -93,7 +98,7 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 			this.leisureNightlyScale = leisureNightlyScale;
 			return this;
 		}
-		
+
 		public Builder setHouseholdSusc(double householdSusc) {
 			this.householdSusc = householdSusc;
 			return this;
@@ -183,9 +188,11 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 			}
 		}
 
-		// TODO: bind desired config
-		bind(HouseholdSusceptibility.Config.class).toInstance(HouseholdSusceptibility.newConfig(householdSusc, 5.0));
-		Multibinder.newSetBinder(binder(), SimulationStartListener.class)
+		bind(HouseholdSusceptibility.Config.class).toInstance(
+				HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0)
+		);
+
+		Multibinder.newSetBinder(binder(), SimulationListener.class)
 				.addBinding().to(HouseholdSusceptibility.class);
 
 	}
@@ -198,7 +205,7 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 
 		if (this.sample != 25 && this.sample != 100)
 			throw new RuntimeException("Sample size not calibrated! Currently only 25% is calibrated. Comment this line out to continue.");
-		
+
 		Config config = ConfigUtils.createConfig(new EpisimConfigGroup());
 
 		EpisimConfigGroup episimConfig = ConfigUtils.addOrGetModule(config, EpisimConfigGroup.class);
@@ -243,7 +250,7 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 		//restrictions and masks
 		CreateRestrictionsFromCSV activityParticipation = new CreateRestrictionsFromCSV(episimConfig);
 
-		activityParticipation.setInput(INPUT.resolve("cologneSnzData_daily_until20210917.csv"));
+		activityParticipation.setInput(INPUT.resolve("cologneSnzData_daily_until20211114.csv"));
 
 		activityParticipation.setScale(this.scale);
 		activityParticipation.setLeisureAsNightly(this.leisureNightly);
@@ -274,12 +281,14 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 		builder.restrict(LocalDate.parse("2021-04-10"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
 		builder.restrict(LocalDate.parse("2021-07-05"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
 		builder.restrict(LocalDate.parse("2021-08-17"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+		builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+
 		builder.restrict(LocalDate.parse("2021-10-11"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
 		builder.restrict(LocalDate.parse("2021-10-18"), 1.0, "educ_higher");
 		builder.restrict(LocalDate.parse("2021-10-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
 		builder.restrict(LocalDate.parse("2021-12-24"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
 		builder.restrict(LocalDate.parse("2022-01-08"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
-		
+
 
 		{
 			LocalDate masksCenterDate = LocalDate.of(2020, 4, 27);
@@ -339,6 +348,8 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 			builder.applyToRf("2021-01-29", "2021-02-05", workVacFactor, "work", "business");
 			builder.applyToRf("2021-03-26", "2021-04-09", workVacFactor, "work", "business");
 			builder.applyToRf("2021-07-01", "2021-08-13", workVacFactor, "work", "business");
+			builder.applyToRf("2021-10-08", "2021-10-22", workVacFactor, "work", "business");
+
 
 		}
 
@@ -347,6 +358,14 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 			VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
 			SnzProductionScenario.configureVaccines(vaccinationConfig, 2_352_480);
 
+			if (vaccinationModel.equals(VaccinationFromData.class)) {
+				// Compliance and capacity will come from data
+				vaccinationConfig.setCompliancePerAge(Map.of(0, 1.0));
+
+				vaccinationConfig.setVaccinationCapacity_pers_per_day(Map.of());
+
+				vaccinationConfig.setFromFile(INPUT.resolve("cologneVaccinations.csv").toString());
+			}
 		}
 
 

@@ -13,6 +13,8 @@ import org.matsim.episim.EpisimUtils;
 import org.matsim.episim.TracingConfigGroup;
 import org.matsim.episim.VaccinationConfigGroup;
 import org.matsim.episim.model.*;
+import org.matsim.episim.model.vaccination.VaccinationByAge;
+import org.matsim.episim.model.vaccination.VaccinationModel;
 import org.matsim.episim.policy.FixedPolicy;
 import org.matsim.vehicles.VehicleType;
 
@@ -338,7 +340,6 @@ public abstract class SnzProductionScenario extends AbstractModule {
 
 		Map<LocalDate, Map<VaccinationType, Double>> share = new HashMap<>();
 
-		share.put(LocalDate.parse("2020-01-01"), Map.of(VaccinationType.mRNA, 1d, VaccinationType.vector, 0d));
 		share.put(LocalDate.parse("2020-12-28"), Map.of(VaccinationType.mRNA, 1.00d, VaccinationType.vector, 0.00d));
 		share.put(LocalDate.parse("2021-01-04"), Map.of(VaccinationType.mRNA, 1.00d, VaccinationType.vector, 0.00d));
 		share.put(LocalDate.parse("2021-01-11"), Map.of(VaccinationType.mRNA, 1.00d, VaccinationType.vector, 0.00d));
@@ -363,15 +364,26 @@ public abstract class SnzProductionScenario extends AbstractModule {
 		share.put(LocalDate.parse("2021-05-24"), Map.of(VaccinationType.mRNA, 0.67d, VaccinationType.vector, 0.33d));
 		share.put(LocalDate.parse("2021-05-31"), Map.of(VaccinationType.mRNA, 0.72d, VaccinationType.vector, 0.28d));
 		share.put(LocalDate.parse("2021-06-07"), Map.of(VaccinationType.mRNA, 0.74d, VaccinationType.vector, 0.26d));
-		share.put(LocalDate.parse("2021-06-14"), Map.of(VaccinationType.mRNA, 0.79d, VaccinationType.vector, 0.21d));
+		share.put(LocalDate.parse("2021-06-14"), Map.of(VaccinationType.mRNA, 0.80d, VaccinationType.vector, 0.20d));
 		share.put(LocalDate.parse("2021-06-21"), Map.of(VaccinationType.mRNA, 0.87d, VaccinationType.vector, 0.13d));
 		share.put(LocalDate.parse("2021-06-28"), Map.of(VaccinationType.mRNA, 0.91d, VaccinationType.vector, 0.09d));
 		share.put(LocalDate.parse("2021-07-05"), Map.of(VaccinationType.mRNA, 0.91d, VaccinationType.vector, 0.09d));
 		share.put(LocalDate.parse("2021-07-12"), Map.of(VaccinationType.mRNA, 0.87d, VaccinationType.vector, 0.13d));
 		share.put(LocalDate.parse("2021-07-19"), Map.of(VaccinationType.mRNA, 0.87d, VaccinationType.vector, 0.13d));
 		share.put(LocalDate.parse("2021-07-26"), Map.of(VaccinationType.mRNA, 0.86d, VaccinationType.vector, 0.14d));
-		share.put(LocalDate.parse("2021-08-02"), Map.of(VaccinationType.mRNA, 0.85d, VaccinationType.vector, 0.15d));
-		share.put(LocalDate.parse("2021-08-09"), Map.of(VaccinationType.mRNA, 0.86d, VaccinationType.vector, 0.14d));
+		share.put(LocalDate.parse("2021-08-02"), Map.of(VaccinationType.mRNA, 0.84d, VaccinationType.vector, 0.16d));
+		share.put(LocalDate.parse("2021-08-09"), Map.of(VaccinationType.mRNA, 0.84d, VaccinationType.vector, 0.16d));
+		share.put(LocalDate.parse("2021-08-16"), Map.of(VaccinationType.mRNA, 0.84d, VaccinationType.vector, 0.16d));
+		share.put(LocalDate.parse("2021-08-23"), Map.of(VaccinationType.mRNA, 0.85d, VaccinationType.vector, 0.15d));
+		share.put(LocalDate.parse("2021-08-30"), Map.of(VaccinationType.mRNA, 0.86d, VaccinationType.vector, 0.14d));
+		share.put(LocalDate.parse("2021-09-06"), Map.of(VaccinationType.mRNA, 0.85d, VaccinationType.vector, 0.15d));
+		share.put(LocalDate.parse("2021-09-13"), Map.of(VaccinationType.mRNA, 0.84d, VaccinationType.vector, 0.16d));
+		share.put(LocalDate.parse("2021-09-20"), Map.of(VaccinationType.mRNA, 0.84d, VaccinationType.vector, 0.16d));
+		share.put(LocalDate.parse("2021-09-27"), Map.of(VaccinationType.mRNA, 0.86d, VaccinationType.vector, 0.14d));
+		share.put(LocalDate.parse("2021-10-04"), Map.of(VaccinationType.mRNA, 0.87d, VaccinationType.vector, 0.13d));
+		share.put(LocalDate.parse("2021-10-11"), Map.of(VaccinationType.mRNA, 0.89d, VaccinationType.vector, 0.11d));
+		share.put(LocalDate.parse("2021-10-18"), Map.of(VaccinationType.mRNA, 0.89d, VaccinationType.vector, 0.11d));
+
 
 		vaccinationConfig.setVaccinationShare(share);
 
