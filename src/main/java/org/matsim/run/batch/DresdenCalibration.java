@@ -65,7 +65,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 				RunParallel.OPTION_SETUP, DresdenCalibration.class.getName(),
 				RunParallel.OPTION_PARAMS, Params.class.getName(),
 				RunParallel.OPTION_TASKS, Integer.toString(1),
-				RunParallel.OPTION_ITERATIONS, Integer.toString(500),
+				RunParallel.OPTION_ITERATIONS, Integer.toString(5),
 				RunParallel.OPTION_METADATA
 		};
 
