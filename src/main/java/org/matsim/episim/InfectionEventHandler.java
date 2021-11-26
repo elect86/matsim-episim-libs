@@ -43,6 +43,7 @@ import org.matsim.episim.events.EpisimInfectionEvent;
 import org.matsim.episim.model.*;
 import org.matsim.episim.model.activity.ActivityParticipationModel;
 import org.matsim.episim.model.testing.TestingModel;
+import org.matsim.episim.model.vaccination.VaccinationModel;
 import org.matsim.episim.policy.Restriction;
 import org.matsim.episim.policy.ShutdownPolicy;
 import org.matsim.facilities.ActivityFacility;
@@ -53,7 +54,6 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.lang.invoke.VarHandle;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
@@ -174,6 +174,11 @@ public final class InfectionEventHandler implements Externalizable {
 	 * Most recent infection report for all persons.
 	 */
 	private EpisimReporting.InfectionReport report;
+
+	/**
+	 * Installed simulation listeners.
+	 */
+	private Set<SimulationListener> listener;
 
 	@Inject
 	public InfectionEventHandler(Injector injector, SplittableRandom rnd) {
@@ -504,14 +509,16 @@ public final class InfectionEventHandler implements Externalizable {
 			p.setVaccinable(localRnd.nextDouble() < compliance);
 		});
 
-		Set<SimulationStartListener> listener = (Set<SimulationStartListener>) injector.getInstance(Key.get(Types.setOf(SimulationStartListener.class)));
+		listener = (Set<SimulationListener>) injector.getInstance(Key.get(Types.setOf(SimulationListener.class)));
 
-		for (SimulationStartListener s : listener) {
+		for (SimulationListener s : listener) {
 
 			log.info("Executing simulation start listener {}", s.toString());
 
 			s.init(localRnd, personMap, pseudoFacilityMap, vehicleMap);
 		}
+
+		vaccinationModel.init(localRnd, personMap, pseudoFacilityMap, vehicleMap);
 
 		balanceContainersByLoad(estimatedLoad);
 
@@ -715,11 +722,11 @@ public final class InfectionEventHandler implements Externalizable {
 		reporting.reportCpuTime(iteration, "ProgressionModel", "finished", -1);
 
 		reporting.reportCpuTime(iteration, "VaccinationModel", "start", -1);
-		int available = EpisimUtils.findValidEntry(vaccinationConfig.getVaccinationCapacity(), 0, date);
-		vaccinationModel.handleVaccination(personMap, false, (int) (available * episimConfig.getSampleSize()), date, iteration, now);
+		int available = EpisimUtils.findValidEntry(vaccinationConfig.getVaccinationCapacity(), -1, date);
+		vaccinationModel.handleVaccination(personMap, false, available > 0 ? (int) (available * episimConfig.getSampleSize()) : -1, date, iteration, now);
 
-		available = EpisimUtils.findValidEntry(vaccinationConfig.getReVaccinationCapacity(), 0, date);
-		vaccinationModel.handleVaccination(personMap, true, (int) (available * episimConfig.getSampleSize()), date, iteration, now);
+		available = EpisimUtils.findValidEntry(vaccinationConfig.getReVaccinationCapacity(), -1, date);
+		vaccinationModel.handleVaccination(personMap, true, available > 0 ? (int) (available * episimConfig.getSampleSize()) : -1, date, iteration, now);
 		reporting.reportCpuTime(iteration, "VaccinationModel", "finished", -1);
 
 		this.iteration = iteration;
@@ -767,6 +774,10 @@ public final class InfectionEventHandler implements Externalizable {
 
 		reporting.reportRestrictions(restrictions, iteration, report.date);
 		reporting.reportCpuTime(iteration, "Reporting", "finished", -1);
+
+		for (SimulationListener l : listener) {
+			l.onIterationStart(iteration, date);
+		}
 	}
 
 	public Collection<EpisimPerson> getPersons() {
@@ -893,6 +904,11 @@ public final class InfectionEventHandler implements Externalizable {
 		// report infections in order
 		infections.stream().sorted()
 				.forEach(reporting::reportInfection);
+
+		for (SimulationListener l : listener) {
+			l.onIterationEnd(iteration, episimConfig.getStartDate().plusDays(iteration - 1));
+		}
+
 	}
 
 	/**

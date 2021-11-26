@@ -1,5 +1,8 @@
 package org.matsim.run.batch;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.episim.*;
@@ -8,12 +11,14 @@ import org.matsim.episim.model.FaceMask;
 import org.matsim.episim.model.Transition;
 import org.matsim.episim.model.VaccinationType;
 import org.matsim.episim.model.VirusStrain;
+import org.matsim.episim.model.listener.HouseholdSusceptibility;
 import org.matsim.episim.model.testing.TestType;
 import org.matsim.episim.policy.FixedPolicy;
 import org.matsim.episim.policy.FixedPolicy.ConfigBuilder;
 import org.matsim.episim.policy.Restriction;
 import org.matsim.run.RunParallel;
 import org.matsim.run.modules.SnzCologneProductionScenario;
+import org.matsim.run.modules.SnzProductionScenario;
 
 import javax.annotation.Nullable;
 
@@ -30,21 +35,32 @@ import static org.matsim.episim.model.Transition.to;
 /**
  * Batch for bmbf report
  */
-public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
+public class CologneDistricts implements BatchRun<CologneDistricts.Params> {
 
-	@Override
-	public SnzCologneProductionScenario getBindings(int id, @Nullable Params params) {
-
-		double pHousehold = 0.0;
-		
-//		if (params != null) 
-//			pHousehold = params.pHousehold;
-		
+	public static SnzCologneProductionScenario getModule(Params params) {
 		return new SnzCologneProductionScenario.Builder()
 				.setScale(1.3)
-				.setHouseholdSusc(pHousehold)
 				.setActivityHandling(EpisimConfigGroup.ActivityHandling.startOfDay)
 				.build();
+	}
+
+	@Override
+	public Module getBindings(int id, @Nullable Params params) {
+		return Modules.override(getModule(params)).with(new AbstractModule() {
+			@Override
+			protected void configure() {
+
+				double pHousehold = 0.0;
+				bind(HouseholdSusceptibility.Config.class).toInstance(
+						HouseholdSusceptibility.newConfig()
+								.withSusceptibleHouseholds(pHousehold, 5.0)
+								.withNonVaccinableHouseholds(0.5)
+								.withShape(SnzCologneProductionScenario.INPUT.resolve("CologneDistricts.zip"))
+								.withFeature("STT_NAME", "Altstadt/Nord")
+				);
+
+			}
+		});
 	}
 
 	@Override
@@ -57,7 +73,7 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 
 		LocalDate restrictionDate = LocalDate.parse("2021-11-01");
 
-		SnzCologneProductionScenario module = getBindings(id, params);
+		SnzCologneProductionScenario module = getModule(params);
 
 		Config config = module.config();
 
@@ -70,19 +86,19 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 
 		episimConfig.setCalibrationParameter(1.0e-05);
 
-		episimConfig.setCalibrationParameter(episimConfig.getCalibrationParameter() * 0.83 * 1.4);
+		episimConfig.setCalibrationParameter(episimConfig.getCalibrationParameter() * 0.83 * 1.4 * params.thetaFactor);
 
 //		episimConfig.setStartFromSnapshot("/scratch/projects/bzz0020/episim-input/snapshots-cologne-20210917/" + params.seed + "-270-2020-11-20.zip");
 //		episimConfig.setSnapshotSeed(SnapshotSeed.restore);
 
 		// age susceptibility increases by 28% every 10 years
-//		if (params.ageDep.equals("yes")) {
-//			episimConfig.setCalibrationParameter(episimConfig.getCalibrationParameter() / 3.);
-//			Map<Integer, Double> map = new HashMap<>();
-//			for (int i = 0; i<120; i++) map.put(i, Math.pow(1.02499323, i));
-//			episimConfig.setAgeSusceptibility(map);
-//		}
-		
+		if (params.ageDep.equals("yes")) {
+			episimConfig.setCalibrationParameter(episimConfig.getCalibrationParameter() / 3.5);
+			Map<Integer, Double> map = new HashMap<>();
+			for (int i = 0; i<120; i++) map.put(i, Math.pow(1.02499323, i));
+			episimConfig.setAgeSusceptibility(map);
+		}
+
 		//restrictions
 		ConfigBuilder builder = FixedPolicy.parse(episimConfig.getPolicy()).setHospitalScale(id);
 
@@ -93,19 +109,19 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 		curfewCompliance.put(LocalDate.parse("2021-05-31"), 0.0);
 //		if (params.curfew.equals("yes")) curfewCompliance.put(restrictionDate, 1.0);
 		episimConfig.setCurfewCompliance(curfewCompliance);
-		
+
 //		builder.restrict("2021-10-10", 0.92 * 0.79, "work", "business");
 		builder.restrict("2021-10-24", 0.74, "work", "business");
 
 		//masks
-		if (params.masksEdu.equals("no")) builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, 0.0), "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
+//		if (params.masksEdu.equals("no")) builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, 0.0), "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
 
 		//2G
-		if (!params.leisureUnv.equals("no")) {
-			double fraction = Double.parseDouble(params.leisureUnv);
-			builder.restrict(restrictionDate, Restriction.ofSusceptibleRf(fraction), "leisure");
-		}
-		
+//		if (!params.leisureUnv.equals("no")) {
+//			double fraction = Double.parseDouble(params.leisureUnv);
+//			builder.restrict(restrictionDate, Restriction.ofSusceptibleRf(fraction), "leisure");
+//		}
+
 		episimConfig.setPolicy(builder.build());
 
 		//disease import 2020
@@ -131,7 +147,7 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 		//weather model
 		try {
 			Map<LocalDate, Double> outdoorFractions = EpisimUtils.getOutDoorFractionFromDateAndTemp2(SnzCologneProductionScenario.INPUT.resolve("cologneWeather.csv").toFile(),
-					SnzCologneProductionScenario.INPUT.resolve("weatherDataAvgCologne2000-2020.csv").toFile(), 0.5, 18.5, 25.0, 18.5, params.tmid, 5., 1.0);
+					SnzCologneProductionScenario.INPUT.resolve("weatherDataAvgCologne2000-2020.csv").toFile(), 0.5, 18.5, 25.0, 18.5, 18.5, 5., 1.0);
 			episimConfig.setLeisureOutdoorFraction(outdoorFractions);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -153,25 +169,25 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 
 		Map<LocalDate, Integer> infPerDayMUTB = new HashMap<>();
 		infPerDayMUTB.put(LocalDate.parse("2020-01-01"), 0);
-		
+
 //		if(params.deltaInf == 2.2) infPerDayMUTB.put(LocalDate.parse("2021-04-05"), 1);
 //		else if (params.deltaInf == 2.8) infPerDayMUTB.put(LocalDate.parse("2021-04-19"), 1);
 //		else if (params.deltaInf == 3.4) infPerDayMUTB.put(LocalDate.parse("2021-05-03"), 1);
 //		else throw new RuntimeException();
-		
+
 		infPerDayMUTB.put(LocalDate.parse("2021-05-17"), 1);
-		
+
 		//disease import 2021
 		SnzCologneProductionScenario.interpolateImport(infPerDayMUTB, cologneFactor * params.impFac, LocalDate.parse("2021-07-03").plusDays(0),
 				LocalDate.parse("2021-07-25").plusDays(0), 1, 48);
 		SnzCologneProductionScenario.interpolateImport(infPerDayMUTB, cologneFactor * params.impFac, LocalDate.parse("2021-07-26").plusDays(0),
 				LocalDate.parse("2021-08-17").plusDays(0), 48, 1);
 		infPerDayMUTB.put(LocalDate.parse("2021-08-18"), 1);
-		
+
 //		infPerDayMUTB.put(LocalDate.parse("2021-07-25"), (int) (0.5 * 48 * 2));
 //		infPerDayMUTB.put(LocalDate.parse("2021-08-15"), 1);
 		episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB);
-		
+
 		virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).setInfectiousness(params.deltaInf);
 		virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).setFactorSeriouslySick(2.0);
 
@@ -195,7 +211,7 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 
 
 		vaccinationConfig.setCompliancePerAge(vaccinationCompliance);
-		
+
 		Map<LocalDate, Integer> vaccinations = new HashMap<>();
 
 		vaccinations.put(LocalDate.parse("2020-01-01"), 0);
@@ -220,14 +236,14 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 		vaccinations.put(LocalDate.parse("2021-04-17"), (int) ((0.207 - 0.123) * population / 17));
 
 		vaccinations.put(LocalDate.parse("2021-04-22"), (int) ((0.279 - 0.207) * population / 13));
-		vaccinations.put(LocalDate.parse("2021-05-05"), (int) ((0.404 - 0.279) * params.vacSpeed * population / 23));
-		vaccinations.put(LocalDate.parse("2021-05-28"), (int) ((0.484 - 0.404) * params.vacSpeed * population / 14));
-		vaccinations.put(LocalDate.parse("2021-06-11"), (int) ((0.535 - 0.484) * params.vacSpeed * population / 14));
-		vaccinations.put(LocalDate.parse("2021-06-25"), (int) ((0.583 - 0.535) * params.vacSpeed * population / 19));
-		vaccinations.put(LocalDate.parse("2021-07-14"), (int) ((0.605 - 0.583) * params.vacSpeed * population / 14)); // until 07-28
+		vaccinations.put(LocalDate.parse("2021-05-05"), (int) ((0.404 - 0.279) * population / 23));
+		vaccinations.put(LocalDate.parse("2021-05-28"), (int) ((0.484 - 0.404) * population / 14));
+		vaccinations.put(LocalDate.parse("2021-06-11"), (int) ((0.535 - 0.484) * population / 14));
+		vaccinations.put(LocalDate.parse("2021-06-25"), (int) ((0.583 - 0.535) * population / 19));
+		vaccinations.put(LocalDate.parse("2021-07-14"), (int) ((0.605 - 0.583) * population / 14)); // until 07-28
 
 		vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations);
-		
+
 //		if (!params.vaccine.equals("cur")) {
 //			Map<LocalDate, Map<VaccinationType, Double>> share = new HashMap<>();
 //			if(params.vaccine.equals("mRNA"))
@@ -237,17 +253,17 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 //			vaccinationConfig.setVaccinationShare(share);
 //		}
 
-		
-		adaptVacinationEffectiveness(vaccinationConfig, params.effDeltaMRNA, params.vacInf, params.hosDeltaMRNA);
-		
-		if (!params.booster.equals("no")) configureBooster(vaccinationConfig, params.booster, params.effDeltaMRNA);
-			
+
+		adaptVacinationEffectiveness(vaccinationConfig, params.effDeltaMRNA, params.vacInf, 0.09);
+
+		if (params.boosterEff != 0.0) configureBooster(vaccinationConfig, params.boosterEff, params.boosterSpeed, params.endBooster);
+
 		//testing
 		TestingConfigGroup testingConfigGroup = ConfigUtils.addOrGetModule(config, TestingConfigGroup.class);
-		
-		if (params.testVaccinated.equals("yes")) {
- 			testingConfigGroup.setTestAllPersonsAfter(restrictionDate);
- 		}
+
+//		if (params.testVaccinated.equals("yes")) {
+// 			testingConfigGroup.setTestAllPersonsAfter(restrictionDate);
+// 		}
 
 		TestingConfigGroup.TestingParams rapidTest = testingConfigGroup.getOrAddParams(TestType.RAPID_TEST);
 		TestingConfigGroup.TestingParams pcrTest = testingConfigGroup.getOrAddParams(TestType.PCR);
@@ -356,17 +372,17 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 	}
 
 	private void adaptVacinationEffectiveness(VaccinationConfigGroup vaccinationConfig, double effDeltaMRNA, double vacInf, double hosDeltaMRNA) {
-		
+
 		double effectivnessAlphaMRNA =  1.0 - ((1.0 - 0.86) * 0.6);
 		double factorShowingSymptomsAlphaMRNA = 0.06 / (1 - effectivnessAlphaMRNA);
 		double factorSeriouslySickAlphaMRNA = 0.02 / ((1 - effectivnessAlphaMRNA) * factorShowingSymptomsAlphaMRNA);
-		
+
 		double effectivnessDeltaMRNA = 1.0 - ((1.0 - effDeltaMRNA) * 0.6);
 		double factorShowingSymptomsDeltaMRNA = 0.15 / (1 - effectivnessDeltaMRNA);
 		double factorSeriouslySickDeltaMRNA = hosDeltaMRNA / ((1 - effectivnessDeltaMRNA) * factorShowingSymptomsDeltaMRNA);
 
 		double infectivityMRNA = vacInf;
-		
+
 		int fullEffectMRNA = 7 * 7; //second shot after 6 weeks, full effect one week after second shot
 		vaccinationConfig.getOrAddParams(VaccinationType.mRNA)
 				.setDaysBeforeFullEffect(fullEffectMRNA)
@@ -425,18 +441,18 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 						.atFullEffect(infectivityMRNA)
 				)
 		;
-		
-		
+
+
 		double effectivnessAlphaVector = 1.0 - ((1.0 - 0.52) * 0.6);
 		double factorShowingSymptomsAlphaVector = 0.25 / (1 - effectivnessAlphaVector);
 		double factorSeriouslySickAlphaVector = 0.02 / ((1 - effectivnessAlphaVector) * factorShowingSymptomsAlphaVector);
-		
+
 		double effectivnessDeltaVector = 1.0 - ((1.0 - 0.49) * 0.6);
 		double factorShowingSymptomsDeltaVector = 0.35 / (1 - effectivnessDeltaVector);
 		double factorSeriouslySickDeltaVector = 0.09 / ((1 - effectivnessDeltaVector) * factorShowingSymptomsDeltaVector);
-		
+
 		double infectivityVector = vacInf;
-		
+
 		int fullEffectVector = 10 * 7; //second shot after 9 weeks, full effect one week after second shot
 		vaccinationConfig.getOrAddParams(VaccinationType.vector)
 				.setDaysBeforeFullEffect(fullEffectVector)
@@ -493,16 +509,16 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 				.setInfectivity(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
 						.atDay(1, 1.0)
 						.atFullEffect(infectivityVector)
-				)		
+				)
 		;
-		
+
 		double effectivnessAlphaNatural = 0.96 ;
 		double effectivnessDeltaNatural = 0.9;
 
 		double factorShowingSymptomsNatural = 0.5;
 		double factorSeriouslySickNatural = 0.5;
 		double infectivityNatural = vacInf;
-		
+
 		int fullEffectNatural = 7;
 		vaccinationConfig.getOrAddParams(VaccinationType.natural)
 				.setDaysBeforeFullEffect(fullEffectNatural)
@@ -564,52 +580,52 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 						.atFullEffect(infectivityNatural)
 				)
 		;
-		
-		
+
+
 	}
-	
-	private void configureBooster(VaccinationConfigGroup vaccinationConfig, String booster, double effDeltaMRNA) {
-		
+
+	private void configureBooster(VaccinationConfigGroup vaccinationConfig, double boosterEff, double boosterSpeed, String endBooster) {
+
 		Map<LocalDate, Integer> boosterVaccinations = new HashMap<>();
-		
-		double boosterSpeed = Double.parseDouble(booster.split("-")[1]);
-				
+
 		boosterVaccinations.put(LocalDate.parse("2020-01-01"), 0);
 		boosterVaccinations.put(LocalDate.parse("2021-11-01"), (int) (2_352_480 * boosterSpeed));
-		
+		boosterVaccinations.put(LocalDate.parse(endBooster), 0);
+
 		vaccinationConfig.setReVaccinationCapacity_pers_per_day(boosterVaccinations);
-		
-		double boostEffectiveness;
-		if (booster.endsWith("mRNADelta")) {
-			boostEffectiveness = effDeltaMRNA;
-		}
-		else {
-			boostEffectiveness = Double.parseDouble(booster.split("-")[2]);
-		}
-		boostEffectiveness = 1.0 - ((1.0 - boostEffectiveness) * 0.6);
-						
+
+		double boostEffectiveness = 1.0 - ((1.0 - boosterEff) * 0.6);
+
 		vaccinationConfig.getOrAddParams(VaccinationType.mRNA)
 				.setBoostEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-						.atDay(1, boostEffectiveness)
+						.atDay(1, 0.0)
+						.atDay(7, boostEffectiveness)
 				)
 				.setBoostEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-						.atDay(1, boostEffectiveness)
+						.atDay(1, 0.0)
+						.atDay(7, boostEffectiveness)
 				)
 				.setBoostEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
-						.atDay(1, boostEffectiveness)
-				)	
+						.atDay(1, 0.0)
+						.atDay(7, boostEffectiveness)
+				)
+				.setBoostWaitPeriod(5 * 30 + 6 * 7); //5 months after second shot
 		;
-				
+
 		vaccinationConfig.getOrAddParams(VaccinationType.vector)
 				.setBoostEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-						.atDay(1, boostEffectiveness)
+						.atDay(1, 0.0)
+						.atDay(7, boostEffectiveness)
 				)
 				.setBoostEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-						.atDay(1, boostEffectiveness)
+						.atDay(1, 0.0)
+						.atDay(7, boostEffectiveness)
 				)
 				.setBoostEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
-						.atDay(1, boostEffectiveness)
-				)		
+						.atDay(1, 0.0)
+						.atDay(7, boostEffectiveness)
+				)
+				.setBoostWaitPeriod(5 * 30 + 9 * 7); //5 months after second shot
 		;
 	}
 
@@ -618,81 +634,84 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 		@GenerateSeeds(5)
 		public long seed;
 
-//		@Parameter({0.0, 0.4})
-//		double testRateEdu;
-		
-//		@Parameter({1.0})
-//		double thetaFactor;
-		
-//		@Parameter({0.0, 0.33})
-//		double pHousehold;
-
-//		@Parameter({0.05, 0.4})
-//		double testRateWork;
-
-		@Parameter({0.05, 0.4})
+		@Parameter({0.05})
 		double testRateLeisure;
-		
-		@StringParameter({"no", "yes"})
-		String testVaccinated;
-		
+
+//		@StringParameter({"no", "yes"})
+//		String testVaccinated;
+
+		@Parameter({0.9, 0.95, 1.0})
+		double thetaFactor;
+
 		@Parameter({3.0})
 		double impFac;
-		
-		@Parameter({0.7, 0.78})
+
+		@Parameter({0.7})
 		double effDeltaMRNA;
-		
-		@Parameter({0.09})
-		double hosDeltaMRNA;
-		
+//
+//		@Parameter({0.09})
+//		double hosDeltaMRNA;
+
 //		@Parameter({1.0, 0.75, 0.5})
 //		double effFactor;
-		
+
 //		@StringParameter({"mRNADelta", "mRNA", "all"})
 //		String vacEffDecrType;
-		
-		@Parameter({15.0})
-		double tmid;
-		
-		@Parameter({1.0})
-		double vacSpeed;
-		
-		@Parameter({0.33, 0.5})
+
+//		@Parameter({15.0})
+//		double tmid;
+
+//		@Parameter({1.0})
+//		double vacSpeed;
+
+		@Parameter({0.5})
 		double vacInf;
-		
+
 		@StringParameter({"cur"})
 		String vacCompl;
-		
-		@StringParameter({"yes-0.02-0.9", "yes-0.005-0.9", "yes-0.02-0.97", "yes-0.005-0.97", "yes-0.02-mRNADelta", "yes-0.005-mRNADelta", "no"})
-		String booster;
-		
+
+//		@StringParameter({"yes-0.02-0.9", "yes-0.005-0.9", "yes-0.02-0.97", "yes-0.005-0.97", "yes-0.02-mRNADelta", "yes-0.005-mRNADelta", "no"})
+//		String booster;
+
+		@Parameter({0.0, 0.005, 0.02})
+		double boosterSpeed;
+
+		@Parameter({0.7, 0.9})
+		double boosterEff;
+
+		@StringParameter({"2021-12-01", "2022-01-01", "2022-12-01"})
+		String endBooster;
+
 //		@StringParameter({"2021-04-05", "2021-04-19", "2021-05-03", "2021-05-17" })
 //		String deltaDate;
-		
+
+		@StringParameter({"yes", "no"})
+		String ageDep;
+
 		@Parameter({3.4})
 		double deltaInf;
-		
+
 //		@StringParameter({"cur", "mRNA", "vector"})
 //		@StringParameter({"cur"})
 //		String vaccine;
-		
+
 //		@IntParameter({1})
 //		int recSus;
 
 //		@StringParameter({"no"})
 //		String curfew;
-		
-		@StringParameter({"no", "0.5"})
-		String leisureUnv;
 
-		@StringParameter({"yes"})
-		String masksEdu;
+//		@StringParameter({"no", "0.5"})
+//		String leisureUnv;
+
+//		@StringParameter({"yes"})
+//		String masksEdu;
 
 	}
 
 	public static void main(String[] args) {
 		String[] args2 = {
-				RunParallel.OPTION_SETUP, Bmbf211022Cologne.class.getName(),
+				RunParallel.OPTION_SETUP, CologneDistricts.class.getName(),
 				RunParallel.OPTION_PARAMS, Params.class.getName(),
 				RunParallel.OPTION_TASKS, Integer.toString(1),
 				RunParallel.OPTION_ITERATIONS, Integer.toString(500),
@@ -715,7 +734,7 @@ public class Bmbf211022Cologne implements BatchRun<Bmbf211022Cologne.Params> {
 //		}
 //		else {
 //			transitionRecSus = Transition.logNormalWithMedianAndStd(params.recSus, 10.);
-//		
+//
 //		}
 
 		return builder
