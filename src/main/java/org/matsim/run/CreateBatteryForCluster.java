@@ -79,10 +79,10 @@ public class CreateBatteryForCluster<T> implements Callable<Integer> {
 	private String runVersion;
 
 	// around 10GB per simulation, but better to test and see on
-	@CommandLine.Option(names = "--step-size", description = "Step size of the job array", defaultValue = "20") // RealMemory=257860
+	@CommandLine.Option(names = "--step-size", description = "Step size of the job array", defaultValue = "32") // RealMemory=257860
 	private int stepSize;
 
-	// we need to divide RealMemory by the number of sockets per board, in our case 257860/2 (we set Xms to reserve memory)
+	// we need to divide RealMemory by the number of sockets per board, in our case 257860/2 (we set Xms to reserve memory) // 82GB on upstream
 	@CommandLine.Option(names = "--jvm-opts", description = "Additional options for JVM", defaultValue = "-Xms110G -Xmx110G -XX:+UseParallelGC") // total ram per node / 2 - some guard space
 	private String jvmOpts;
 

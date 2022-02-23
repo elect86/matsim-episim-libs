@@ -22,13 +22,14 @@ public enum VirusStrain {
 	B1351,
 
 	/**
-	 * Delta variant (need to check the arrival time in Germany)
-	 */
-
- DELTA,
-	/**
 	 * unknown mutation
 	 */
-	MUTB;
-;
+	MUTB,
+
+	/**
+	 * VoC B.1.1.529, first reported to WHO from South Africa on 24 November 2021
+	 */
+	OMICRON
+
+
 }
