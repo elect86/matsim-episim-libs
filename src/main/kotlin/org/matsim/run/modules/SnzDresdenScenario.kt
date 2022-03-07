@@ -283,69 +283,103 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
         // https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv  Information about the share of different types of vaccination // NEED to automate this (Giuseppe)
 
+        val vaccines = listOf(
+                Vax(VaccinationType.mRNA, 0.9, 0.05, 0.02, 28), //second shot after 6 weeks, full effect one week after second shot
+                Vax(VaccinationType.vector, 0.5, 0.25, 0.15, 10 * 7), //second shot after 9 weeks, full effect one week after second shot
+                Vax(VaccinationType.subunit, 0.86, 0.05, 0.02, 28))  // Look for the information regarding subunit
+        for (vax in vaccines) {
+            vaccinationConfig.getOrAddParams(vax.type).apply {
+                daysBeforeFullEffect = vax.fullEffect
+                val fullEffect = vax.fullEffect + 5 * 365
+                setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                        .atDay(1, 0.0)
+                        .atFullEffect(vax.effectiveness)
+                        .atDay(fullEffect, 0.0)) //10% reduction every 6 months (source: TC)
+                setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                        .atDay(1, 0.0)
+                        .atFullEffect(vax.effectiveness)
+                        .atDay(fullEffect, 0.0)) //10% reduction every 6 months (source: TC)
+                setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                        .atDay(1, 1.0)
+                        .atFullEffect(vax.factorShowingSymptoms)
+                        .atDay(fullEffect, 1.0)) //10% reduction every 6 months (source: TC)
+                setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                        .atDay(1, 1.0)
+                        .atFullEffect(vax.factorShowingSymptoms)
+                        .atDay(fullEffect, 1.0)) //10% reduction every 6 months (source: TC)
+                setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+                        .atDay(1, 1.0)
+                        .atFullEffect(vax.factorSeriouslySick)
+                        .atDay(fullEffect, 1.0)) //10% reduction every 6 months (source: TC)
+                setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+                        .atDay(1, 1.0)
+                        .atFullEffect(vax.factorSeriouslySick)
+                        .atDay(fullEffect, 1.0)) //10% reduction every 6 months (source: TC)
+            }
+        }
 
-        val effectivnessMRNA = 0.9 // 0.7
-        val factorShowingSymptomsMRNA = 0.05 / (1 - effectivnessMRNA) //95% protection against symptoms
-        val factorSeriouslySickMRNA = 0.02 / ((1 - effectivnessMRNA) * factorShowingSymptomsMRNA) //98% protection against severe disease
-        val fullEffectMRNA = 28 // 7 * 7 //second shot after 6 weeks, full effect one week after second shot
-        vaccinationConfig.getOrAddParams(VaccinationType.mRNA).apply {
-            daysBeforeFullEffect = fullEffectMRNA
-            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                 .atDay(1, 0.0)
-                                 .atFullEffect(effectivnessMRNA)
-                                 .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
-            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                 .atDay(1, 0.0)
-                                 .atFullEffect(effectivnessMRNA)
-                                 .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
-            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                         .atDay(1, 1.0)
-                                         .atFullEffect(factorShowingSymptomsMRNA)
-                                         .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                         .atDay(1, 1.0)
-                                         .atFullEffect(factorShowingSymptomsMRNA)
-                                         .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                       .atDay(1, 1.0)
-                                       .atFullEffect(factorSeriouslySickMRNA)
-                                       .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                       .atDay(1, 1.0)
-                                       .atFullEffect(factorSeriouslySickMRNA)
-                                       .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-        }
-        val effectivnessVector = 0.5
-        val factorShowingSymptomsVector = 0.25 / (1 - effectivnessVector) //75% protection against symptoms
-        val factorSeriouslySickVector = 0.15 / ((1 - effectivnessVector) * factorShowingSymptomsVector) //85% protection against severe disease
-        val fullEffectVector = 10 * 7 //second shot after 9 weeks, full effect one week after second shot
-        vaccinationConfig.getOrAddParams(VaccinationType.vector).apply {
-            daysBeforeFullEffect = fullEffectVector
-            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                 .atDay(1, 0.0)
-                                 .atFullEffect(effectivnessVector)
-                                 .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
-            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                 .atDay(1, 0.0)
-                                 .atFullEffect(effectivnessVector)
-                                 .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
-            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                         .atDay(1, 1.0)
-                                         .atFullEffect(factorShowingSymptomsVector)
-                                         .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                         .atDay(1, 1.0)
-                                         .atFullEffect(factorShowingSymptomsVector)
-                                         .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
-                                       .atDay(1, 1.0)
-                                       .atFullEffect(factorSeriouslySickVector)
-                                       .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
-                                       .atDay(1, 1.0)
-                                       .atFullEffect(factorSeriouslySickVector)
-                                       .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
-        }
+//        val effectivenessMRNA = 0.9 // 0.7
+//        val factorShowingSymptomsMRNA = 0.05 / (1 - effectivenessMRNA) //95% protection against symptoms
+//        val factorSeriouslySickMRNA = 0.02 / ((1 - effectivenessMRNA) * factorShowingSymptomsMRNA) //98% protection against severe disease
+//        val fullEffectMRNA = 28 // 7 * 7 //second shot after 6 weeks, full effect one week after second shot
+//        vaccinationConfig.getOrAddParams(VaccinationType.mRNA).apply {
+//            daysBeforeFullEffect = fullEffectMRNA
+//            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+//                    .atDay(1, 0.0)
+//                    .atFullEffect(effectivenessMRNA)
+//                    .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+//            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+//                    .atDay(1, 0.0)
+//                    .atFullEffect(effectivenessMRNA)
+//                    .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+//            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorShowingSymptomsMRNA)
+//                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorShowingSymptomsMRNA)
+//                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorSeriouslySickMRNA)
+//                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorSeriouslySickMRNA)
+//                    .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//        }
+//        val effectivnessVector = 0.5
+//        val factorShowingSymptomsVector = 0.25 / (1 - effectivnessVector) //75% protection against symptoms
+//        val factorSeriouslySickVector = 0.15 / ((1 - effectivnessVector) * factorShowingSymptomsVector) //85% protection against severe disease
+//        val fullEffectVector = 10 * 7 //second shot after 9 weeks, full effect one week after second shot
+//        vaccinationConfig.getOrAddParams(VaccinationType.vector).apply {
+//            daysBeforeFullEffect = fullEffectVector
+//            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+//                    .atDay(1, 0.0)
+//                    .atFullEffect(effectivnessVector)
+//                    .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+//            setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+//                    .atDay(1, 0.0)
+//                    .atFullEffect(effectivnessVector)
+//                    .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+//            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorShowingSymptomsVector)
+//                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//            setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorShowingSymptomsVector)
+//                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorSeriouslySickVector)
+//                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//            setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.B117)
+//                    .atDay(1, 1.0)
+//                    .atFullEffect(factorSeriouslySickVector)
+//                    .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+//        }
 
         var url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Bundeslaender_COVID-19-Impfungen.csv"
         val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = mutableMapOf()
