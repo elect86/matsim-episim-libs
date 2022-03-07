@@ -82,7 +82,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
             // episimConfig.setSnapshotInterval(350); // At every 100 days it will create a snapshot
 
-//            episimConfig.setStartFromSnapshot("output-snz-dresden/episim-snapshot-350-2021-02-07.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
+            //            episimConfig.setStartFromSnapshot("output-snz-dresden/episim-snapshot-350-2021-02-07.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
             // episimConfig.setSnapshotInterval();
 
@@ -144,15 +144,15 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
                 "educ_primary" { contactIntensity = 11.0; spacesPerFacility = spaces }
                 "educ_secondary" { contactIntensity = 11.0; spacesPerFacility = spaces }
                 "educ_tertiary" { contactIntensity = 11.0; spacesPerFacility = spaces }
-                "educ_higher"{ contactIntensity = 5.5; spacesPerFacility = spaces }
-                "educ_other"{ contactIntensity = 11.0;spacesPerFacility = spaces }
-                "shop_daily"{ contactIntensity = 0.88; spacesPerFacility = spaces }
-                "shop_other"{ contactIntensity = 0.88; spacesPerFacility = spaces }
-                "errands"{ contactIntensity = 1.47; spacesPerFacility = spaces }
+                "educ_higher" { contactIntensity = 5.5; spacesPerFacility = spaces }
+                "educ_other" { contactIntensity = 11.0;spacesPerFacility = spaces }
+                "shop_daily" { contactIntensity = 0.88; spacesPerFacility = spaces }
+                "shop_other" { contactIntensity = 0.88; spacesPerFacility = spaces }
+                "errands" { contactIntensity = 1.47; spacesPerFacility = spaces }
                 "business" { contactIntensity = 1.47; spacesPerFacility = spaces }
-                "visit"{ contactIntensity = 9.24; spacesPerFacility = spaces /* 33/3.57 */ }
+                "visit" { contactIntensity = 9.24; spacesPerFacility = spaces /* 33/3.57 */ }
                 "home" { contactIntensity = 1.0; spacesPerFacility = 1.0 /* 33/33 */ }
-                "quarantine_home"{ contactIntensity = 1.0; spacesPerFacility = 1.0 /* 33/33 */ }
+                "quarantine_home" { contactIntensity = 1.0; spacesPerFacility = 1.0 /* 33/33 */ }
             }
         }
 
@@ -192,15 +192,14 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         }
 
 
-//        val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
-//                LocalDate.parse("2020-01-01") to 0,
-//                LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
-//        episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
-//
-//
-//        ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).getOrAddParams(VirusStrain.DELTA).apply {
-//            infectiousness = 2.0 // 1.8
-//        }
+        val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
+            LocalDate.parse("2020-01-01") to 0,
+            LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
+        episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
+
+
+        ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
+            .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.0 // 1.8
 
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
         //        val vaccineEff = vaccinationParams.effectiveness
@@ -218,24 +217,24 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
           //    LocalDate.parse("2021-07-01") to 0) // Added
          episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB) */
 
-//            vaccineEffectiveness = 0.8 // we can tweak it
-//            reVaccineEffectiveness = 1.0
-//            factorSeriouslySick = 1.5
-//            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
-//        }
-//
+        //            vaccineEffectiveness = 0.8 // we can tweak it
+        //            reVaccineEffectiveness = 1.0
+        //            factorSeriouslySick = 1.5
+        //            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
+        //        }
+        //
 
 
-//            vaccineEffectiveness = 0.8 // we can tweak it
-//            reVaccineEffectiveness = 1.0
+        //            vaccineEffectiveness = 0.8 // we can tweak it
+        //            reVaccineEffectiveness = 1.0
 
-//            factorSeriouslySick = 1.2
-//            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
-//        }
-//
-//
-//        // Vaccination compliance by age
-//        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
+        //            factorSeriouslySick = 1.2
+        //            factorSeriouslySickVaccinated = 0.05 / (1 - 0.8)
+        //        }
+        //
+        //
+        //        // Vaccination compliance by age
+        //        vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
 
         // Vaccinate everybody with age above 0
         val vaccinationCompliance: MutableMap<Int, Double> = hashMapOf(0 to 1.0) // Age group wise vaccination?
@@ -362,9 +361,12 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             } else {
                 val mRna = week.getOrDefault(VaccinationType.mRNA, 0.0)
                 val vector = week.getOrDefault(VaccinationType.vector, 0.0)
-                val total = mRna + vector
+                val subunit = week.getOrDefault(VaccinationType.subunit, 0.0)
+                val total = mRna + vector + subunit
                 week[VaccinationType.mRNA] = mRna / total
                 week[VaccinationType.vector] = vector / total
+                if (subunit != 0.0)
+                    week[VaccinationType.subunit] = subunit / total
                 share[startDate] = week
                 week = mutableMapOf()
                 startDate = endDate

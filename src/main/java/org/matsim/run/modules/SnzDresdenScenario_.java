@@ -53,7 +53,7 @@ public final class SnzDresdenScenario_ extends AbstractModule {
 	/**
 	 * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
 	 */
-	public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
+	public static final Path INPUT = EpisimUtils.resolveInputPath("dresden");
 
 	/**
 	 * Empty constructor is needed for running scenario from command line.

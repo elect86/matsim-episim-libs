@@ -7,6 +7,7 @@ public enum VaccinationType {
 
 	generic,
 	mRNA,
+	subunit,
 	vector,
 
 	/**

@@ -49,34 +49,35 @@ object InfectionParamsBuilder {
 }
 
 fun main() {
-    val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Bundeslaender_COVID-19-Impfungen.csv"
-    val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = mutableMapOf()
-    val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14" && it[3] == "1" }
-    var week = mutableMapOf<VaccinationType, Double>()
-    var startDate = LocalDate.parse(rows.first()[0])
-    var endDate = startDate.plusDays(7)
-    for (row in rows) {
-        val date = LocalDate.parse(row[0])
-        if (date.isBefore(endDate)) {
-            val type = row[2].vaxType
-            week[type] = week.getOrDefault(type, 0.0) + row[4].toDouble()
-        } else {
-            val mRna = week.getOrDefault(VaccinationType.mRNA, 0.0)
-            val vector = week.getOrDefault(VaccinationType.vector, 0.0)
-            val total = mRna + vector
-            week[VaccinationType.mRNA] = mRna / total
-            week[VaccinationType.vector] = vector / total
-            share[startDate] = week
-            week = mutableMapOf()
-            startDate = endDate
-            endDate = startDate.plusDays(7)
-        }
-    }
+//    val url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Bundeslaender_COVID-19-Impfungen.csv"
+//    val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = mutableMapOf()
+//    val rows = csvReader().readAll(URL(url).readText()).filter { it[1] == "14" && it[3] == "1" }
+//    var week = mutableMapOf<VaccinationType, Double>()
+//    var startDate = LocalDate.parse(rows.first()[0])
+//    var endDate = startDate.plusDays(7)
+//    for (row in rows) {
+//        val date = LocalDate.parse(row[0])
+//        if (date.isBefore(endDate)) {
+//            val type = row[2].vaxType
+//            week[type] = week.getOrDefault(type, 0.0) + row[4].toDouble()
+//        } else {
+//            val mRna = week.getOrDefault(VaccinationType.mRNA, 0.0)
+//            val vector = week.getOrDefault(VaccinationType.vector, 0.0)
+//            val total = mRna + vector
+//            week[VaccinationType.mRNA] = mRna / total
+//            week[VaccinationType.vector] = vector / total
+//            share[startDate] = week
+//            week = mutableMapOf()
+//            startDate = endDate
+//            endDate = startDate.plusDays(7)
+//        }
+//    }
 }
 
 val String.vaxType: VaccinationType
     get() = when (this) {
         "Comirnaty", "Moderna" -> VaccinationType.mRNA
         "AstraZeneca", "Janssen" -> VaccinationType.vector
-        else -> error("invalid")
+        "Novavax" -> VaccinationType.subunit
+        else -> error("invalid $this")
     }
