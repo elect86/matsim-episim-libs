@@ -24,6 +24,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.config.groups.VspExperimentalConfigGroup;
 import org.matsim.episim.*;
 import org.matsim.episim.TracingConfigGroup.CapacityType;
 import org.matsim.episim.model.*;
@@ -76,6 +77,9 @@ public final class SnzDresdenScenario_ extends AbstractModule {
     public Config config() {
 
         Config config = ConfigUtils.createConfig(new EpisimConfigGroup());
+
+        // Turn off MATSim related warnings https://github.com/matsim-org/matsim-episim-libs/issues/91
+        config.vspExperimental().setVspDefaultsCheckingLevel(VspExperimentalConfigGroup.VspDefaultsCheckingLevel.ignore);
 
         EpisimConfigGroup episimConfig = ConfigUtils.addOrGetModule(config, EpisimConfigGroup.class);
         episimConfig.setFacilitiesHandling(EpisimConfigGroup.FacilitiesHandling.snz);
@@ -156,6 +160,7 @@ public final class SnzDresdenScenario_ extends AbstractModule {
 
         VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
         vaccinationConfig.getParams(VaccinationType.generic).setEffectiveness(0.9);
+//        vaccinationConfig.getParams(VaccinationType.generic).setEffectiveness(VaccinationConfigGroup.Parameter. 0.9);
         vaccinationConfig.getParams(VaccinationType.generic).setDaysBeforeFullEffect(28);
 
         Map<LocalDate, Integer> vaccinations = new HashMap<>();
