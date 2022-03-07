@@ -97,10 +97,10 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
             val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2020-03-02") to 1,
-                LocalDate.parse("2020-10-01") to 2,
-                LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
+                    LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
+                    LocalDate.parse("2020-03-02") to 1,
+                    LocalDate.parse("2020-10-01") to 2,
+                    LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
             episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
 
@@ -171,8 +171,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             capacityType = CapacityType.PER_PERSON
             val tracingCapacity = 200
             setTracingCapacity_pers_per_day(mapOf(
-                LocalDate.of(2020, 4, 1) to (tracingCapacity * 0.2).toInt(),
-                LocalDate.of(2020, 6, 15) to tracingCapacity))
+                    LocalDate.of(2020, 4, 1) to (tracingCapacity * 0.2).toInt(),
+                    LocalDate.of(2020, 6, 15) to tracingCapacity))
         }
 
 
@@ -182,8 +182,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
         //mutations and vaccinations
         val infPerDayB117: MutableMap<LocalDate, Int> = hashMapOf(
-            LocalDate.parse("2020-01-01") to 0,
-            LocalDate.parse("2020-09-21") to 1) // "2020-09-21")
+                LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-09-21") to 1) // "2020-09-21")
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
 
@@ -193,13 +193,13 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
         val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
-            LocalDate.parse("2020-01-01") to 0,
-            LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
+                LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2021-07-01") to 1) // 1 person  //Need to change the date
         episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
-            .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.0 // 1.8
+                .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.0 // 1.8
 
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
         //        val vaccineEff = vaccinationParams.effectiveness
@@ -243,21 +243,21 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
         // Policy and restrictions
         val restrictions = CreateRestrictionsFromCSV(episimConfig)
-        // restrictions.setInput(INPUT.resolve("DresdenSnzData_daily_until20210531.csv"));
+// restrictions.setInput(INPUT.resolve("DresdenSnzData_daily_until20210531.csv"));
         restrictions.setInput(INPUT.resolve("DresdenSnzData_daily_until20210917.csv"))
 
-        // restrictions.setExtrapolation(EpisimUtils.Extrapolation.linear); // TODO
-        //
+// restrictions.setExtrapolation(EpisimUtils.Extrapolation.linear); // TODO
+//
 
         // Using the same base policy as berlin
         val builder = BasePolicyBuilder(episimConfig)
         builder.activityParticipation = restrictions
         val policy = builder.buildFixed()
 
-        // Set compliance rate of 90% for cloth masks
+// Set compliance rate of 90% for cloth masks
         policy.restrict(LocalDate.parse("2020-04-01"), Restriction.ofMask(FaceMask.CLOTH, 0.9), "pt")
 
-        // Testing rates
+// Testing rates
         ConfigUtils.addOrGetModule(config, TestingConfigGroup::class.java).apply {
             strategy = TestingConfigGroup.Strategy.ACTIVITIES
             val actsList = listOf("leisure", "work", "business", "educ_kiga", "educ_primary", "educ_secondary", "educ_tertiary", "educ_other", "educ_higher")
@@ -272,8 +272,9 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             householdCompliance = 1.0
         }
 
-        //LocalDate testingDate = LocalDate.parse("2021-04-19");
-        episimConfig.setPolicy(FixedPolicy::class.java, policy.build())
+//LocalDate testingDate = LocalDate.parse("2021-04-19");
+        episimConfig.setPolicy(FixedPolicy::
+        class.java, policy.build())
         config.controler().outputDirectory = "output-snz-dresden"
         return config
     }
@@ -282,6 +283,14 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         // Vaccination capacity
 
         // https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv  Information about the share of different types of vaccination // NEED to automate this (Giuseppe)
+        class Vax(val type: VaccinationType,
+                  val effectiveness: Double,
+                  showingSymptoms: Double,
+                  seriouslySick: Double,
+                  val fullEffect: Int) {
+            val factorShowingSymptoms = showingSymptoms / (1 - effectiveness)
+            val factorSeriouslySick = seriouslySick / ((1 - effectiveness) * factorShowingSymptoms)
+        }
 
         val vaccines = listOf(
                 Vax(VaccinationType.mRNA, 0.9, 0.05, 0.02, 28), //second shot after 6 weeks, full effect one week after second shot
