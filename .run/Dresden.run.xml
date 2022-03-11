@@ -2,7 +2,7 @@
   <configuration default="false" name="Dresden" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="org.matsim.run.RunEpisim" />
     <module name="matsim-episim.main" />
-    <option name="PROGRAM_PARAMETERS" value="--modules SnzDresdenScenario --iterations 1 --config:episim.threads 8" />
+    <option name="PROGRAM_PARAMETERS" value="--modules SnzDresdenScenario --iterations 2000 --config:episim.threads 8" />
     <option name="VM_PARAMETERS" value="-Xmx12g " />
     <method v="2">
       <option name="Make" enabled="true" />

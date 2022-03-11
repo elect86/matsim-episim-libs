@@ -103,7 +103,7 @@ tasks {
     //        args = listOf("--modules", "OpenBerlinScenario", "--iterations", "365")
     //    }
     register<Berlin>("berlin") {
-        iterations = "1"
+        iterations = 1
     }
     //    addRule("run") {
     //        println(this)
@@ -113,8 +113,8 @@ tasks {
     //    }
 
     register<Dresden>("dresden") {
-        iterations = "4"
-        output = "output-snz-dresden"
+        iterations = 2
+        output = "output-dresden"
     }
 
     compileKotlin {
@@ -156,11 +156,15 @@ abstract class Scenario(@Internal val scenarioName: String) : JavaExec() {
 
     @get:Input
     @set:Option(option = "iterations", description = "number of days the simulation should run for")
-    var iterations = "10"
+    var iterations = 10
+
+    @get:Input
+    @set:Option(option = "threads", description = "number of threads")
+    var threads = 8
 
     @get:Input
     @set:Option(option = "output", description = "the output folder where the results will be written")
-    var output = "output-berlin"
+    var output = "output"
 
     @Optional
     @get:Input
@@ -177,10 +181,13 @@ abstract class Scenario(@Internal val scenarioName: String) : JavaExec() {
     }
 
     override fun exec() {
-        args = mutableListOf("--modules", scenarioName,
-                             "--iterations", iterations,
-                             "--config:controler.outputDirectory", output)
+        //        println(args)
+        args = listOf("--modules", scenarioName,
+                      "--iterations", iterations.toString(),
+                      "--config:controler.outputDirectory", output,
+                      "--config:episim.threads", threads.toString())
         randomSeed?.let { args = args!! + "--config:global.randomSeed" + it }
+        //        println(args)
         super.exec()
     }
 }

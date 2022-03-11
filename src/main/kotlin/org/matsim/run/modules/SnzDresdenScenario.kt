@@ -24,6 +24,7 @@ import com.google.inject.Provides
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.matsim.core.config.Config
 import org.matsim.core.config.ConfigUtils
+import org.matsim.core.config.groups.VspExperimentalConfigGroup
 import org.matsim.episim.*
 import org.matsim.episim.TracingConfigGroup.CapacityType
 import org.matsim.episim.model.*
@@ -61,6 +62,8 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
     @Singleton
     fun config(): Config {
         val config = ConfigUtils.createConfig(EpisimConfigGroup())
+        // Turn off MATSim related warnings https://github.com/matsim-org/matsim-episim-libs/issues/91
+        config.vspExperimental().vspDefaultsCheckingLevel = VspExperimentalConfigGroup.VspDefaultsCheckingLevel.ignore
         val episimConfig = ConfigUtils.addOrGetModule(config, EpisimConfigGroup::class.java)
         episimConfig {
             facilitiesHandling = EpisimConfigGroup.FacilitiesHandling.snz
