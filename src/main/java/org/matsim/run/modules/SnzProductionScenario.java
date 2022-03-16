@@ -343,6 +343,8 @@ public abstract class SnzProductionScenario extends AbstractModule {
 
 		// Based on https://experience.arcgis.com/experience/db557289b13c42e4ac33e46314457adc
 
+		// https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv  Information about the share of different types of vaccination
+
 		Map<LocalDate, Map<VaccinationType, Double>> share = new HashMap<>();
 
 		share.put(LocalDate.parse("2020-12-28"), Map.of(VaccinationType.mRNA, 1.00d, VaccinationType.vector, 0.00d));
@@ -638,7 +640,7 @@ public abstract class SnzProductionScenario extends AbstractModule {
 			return this;
 		}
 	}
-	
+
 
 	/**
 	 * Adds progression config to the given builder.
