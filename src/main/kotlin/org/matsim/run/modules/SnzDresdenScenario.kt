@@ -212,7 +212,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
-                .getOrAddParams(VirusStrain.OMICRON).infectiousness = 4.0 // 1.8
+                .getOrAddParams(VirusStrain.OMICRON).infectiousness = 3.0 // 1.8
 
 
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
