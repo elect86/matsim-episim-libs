@@ -78,7 +78,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             }
 
             // Calibration parameter
-            calibrationParameter = 1.56E-5 * 0.1 // TODO  //2.5E-5 * 0.8(calibrated)
+            calibrationParameter =1.56E-5 //1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
             setStartDate("2020-02-24")
 
             //snapshot
