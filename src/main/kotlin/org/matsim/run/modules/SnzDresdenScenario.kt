@@ -78,7 +78,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             }
 
             // Calibration parameter
-            calibrationParameter = 1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
+            calibrationParameter =1.56E-5 //1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
             setStartDate("2020-02-24")
 
             //snapshot
@@ -100,9 +100,9 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
             val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                    LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
+                    LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
                     LocalDate.parse("2020-03-02") to 1,
-                    LocalDate.parse("2020-10-01") to 2,
+                    LocalDate.parse("2020-10-01") to 1,
                     LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
             episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
@@ -204,6 +204,17 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
                 .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.0 // 1.8
 
+
+        val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
+                LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2021-12-10") to 1) // 1 person  //Need to change the date
+        episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
+
+
+        ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
+                .getOrAddParams(VirusStrain.OMICRON).infectiousness = 3.0 // 1.8
+
+
         // VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
         //        val vaccineEff = vaccinationParams.effectiveness
 
@@ -276,9 +287,9 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         }
 
 //LocalDate testingDate = LocalDate.parse("2021-04-19");
-        episimConfig.setPolicy(FixedPolicy::
-        class.java, policy.build())
-        config.controler().outputDirectory = "output-snz-dresden"
+//        episimConfig.setPolicy(FixedPolicy::
+//        class.java, policy.build())
+//        config.controler().outputDirectory = "output-snz-dresden"
         return config
     }
 
