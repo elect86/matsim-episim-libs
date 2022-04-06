@@ -53,7 +53,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 		@GenerateSeeds(1)
 		public long seed;
 
-		@Parameter({0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5})
+		@Parameter({0.01, 0.1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5})
 
 		//@Parameter({ 1.0 })
 		double thetaFactor;
