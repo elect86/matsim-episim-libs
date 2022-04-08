@@ -78,7 +78,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             }
 
             // Calibration parameter
-            calibrationParameter =1.56E-5 //1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
+            calibrationParameter =1.56E-5*0.2 //1.56E-5 * 0.8 // TODO  //2.5E-5 * 0.8(calibrated)
             setStartDate("2020-02-24")
 
             //snapshot
@@ -102,7 +102,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
                     LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
                     LocalDate.parse("2020-03-02") to 1,
-                    LocalDate.parse("2020-10-01") to 1,
+                    LocalDate.parse("2020-10-01") to 0,
                     LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
             episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
@@ -191,7 +191,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.45 // 1.8
+            infectiousness = 1.7 // 1.8
         }
 
 
