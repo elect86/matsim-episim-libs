@@ -50,7 +50,7 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 
 	public static final class Params {
 
-		@GenerateSeeds(20)
+		@GenerateSeeds(10)
 		public long seed;
 
 		@Parameter({0.8})

@@ -206,7 +206,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2021-12-10") to 4) // 1 person  //Need to change the date
+                LocalDate.parse("2021-12-10") to 2) // 1 person  //Need to change the date
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
 
