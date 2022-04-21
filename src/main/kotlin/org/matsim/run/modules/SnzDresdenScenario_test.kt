@@ -33,6 +33,7 @@ import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionMo
 import org.matsim.episim.model.progression.DiseaseStatusTransitionModel
 import org.matsim.episim.model.testing.TestType
 import org.matsim.episim.model.vaccination.VaccinationByAge
+import org.matsim.episim.model.vaccination.VaccinationFromData
 import org.matsim.episim.model.vaccination.VaccinationModel
 import org.matsim.episim.policy.Restriction
 import org.matsim.run.modules.SnzBerlinScenario25pct2020.BasePolicyBuilder
@@ -45,17 +46,73 @@ import javax.inject.Singleton
 /**
  * Scenario for Dresden using Senozon data.
  */
-class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abhishek/Desktop/episim-dresden-libs/dresden-data");
-/**
- * Empty constructor is needed for running scenario from command line.
- */
-    : KotlinModule() {
-    override fun configure() {
-        bind<ContactModel>().to<SymmetricContactModel>().`in`<Singleton>()
-        bind<DiseaseStatusTransitionModel>().to<AgeDependentDiseaseStatusTransitionModel>().`in`<Singleton>()
-        bind<InfectionModel>().to<AgeDependentInfectionModelWithSeasonality>().`in`<Singleton>()
-        bind<VaccinationModel>().to<VaccinationByAge>().`in`<Singleton>()
+open class SnzDresdenScenario_test(builder: Builder = Builder()) : SnzProductionScenario() {
+
+    class Builder : SnzProductionScenario.Builder<SnzDresdenScenario_test>() {
+
+        var leisureOffset = 0.0
+        var scale = 1.3
+        var leisureNightly = false
+        var leisureNightlyScale = 1.0
+        var householdSusc = 1.0
+
+        init {
+            vaccinationModel = VaccinationFromData.class
+        }
+
+        override fun build() = SnzDresdenScenario_test(this)
+
+//        @Deprecated
+//        fun createSnzDresdenProductionScenario(): SnzDresdenScenario_test {
+//            return build();
+//        }
+
+//        public Builder setLeisureOffset(double offset) {
+//            this.leisureOffset = offset;
+//            return this;
+//        }
+//
+//        public Builder setScale(double scale) {
+//            this.scale = scale;
+//            return this;
+//        }
+//
+//        public Builder setLeisureNightly(boolean leisureNightly) {
+//            this.leisureNightly = leisureNightly;
+//            return this;
+//        }
+//
+//        public Builder setLeisureNightlyScale(double leisureNightlyScale) {
+//            this.leisureNightlyScale = leisureNightlyScale;
+//            return this;
+//        }
+//
+//        public Builder setHouseholdSusc(double householdSusc) {
+//            this.householdSusc = householdSusc;
+//            return this;
+//        }
     }
+
+    val sample = builder.sample
+    val diseaseImport = builder.diseaseImport
+    val restrictions = builder.restrictions
+    val tracing = builder.tracing
+    val activityHandling = builder.activityHandling
+    val infectionModel = builder.infectionModel
+    val importOffset = builder.importOffset
+    val vaccinationModel = builder.vaccinationModel
+    val vaccinations = builder.vaccinations
+    val weatherModel = builder.weatherModel
+    val imprtFctMult = builder.imprtFctMult
+    val leisureOffset = builder.leisureOffset
+    val scale = builder.scale
+    val leisureNightly = builder.leisureNightly
+    val leisureNightlyScale = builder.leisureNightlyScale
+    val householdSusc = builder.householdSusc
+
+    val importFactorBeforeJune = builder.importFactorBeforeJune
+    val importFactorAfterJune = builder.importFactorAfterJune
+    val locationBasedRestrictions = builder.locationBasedRestrictions
 
     @Provides
     @Singleton
@@ -77,7 +134,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
             }
 
             // Calibration parameter
-            calibrationParameter =1.56E-5*0.2 //
+            calibrationParameter = 1.56E-5 * 0.2 //
             setStartDate("2020-02-24")
 
             //snapshot
@@ -303,9 +360,9 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 // we assumed that the vaccines has same effect for all the strain
         // We can assign different effect corresponding to different strains following COLOGNE scenario
         val vaccines = listOf(
-                Vax(VaccinationType.mRNA, 0.9, 0.05, 0.02, 7*7), //second shot after 6 weeks, full effect one week after second shot
+                Vax(VaccinationType.mRNA, 0.9, 0.05, 0.02, 7 * 7), //second shot after 6 weeks, full effect one week after second shot
                 Vax(VaccinationType.vector, 0.5, 0.25, 0.02, 10 * 7), //second shot after 9 weeks, full effect one week after second shot
-                Vax(VaccinationType.subunit, 0.86, 0.05, 0.02, 7*7))  // Look for the information regarding subunit
+                Vax(VaccinationType.subunit, 0.86, 0.05, 0.02, 7 * 7))  // Look for the information regarding subunit
         for (vax in vaccines) {
             vaccinationConfig.getOrAddParams(vax.type).apply {
                 daysBeforeFullEffect = vax.fullEffect
@@ -346,10 +403,6 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
                         .atDay(1, 1.0)
                         .atFullEffect(vax.factorShowingSymptoms)
                         .atDay(fullEffect, 1.0)) //10% reduction every 6 months (source: TC)
-
-
-
-
 
 
                 setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.SARS_CoV_2)

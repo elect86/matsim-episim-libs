@@ -43,6 +43,8 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 
 		episimConfig.setCalibrationParameter(episimConfig.getCalibrationParameter() * params.thetaFactor);
 
+		episimConfig.setCalibrationParameter(episimConfig.getCalibrationParameter() * params.OMI_inf);
+
 		//episimConfig.setHospitalFactor(); TODO
 
 		return config;
@@ -50,13 +52,14 @@ public class DresdenCalibration implements BatchRun<DresdenCalibration.Params> {
 
 	public static final class Params {
 
-		@GenerateSeeds(10)
+		@GenerateSeeds(1)
 		public long seed;
 
-		@Parameter({0.8})
-
-		//@Parameter({ 1.0 })
+		@Parameter({0.8,0.9})
 		double thetaFactor;
+
+		@Parameter({3, 3.5, 4, 4.5,5,5.5})
+		double OMI_inf;
 
 	}
 
