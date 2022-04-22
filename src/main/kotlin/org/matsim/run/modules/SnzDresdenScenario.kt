@@ -205,7 +205,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
-                .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.1 // 1.8
+                .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.0 // 1.8
 
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
