@@ -197,15 +197,15 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
         val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2021-02-01") to 1,
-                LocalDate.parse("2021-07-01") to 2,
+                LocalDate.parse("2021-02-01") to 5,
+                LocalDate.parse("2021-07-01") to 5,
                 LocalDate.parse("2021-12-01") to 0) // 1 person  //Need to change the date
 
         episimConfig.setInfections_pers_per_day(VirusStrain.DELTA, infPerDayDELTA)
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
-                .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.0 // 1.8
+                .getOrAddParams(VirusStrain.DELTA).infectiousness = 2.2 // 1.8
 
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
