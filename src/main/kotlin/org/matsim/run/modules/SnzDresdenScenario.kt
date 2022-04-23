@@ -99,10 +99,10 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
             val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                    LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
-                    LocalDate.parse("2020-03-02") to 1,
-                    LocalDate.parse("2020-10-01") to 2,
-                    LocalDate.parse("2020-10-15") to 1) // "2020-10-01")
+                    LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
+                    LocalDate.parse("2020-04-02") to 0,
+                    LocalDate.parse("2020-10-01") to 1,
+                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
             episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
 
@@ -196,7 +196,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
         val infPerDayDELTA: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2021-02-07") to 1,
+                LocalDate.parse("2021-02-07") to 10,
                 LocalDate.parse("2021-07-01") to 1,
                 LocalDate.parse("2021-12-01") to 0) // 1 person  //Need to change the date
 
