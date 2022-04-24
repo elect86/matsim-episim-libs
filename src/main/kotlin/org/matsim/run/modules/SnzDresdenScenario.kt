@@ -186,7 +186,6 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         val infPerDayB117: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
                 LocalDate.parse("2020-09-21") to 1,
-                LocalDate.parse("2021-02-07") to 1,
                 LocalDate.parse("2021-07-01") to 0) // "2020-09-21")
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
@@ -229,11 +228,14 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         //            }
         //            getOrAddParams(VirusStrain.SARS_CoV_2).factorSeriouslySickVaccinated = 0.05 / (1 - vaccineEff)
         //        }
-        /*  val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
+         val infPerDayMUTB: MutableMap<LocalDate, Int> = hashMapOf(
                   LocalDate.parse("2020-01-01") to 0,
                   LocalDate.parse("2021-02-07") to 1) // 1 person  //2021-02-01
           //    LocalDate.parse("2021-07-01") to 0) // Added
-         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB) */
+         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
+        ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
+                .getOrAddParams(VirusStrain.MUTB).infectiousness = 2.3 //
+
 
         //            vaccineEffectiveness = 0.8 // we can tweak it
         //            reVaccineEffectiveness = 1.0
