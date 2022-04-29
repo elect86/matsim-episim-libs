@@ -190,7 +190,7 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.7 // 1.8
+            infectiousness = 1.8 // 1.8
         }
 
 
