@@ -185,12 +185,12 @@ class SnzDresdenScenario  // public static final Path INPUT = Path.of("/home/abh
         //mutations and vaccinations
         val infPerDayB117: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2020-08-15") to 1 ) // "2020-09-21")
+                LocalDate.parse("2020-08-1") to 1 ) // "2020-09-21")
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java).getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.8 // 1.8
+            infectiousness = 1.7 // 1.8
         }
 
 
