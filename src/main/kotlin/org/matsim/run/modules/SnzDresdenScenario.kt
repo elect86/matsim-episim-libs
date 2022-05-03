@@ -102,21 +102,19 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             bind(ActivityParticipationModel::class.java).to(model)
         }
 
-        bind(HouseholdSusceptibility.Config::class.java).toInstance(
-                HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0)
-        )
+        bind(HouseholdSusceptibility.Config::class.java).toInstance(HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0))
 
-//         Useless since we are not taking ages into account in vaccine so far
+        //         Useless since we are not taking ages into account in vaccine so far
         bind(VaccinationFromData.Config::class.java).toInstance(
-                VaccinationFromData.newConfig("14612")
-                        .withAgeGroup("12-17", 28255.8)
-                        .withAgeGroup("18-59", 319955.0)
-                        .withAgeGroup("60+", 151722.0)
-//                VaccinationFromData.newConfig("05315")
-//                        .withAgeGroup("12-17", 54587.2)
-//                        .withAgeGroup("18-59", 676995.0)
-//                        .withAgeGroup("60+", 250986.0)
-        )
+            VaccinationFromData.newConfig("14612")
+                .withAgeGroup("12-17", 28255.8)
+                .withAgeGroup("18-59", 319955.0)
+                .withAgeGroup("60+", 151722.0)
+            //                VaccinationFromData.newConfig("05315")
+            //                        .withAgeGroup("12-17", 54587.2)
+            //                        .withAgeGroup("18-59", 676995.0)
+            //                        .withAgeGroup("60+", 250986.0)
+                                                               )
 
         /* Dresden:
             VaccinationFromData.newConfig("14612")
@@ -138,7 +136,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             // Turn off MATSim related warnings https://github.com/matsim-org/matsim-episim-libs/issues/91
             vspExperimental().vspDefaultsCheckingLevel = VspExperimentalConfigGroup.VspDefaultsCheckingLevel.ignore
             global().randomSeed = 7564655870752979346L  //
-//            vehicles().vehiclesFile = INPUT.resolve("de_2020-vehicles.xml").toString()
+            //            vehicles().vehiclesFile = INPUT.resolve("de_2020-vehicles.xml").toString()
             // Input files
             plans().inputFile = INPUT.resolve("dresden_snz_entirePopulation_emptyPlans_withDistricts_100pt_split_noCoord.xml.gz").toString()
         }
@@ -150,16 +148,16 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
                 "dresden_snz_episim_events_so_100pt_split.xml.gz" on DayOfWeek.SUNDAY
             }
 
-            activityHandling = activityHandling
+            activityHandling = this@SnzDresdenScenario.activityHandling
             // Calibration parameter
-//            calibrationParameter = 1.56E-5 * 0.2
+            //            calibrationParameter = 1.56E-5 * 0.2
             setStartDate("2020-02-24")
             facilitiesHandling = EpisimConfigGroup.FacilitiesHandling.snz
             sampleSize = sample / 100.0
             hospitalFactor = 0.5
             // Progression config
             progressionConfig = progressionConfig(Transition.config()).build()
-//            progressionConfig = AbstractSnzScenario2020.baseProgressionConfig(Transition.config()).build()
+            //            progressionConfig = AbstractSnzScenario2020.baseProgressionConfig(Transition.config()).build()
             threads = 8
             daysInfectious = Integer.MAX_VALUE
 
@@ -206,36 +204,36 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             builder.setHospitalScale(this@SnzDresdenScenario.scale)
             policy = builder.build()
 
-//            builder.restrict(LocalDate.parse("2020-03-16"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2020-04-27"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2020-06-29"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2020-08-11"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            //Lueften nach den Sommerferien
-//            builder.restrict(LocalDate.parse("2020-08-11"), Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2020-12-31"), Restriction.ofCiCorrection(1.0), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//
-//            builder.restrict(LocalDate.parse("2020-10-12"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2020-10-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//
-//
-//            builder.restrict(LocalDate.parse("2020-12-23"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-01-11"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-03-29"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-04-10"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-07-05"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-08-17"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-////		builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//
-//            builder.restrict(LocalDate.parse("2021-10-11"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-10-18"), 1.0, "educ_higher");
-//            builder.restrict(LocalDate.parse("2021-10-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-12-24"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2022-01-08"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//
-//            builder.restrict(LocalDate.parse("2022-04-11"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2022-04-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2022-06-27"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2022-08-09"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2020-03-16"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2020-04-27"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2020-06-29"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2020-08-11"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            //Lueften nach den Sommerferien
+            //            builder.restrict(LocalDate.parse("2020-08-11"), Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2020-12-31"), Restriction.ofCiCorrection(1.0), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //
+            //            builder.restrict(LocalDate.parse("2020-10-12"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2020-10-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //
+            //
+            //            builder.restrict(LocalDate.parse("2020-12-23"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-01-11"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-03-29"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-04-10"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-07-05"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-08-17"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            ////		builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //
+            //            builder.restrict(LocalDate.parse("2021-10-11"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-10-18"), 1.0, "educ_higher");
+            //            builder.restrict(LocalDate.parse("2021-10-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-12-24"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2022-01-08"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //
+            //            builder.restrict(LocalDate.parse("2022-04-11"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2022-04-23"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2022-06-27"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2022-08-09"), 1.0, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
 
             val masksCenterDate = LocalDate.of(2020, 4, 27)
             for (i in 0..14) {
@@ -245,21 +243,21 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
                 val surgicalFraction = 1.0 / 3 * 0.9
 
                 builder.restrict(date, Restriction.ofMask(mapOf(
-                        FaceMask.CLOTH to clothFraction * i / 14,
-                        FaceMask.N95 to ffpFraction * i / 14,
-                        FaceMask.SURGICAL to surgicalFraction * i / 14)),
-                        "pt", "shop_daily", "shop_other", "errands")
+                    FaceMask.CLOTH to clothFraction * i / 14,
+                    FaceMask.N95 to ffpFraction * i / 14,
+                    FaceMask.SURGICAL to surgicalFraction * i / 14)),
+                                 "pt", "shop_daily", "shop_other", "errands")
             }
-//            builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofMask(FaceMask.N95, 0.9), "educ_primary", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-11-02"), Restriction.ofMask(FaceMask.N95, 0.0), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other");
-//            builder.restrict(LocalDate.parse("2021-12-02"), Restriction.ofMask(FaceMask.N95, 0.9), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofMask(FaceMask.N95, 0.9), "educ_primary", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-11-02"), Restriction.ofMask(FaceMask.N95, 0.0), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other");
+            //            builder.restrict(LocalDate.parse("2021-12-02"), Restriction.ofMask(FaceMask.N95, 0.9), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other");
 
             //curfew
-//            builder.restrict("2021-04-17", Restriction.ofClosingHours(21, 5), "leisure", "visit");
-//            Map<LocalDate, Double> curfewCompliance = new HashMap<LocalDate, Double>();
-//            curfewCompliance.put(LocalDate.parse("2021-04-17"), 1.0);
-//            curfewCompliance.put(LocalDate.parse("2021-05-31"), 0.0);
-//            episimConfig.setCurfewCompliance(curfewCompliance);
+            //            builder.restrict("2021-04-17", Restriction.ofClosingHours(21, 5), "leisure", "visit");
+            //            Map<LocalDate, Double> curfewCompliance = new HashMap<LocalDate, Double>();
+            //            curfewCompliance.put(LocalDate.parse("2021-04-17"), 1.0);
+            //            curfewCompliance.put(LocalDate.parse("2021-05-31"), 0.0);
+            //            episimConfig.setCurfewCompliance(curfewCompliance);
 
             //tracing
             if (tracing == Tracing.yes)
@@ -276,12 +274,12 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             // setInfections_pers_per_day(mapOf(LocalDate.EPOCH to 1)) // base case import
 
 
-//            val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-//                    LocalDate.parse("2020-02-24") to 5, //    LocalDate.parse("2020-01-01") to 0,
-//                    LocalDate.parse("2020-04-02") to 0,
-//                    LocalDate.parse("2020-10-01") to 1,
-//                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
-//            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+            //            val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+            //                    LocalDate.parse("2020-02-24") to 5, //    LocalDate.parse("2020-01-01") to 0,
+            //                    LocalDate.parse("2020-04-02") to 0,
+            //                    LocalDate.parse("2020-10-01") to 1,
+            //                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
+            //            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
             //inital infections and import
 
@@ -407,13 +405,13 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
                 }
                 vaccinationConfig.setVaccinationCapacity_pers_per_day(vaccinations)
 
-//                // Compliance and capacity will come from data
-//                vaccinationConfig.setCompliancePerAge(Map.of(0, 1.0));
-//
-//                vaccinationConfig.setVaccinationCapacity_pers_per_day(Map.of());
-//                vaccinationConfig.setReVaccinationCapacity_pers_per_day(Map.of());
-//
-//                vaccinationConfig.setFromFile(INPUT.resolve("Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv").toString());
+                //                // Compliance and capacity will come from data
+                //                vaccinationConfig.setCompliancePerAge(Map.of(0, 1.0));
+                //
+                //                vaccinationConfig.setVaccinationCapacity_pers_per_day(Map.of());
+                //                vaccinationConfig.setReVaccinationCapacity_pers_per_day(Map.of());
+                //
+                //                vaccinationConfig.setFromFile(INPUT.resolve("Aktuell_Deutschland_Landkreise_COVID-19-Impfungen.csv").toString());
             }
         }
 
