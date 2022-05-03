@@ -25,7 +25,10 @@ import com.google.inject.multibindings.Multibinder
 import org.matsim.core.config.Config
 import org.matsim.core.config.ConfigUtils
 import org.matsim.core.config.groups.VspExperimentalConfigGroup
-import org.matsim.episim.*
+import org.matsim.episim.EpisimConfigGroup
+import org.matsim.episim.EpisimUtils
+import org.matsim.episim.TestingConfigGroup
+import org.matsim.episim.VaccinationConfigGroup
 import org.matsim.episim.model.*
 import org.matsim.episim.model.activity.ActivityParticipationModel
 import org.matsim.episim.model.activity.DefaultParticipationModel
@@ -41,6 +44,8 @@ import org.matsim.episim.policy.FixedPolicy
 import org.matsim.episim.policy.Restriction
 import org.matsim.episim.policy.ShutdownPolicy
 import org.matsim.run.batch.DresdenCalibration
+import java.io.IOException
+import java.io.UncheckedIOException
 import java.net.URL
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -56,7 +61,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
     class Builder : SnzProductionScenario.Builder<SnzDresdenScenario>() {
 
         var leisureOffset = 0.0
-        var scale = 1.3
+        var scale = 1.0
         var leisureNightly = false
         var leisureNightlyScale = 1.0
         var householdSusc = 1.0
@@ -97,9 +102,18 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         bind(VaccinationModel::class.java).to(vaccinationModel).`in`(Singleton::class.java)
         bind(ShutdownPolicy::class.java).to(FixedPolicy::class.java).`in`(Singleton::class.java)
 
+//        if (activityHandling == EpisimConfigGroup.ActivityHandling.startOfDay) {
+//            val model = if (locationBasedRestrictions == LocationBasedRestrictions.yes) LocationBasedParticipationModel::class.java else DefaultParticipationModel::class.java
+//            bind(ActivityParticipationModel::class.java).to(model)
+//        }
+
+
         if (activityHandling == EpisimConfigGroup.ActivityHandling.startOfDay) {
-            val model = if (locationBasedRestrictions == LocationBasedRestrictions.yes) LocationBasedParticipationModel::class.java else DefaultParticipationModel::class.java
-            bind(ActivityParticipationModel::class.java).to(model)
+            if (locationBasedRestrictions == LocationBasedRestrictions.yes) {
+                bind(ActivityParticipationModel::class.java).to(LocationBasedParticipationModel::class.java)
+            } else {
+                bind(ActivityParticipationModel::class.java).to(DefaultParticipationModel::class.java)
+            }
         }
 
         bind(HouseholdSusceptibility.Config::class.java).toInstance(HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0))
@@ -135,7 +149,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         val config = ConfigUtils.createConfig(EpisimConfigGroup()).apply {
             // Turn off MATSim related warnings https://github.com/matsim-org/matsim-episim-libs/issues/91
             vspExperimental().vspDefaultsCheckingLevel = VspExperimentalConfigGroup.VspDefaultsCheckingLevel.ignore
-            global().randomSeed = 7564655870752979346L  //
+           // global().randomSeed = 7564655870752979346L  //
             //            vehicles().vehiclesFile = INPUT.resolve("de_2020-vehicles.xml").toString()
             // Input files
             plans().inputFile = INPUT.resolve("dresden_snz_entirePopulation_emptyPlans_withDistricts_100pt_split_noCoord.xml.gz").toString()
@@ -194,15 +208,37 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             configureContactIntensities(episimConfig)
 
             // Policy, restrictions and masks
-            val builder: FixedPolicy.ConfigBuilder = CreateRestrictionsFromCSV(episimConfig).run {
-                setInput(INPUT.resolve("DresdenSnzData_daily_until20210917.csv"))
-                setScale(this@SnzDresdenScenario.scale)
-                setLeisureAsNightly(this@SnzDresdenScenario.leisureNightly)
-                setNightlyScale(this@SnzDresdenScenario.leisureNightlyScale)
-                createPolicy()
+//            val builder: FixedPolicy.ConfigBuilder = CreateRestrictionsFromCSV(episimConfig).run {
+//                setInput(INPUT.resolve("DresdenSnzData_daily_until20210917.csv"))
+//                setScale(this@SnzDresdenScenario.scale)
+//                setLeisureAsNightly(this@SnzDresdenScenario.leisureNightly)
+//                setNightlyScale(this@SnzDresdenScenario.leisureNightlyScale)
+//                createPolicy()
+//            }
+//            builder.setHospitalScale(this@SnzDresdenScenario.scale)
+//            policy = builder.build()
+
+
+
+
+            //restrictions and masks
+            val activityParticipation = CreateRestrictionsFromCSV(episimConfig)
+
+            activityParticipation.setInput(SnzCologneProductionScenario.INPUT.resolve("DresdenSnzData_daily_until20210917.csv"))
+
+            activityParticipation.setScale(scale)
+            activityParticipation.setLeisureAsNightly(leisureNightly)
+            activityParticipation.setNightlyScale(leisureNightlyScale)
+
+            val builder: FixedPolicy.ConfigBuilder
+            builder = try {
+                activityParticipation.createPolicy()
+            } catch (e1: IOException) {
+                throw UncheckedIOException(e1)
             }
-            builder.setHospitalScale(this@SnzDresdenScenario.scale)
-            policy = builder.build()
+
+
+
 
             //            builder.restrict(LocalDate.parse("2020-03-16"), 0.2, "educ_primary", "educ_kiga", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other");
             //            builder.restrict(LocalDate.parse("2020-04-27"), 0.5, "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other");
@@ -351,7 +387,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         if (vaccinations == Vaccinations.yes) {
 
             val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
-            configureVaccines(vaccinationConfig, 2_352_480)
+            configureVaccines(vaccinationConfig, 2_352_480)// Check the population
 
             if (vaccinationModel == VaccinationFromData::class.java) {
 
