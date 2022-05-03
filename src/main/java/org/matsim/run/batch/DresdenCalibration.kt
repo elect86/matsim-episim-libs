@@ -72,15 +72,15 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         // TODO
         //builder.setHospitalScale(2.0);
 
-        builder.restrict("2021-04-17", Restriction.ofClosingHours(21, 5), "leisure", "visit")
-        val curfewCompliance = mapOf<LocalDate, Double>(
-                LocalDate("2021-04-17") to 1.0,
-                LocalDate("2021-05-31") to 0.0)
-        episimConfig.setCurfewCompliance(curfewCompliance);
-
-        builder.restrict(LocalDate("2021-10-18"), 1.0, "educ_higher")
-        builder.restrict(LocalDate("2021-12-20"), 0.2, "educ_higher")
-        builder.restrict(LocalDate("2022-01-02"), 1.0, "educ_higher")
+//        builder.restrict("2021-04-17", Restriction.ofClosingHours(21, 5), "leisure", "visit")
+//        val curfewCompliance = mapOf<LocalDate, Double>(
+//                LocalDate("2021-04-17") to 1.0,
+//                LocalDate("2021-05-31") to 0.0)
+//        episimConfig.setCurfewCompliance(curfewCompliance);
+//
+//        builder.restrict(LocalDate("2021-10-18"), 1.0, "educ_higher")
+//        builder.restrict(LocalDate("2021-12-20"), 0.2, "educ_higher")
+//        builder.restrict(LocalDate("2022-01-02"), 1.0, "educ_higher")
 
 //        builder.apply("2020-10-15", "2020-12-14", { d, e ->
 //            e["fraction"] = 1 - params.leisureFactor * (1 - e["fraction"] as Double)
@@ -92,7 +92,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val importFactorBeforeJune = 4.0
         val imprtFctMult = 1.0
         val importOffset = 0L
-        val dresdenFactor = 0.5
+        val dresdenFactor = 1
 
         SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
                 LocalDate("2020-02-24").plusDays(importOffset),
@@ -324,13 +324,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(1)
+        @GenerateSeeds(10)
         var seed = 0L
 
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(0.8, 0.9)
+        @Parameter(0.8)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -339,7 +339,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
 
-        @Parameter(3.0, 3.5, 4.0, 4.5, 5.0, 5.5)
+        @Parameter(3.0)
         var OMI_inf = 0.0
 
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
@@ -348,7 +348,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-12-15")
+        @StringParameter("2020-08-01")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
@@ -360,7 +360,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @Parameter(0.7)
         var deltaVacEffect = 0.0
 
-        @Parameter(0.25, 0.5, 0.75)
+        @Parameter(0.25)
         var summerImportFactor = 0.0
 
 //		@Parameter({0.25})
