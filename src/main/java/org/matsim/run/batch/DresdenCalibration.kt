@@ -119,6 +119,16 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
         val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
 
+
+
+        val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+                LocalDate.parse("2020-02-24") to 5, //    LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-04-02") to 0,
+                LocalDate.parse("2020-10-01") to 1,
+                LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
+        episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+
+
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate(params.alphaDate) to 1)

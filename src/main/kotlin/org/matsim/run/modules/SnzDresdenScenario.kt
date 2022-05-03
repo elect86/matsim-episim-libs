@@ -106,13 +106,17 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
                 HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0)
         )
 
-        // Useless since we are not taking ages into account in vaccine so far
-//        bind(VaccinationFromData.Config::class.java).toInstance(
+//         Useless since we are not taking ages into account in vaccine so far
+        bind(VaccinationFromData.Config::class.java).toInstance(
+                VaccinationFromData.newConfig("14612")
+                        .withAgeGroup("12-17", 28255.8)
+                        .withAgeGroup("18-59", 319955.0)
+                        .withAgeGroup("60+", 151722.0)
 //                VaccinationFromData.newConfig("05315")
 //                        .withAgeGroup("12-17", 54587.2)
 //                        .withAgeGroup("18-59", 676995.0)
 //                        .withAgeGroup("60+", 250986.0)
-//        )
+        )
 
         /* Dresden:
             VaccinationFromData.newConfig("14612")
@@ -272,12 +276,12 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             // setInfections_pers_per_day(mapOf(LocalDate.EPOCH to 1)) // base case import
 
 
-            val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                    LocalDate.parse("2020-02-24") to 5, //    LocalDate.parse("2020-01-01") to 0,
-                    LocalDate.parse("2020-04-02") to 0,
-                    LocalDate.parse("2020-10-01") to 1,
-                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
-            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+//            val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+//                    LocalDate.parse("2020-02-24") to 5, //    LocalDate.parse("2020-01-01") to 0,
+//                    LocalDate.parse("2020-04-02") to 0,
+//                    LocalDate.parse("2020-10-01") to 1,
+//                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
+//            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
             //inital infections and import
 
