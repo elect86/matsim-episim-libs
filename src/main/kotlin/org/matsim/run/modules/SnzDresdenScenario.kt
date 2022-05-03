@@ -25,7 +25,10 @@ import com.google.inject.multibindings.Multibinder
 import org.matsim.core.config.Config
 import org.matsim.core.config.ConfigUtils
 import org.matsim.core.config.groups.VspExperimentalConfigGroup
-import org.matsim.episim.*
+import org.matsim.episim.EpisimConfigGroup
+import org.matsim.episim.EpisimUtils
+import org.matsim.episim.TestingConfigGroup
+import org.matsim.episim.VaccinationConfigGroup
 import org.matsim.episim.model.*
 import org.matsim.episim.model.activity.ActivityParticipationModel
 import org.matsim.episim.model.activity.DefaultParticipationModel
@@ -97,9 +100,18 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         bind(VaccinationModel::class.java).to(vaccinationModel).`in`(Singleton::class.java)
         bind(ShutdownPolicy::class.java).to(FixedPolicy::class.java).`in`(Singleton::class.java)
 
+//        if (activityHandling == EpisimConfigGroup.ActivityHandling.startOfDay) {
+//            val model = if (locationBasedRestrictions == LocationBasedRestrictions.yes) LocationBasedParticipationModel::class.java else DefaultParticipationModel::class.java
+//            bind(ActivityParticipationModel::class.java).to(model)
+//        }
+
+
         if (activityHandling == EpisimConfigGroup.ActivityHandling.startOfDay) {
-            val model = if (locationBasedRestrictions == LocationBasedRestrictions.yes) LocationBasedParticipationModel::class.java else DefaultParticipationModel::class.java
-            bind(ActivityParticipationModel::class.java).to(model)
+            if (locationBasedRestrictions == LocationBasedRestrictions.yes) {
+                bind(ActivityParticipationModel::class.java).to(LocationBasedParticipationModel::class.java)
+            } else {
+                bind(ActivityParticipationModel::class.java).to(DefaultParticipationModel::class.java)
+            }
         }
 
         bind(HouseholdSusceptibility.Config::class.java).toInstance(
