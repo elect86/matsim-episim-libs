@@ -128,7 +128,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             //                        .withAgeGroup("12-17", 54587.2)
             //                        .withAgeGroup("18-59", 676995.0)
             //                        .withAgeGroup("60+", 250986.0)
-                                                               )
+//                                                               )
 
         /* Dresden:
             VaccinationFromData.newConfig("14612")
