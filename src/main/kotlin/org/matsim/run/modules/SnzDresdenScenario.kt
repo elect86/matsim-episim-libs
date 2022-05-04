@@ -119,11 +119,11 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         bind(HouseholdSusceptibility.Config::class.java).toInstance(HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0))
 
         //         Useless since we are not taking ages into account in vaccine so far
-        bind(VaccinationFromData.Config::class.java).toInstance(
-            VaccinationFromData.newConfig("14612")
-                .withAgeGroup("12-17", 28255.8)
-                .withAgeGroup("18-59", 319955.0)
-                .withAgeGroup("60+", 151722.0)
+//        bind(VaccinationFromData.Config::class.java).toInstance(
+//            VaccinationFromData.newConfig("14612")
+//                .withAgeGroup("12-17", 28255.8)
+//                .withAgeGroup("18-59", 319955.0)
+//                .withAgeGroup("60+", 151722.0)
             //                VaccinationFromData.newConfig("05315")
             //                        .withAgeGroup("12-17", 54587.2)
             //                        .withAgeGroup("18-59", 676995.0)
@@ -182,28 +182,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             // Initial infections and import
             initialInfections = Int.MAX_VALUE
 
-            /* TODO if (this.diseaseImport != DiseaseImport.no) {
 
-//			SnzProductionScenario.configureDiseaseImport(episimConfig, diseaseImport, importOffset,
-//					cologneFactor * imprtFctMult, importFactorBeforeJune, importFactorAfterJune);
-                //disease import 2020
-                Map<LocalDate, Integer> importMap = new HashMap<>();
-                double importFactorBeforeJune = 4.0;
-                double imprtFctMult = 1.0;
-                long importOffset = 0;
-
-                interpolateImport(importMap, cologneFactor * imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-02-24").plusDays(importOffset),
-                        LocalDate.parse("2020-03-09").plusDays(importOffset), 0.9, 23.1);
-                interpolateImport(importMap, cologneFactor * imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-09").plusDays(importOffset),
-                        LocalDate.parse("2020-03-23").plusDays(importOffset), 23.1, 3.9);
-                interpolateImport(importMap, cologneFactor * imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-23").plusDays(importOffset),
-                        LocalDate.parse("2020-04-13").plusDays(importOffset), 3.9, 0.1);
-
-                importMap.put(LocalDate.parse("2020-07-19"), (int) (0.5 * 32));
-                importMap.put(LocalDate.parse("2020-08-09"), 1);
-
-                episimConfig.setInfections_pers_per_day(importMap);
-            }*/
 
             configureContactIntensities(episimConfig)
 
@@ -317,34 +296,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             //                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
             //            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
-            //inital infections and import
 
-            /*  val imprtFctMult = 1.0
-              val importFactorBeforeJune = 4.0
-              val importFactorAfterJune = 0.5
-              val importOffset = 0
-              episimConfig.initialInfections = Int.MAX_VALUE
-              //if (this.diseaseImport != DiseaseImport.no) {
-                  episimConfig.initialInfectionDistrict = null
-                  val importMap: Map<LocalDate, Int> = java.util.HashMap()
-                  SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-02-24").plusDays(importOffset.toLong()),
-                          LocalDate.parse("2020-03-09").plusDays(importOffset.toLong()), 0.9, 23.1)
-                  SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-09").plusDays(importOffset.toLong()),
-                          LocalDate.parse("2020-03-23").plusDays(importOffset.toLong()), 23.1, 3.9)
-                  SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorBeforeJune, LocalDate.parse("2020-03-23").plusDays(importOffset.toLong()),
-                          LocalDate.parse("2020-04-13").plusDays(importOffset.toLong()), 3.9, 0.1)
-               //   if (this.diseaseImport == DiseaseImport.yes) {
-                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-06-08").plusDays(importOffset.toLong()),
-                              LocalDate.parse("2020-07-13").plusDays(importOffset.toLong()), 0.1, 2.7)
-                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-07-13").plusDays(importOffset.toLong()),
-                              LocalDate.parse("2020-08-10").plusDays(importOffset.toLong()), 2.7, 17.9)
-                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-08-10").plusDays(importOffset.toLong()),
-                              LocalDate.parse("2020-09-07").plusDays(importOffset.toLong()), 17.9, 6.1)
-                      SnzBerlinProductionScenario.interpolateImport(importMap, imprtFctMult * importFactorAfterJune, LocalDate.parse("2020-10-26").plusDays(importOffset.toLong()),
-                              LocalDate.parse("2020-12-21").plusDays(importOffset.toLong()), 6.1, 1.1)
-               //   }
-                  episimConfig.setInfections_pers_per_day(importMap)*/
-            // }
 
 
             // Contact intensities
