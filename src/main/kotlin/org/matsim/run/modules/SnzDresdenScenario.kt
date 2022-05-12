@@ -35,7 +35,7 @@ import org.matsim.episim.model.listener.HouseholdSusceptibility
 import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionModel
 import org.matsim.episim.model.progression.DiseaseStatusTransitionModel
 import org.matsim.episim.model.testing.TestType
-import org.matsim.episim.model.vaccination.VaccinationFromData
+import org.matsim.episim.model.vaccination.VaccinationFromRkiData
 import org.matsim.episim.model.vaccination.VaccinationModel
 import org.matsim.episim.policy.FixedPolicy
 import org.matsim.episim.policy.Restriction
@@ -62,7 +62,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         var householdSusc = 1.0
 
         init {
-            vaccinationModel = VaccinationFromData::class.java
+            vaccinationModel = VaccinationFromRkiData::class.java
         }
 
         override fun build() = SnzDresdenScenario(this)
@@ -351,7 +351,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
             configureVaccines(vaccinationConfig, 2_352_480)
 
-            if (vaccinationModel == VaccinationFromData::class.java) {
+            if (vaccinationModel == VaccinationFromRkiData::class.java) {
 
                 var url = "https://raw.githubusercontent.com/robert-koch-institut/COVID-19-Impfungen_in_Deutschland/master/Aktuell_Deutschland_Bundeslaender_COVID-19-Impfungen.csv"
                 val share: MutableMap<LocalDate, Map<VaccinationType, Double>> = mutableMapOf()

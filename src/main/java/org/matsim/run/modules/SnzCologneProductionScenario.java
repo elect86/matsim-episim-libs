@@ -35,7 +35,7 @@ import org.matsim.episim.model.input.CreateRestrictionsFromCSV;
 import org.matsim.episim.model.listener.HouseholdSusceptibility;
 import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionModel;
 import org.matsim.episim.model.progression.DiseaseStatusTransitionModel;
-import org.matsim.episim.model.vaccination.VaccinationFromData;
+import org.matsim.episim.model.vaccination.VaccinationFromRkiData;
 import org.matsim.episim.model.vaccination.VaccinationModel;
 import org.matsim.episim.policy.FixedPolicy;
 import org.matsim.episim.policy.FixedPolicy.ConfigBuilder;
@@ -66,7 +66,7 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 		private double householdSusc = 1.0;
 
 		public Builder() {
-			this.vaccinationModel = VaccinationFromData.class;
+			this.vaccinationModel = VaccinationFromRkiData.class;
 		}
 
 		@Override
@@ -192,8 +192,8 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 				HouseholdSusceptibility.newConfig().withSusceptibleHouseholds(householdSusc, 5.0)
 		);
 
-		bind(VaccinationFromData.Config.class).toInstance(
-				VaccinationFromData.newConfig("05315")
+		bind(VaccinationFromRkiData.Config.class).toInstance(
+				VaccinationFromRkiData.newConfig("05315")
 						.withAgeGroup("12-17", 54587.2)
 						.withAgeGroup("18-59", 676995)
 						.withAgeGroup("60+", 250986)
@@ -407,7 +407,7 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 			VaccinationConfigGroup vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup.class);
 			SnzProductionScenario.configureVaccines(vaccinationConfig, 2_352_480);
 
-			if (vaccinationModel.equals(VaccinationFromData.class)) {
+			if (vaccinationModel.equals(VaccinationFromRkiData.class)) {
 				// Compliance and capacity will come from data
 				vaccinationConfig.setCompliancePerAge(Map.of(0, 1.0));
 
