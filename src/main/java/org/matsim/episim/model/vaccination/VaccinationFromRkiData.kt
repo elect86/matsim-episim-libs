@@ -177,7 +177,7 @@ class VaccinationFromRkiData @Inject constructor(rnd: SplittableRandom?, vaccina
     /**
      * Holds config options for this class.
      */
-    class Config(val district: District) {
+    class Config @Inject constructor(val district: District) {
         val groups: Object2DoubleMap<String> = Object2DoubleLinkedOpenHashMap()
 
         /**
