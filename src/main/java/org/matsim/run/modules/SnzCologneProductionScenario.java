@@ -35,6 +35,7 @@ import org.matsim.episim.model.input.CreateRestrictionsFromCSV;
 import org.matsim.episim.model.listener.HouseholdSusceptibility;
 import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionModel;
 import org.matsim.episim.model.progression.DiseaseStatusTransitionModel;
+import org.matsim.episim.model.vaccination.District;
 import org.matsim.episim.model.vaccination.VaccinationFromRkiData;
 import org.matsim.episim.model.vaccination.VaccinationModel;
 import org.matsim.episim.policy.FixedPolicy;
@@ -193,7 +194,7 @@ public final class SnzCologneProductionScenario extends SnzProductionScenario {
 		);
 
 		bind(VaccinationFromRkiData.Config.class).toInstance(
-				VaccinationFromRkiData.newConfig("05315")
+				VaccinationFromRkiData.newConfig(District.Köln)
 						.withAgeGroup("12-17", 54587.2)
 						.withAgeGroup("18-59", 676995)
 						.withAgeGroup("60+", 250986)
