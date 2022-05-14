@@ -140,7 +140,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
                 "dresden_snz_episim_events_so_100pt_split.xml.gz" on DayOfWeek.SUNDAY
             }
 
-            activityHandling = activityHandling
+            activityHandling = this@SnzDresdenScenario.activityHandling
             // Calibration parameter
 //            calibrationParameter = 1.56E-5 * 0.2
             setStartDate("2020-02-24")
