@@ -35,6 +35,7 @@ import org.matsim.episim.model.listener.HouseholdSusceptibility
 import org.matsim.episim.model.progression.AgeDependentDiseaseStatusTransitionModel
 import org.matsim.episim.model.progression.DiseaseStatusTransitionModel
 import org.matsim.episim.model.testing.TestType
+import org.matsim.episim.model.vaccination.District
 import org.matsim.episim.model.vaccination.VaccinationFromRkiData
 import org.matsim.episim.model.vaccination.VaccinationModel
 import org.matsim.episim.policy.FixedPolicy
@@ -107,19 +108,12 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         )
 
         // Useless since we are not taking ages into account in vaccine so far
-//        bind(VaccinationFromData.Config::class.java).toInstance(
-//                VaccinationFromData.newConfig("05315")
-//                        .withAgeGroup("12-17", 54587.2)
-//                        .withAgeGroup("18-59", 676995.0)
-//                        .withAgeGroup("60+", 250986.0)
-//        )
-
-        /* Dresden:
-            VaccinationFromData.newConfig("14612")
+        bind(VaccinationFromRkiData.Config::class.java).toInstance(
+                VaccinationFromRkiData.newConfig(District.Dresden)
                     .withAgeGroup("12-17", 28255.8)
-                    .withAgeGroup("18-59", 319955)
-                    .withAgeGroup("60+", 151722)
-         */
+                    .withAgeGroup("18-59", 319955.0)
+                    .withAgeGroup("60+", 151722.0)
+        )
 
         Multibinder.newSetBinder(binder(), SimulationListener::class.java).addBinding().to(HouseholdSusceptibility::class.java)
     }

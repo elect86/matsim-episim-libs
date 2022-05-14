@@ -174,6 +174,23 @@ class VaccinationFromRkiData @Inject constructor(rnd: SplittableRandom?, vaccina
         override fun toString() = "AgeGroup{from=$from, to=$to, size=$size}"
     }
 
+    /**
+     * Holds config options for this class.
+     */
+    class Config(val district: District) {
+        val groups: Object2DoubleMap<String> = Object2DoubleLinkedOpenHashMap()
+
+        /**
+         * Define an age group and reference size in the population.
+         * @param ageGroup string that must be exactly like in the data
+         * @param referenceSize unscaled reference size of this age group.
+         */
+        fun withAgeGroup(ageGroup: String, referenceSize: Double): Config {
+            groups[ageGroup] = referenceSize
+            return this
+        }
+    }
+
     companion object {
         private val log = LogManager.getLogger(VaccinationFromRkiData::class.java)
         fun filterData(table: Table, ageGroup: String, population: Double): Table {
@@ -217,23 +234,6 @@ class VaccinationFromRkiData @Inject constructor(rnd: SplittableRandom?, vaccina
         /**
          * Create a new configuration, that needs to be bound with guice.
          */
-        @JvmStatic fun newConfig(locationId: String) = Config(District.values().first { it.region == locationId })
-    }
-}
-
-/**
- * Holds config options for this class.
- */
-class Config @Inject constructor(val district: District) {
-    val groups: Object2DoubleMap<String> = Object2DoubleLinkedOpenHashMap()
-
-    /**
-     * Define an age group and reference size in the population.
-     * @param ageGroup string that must be exactly like in the data
-     * @param referenceSize unscaled reference size of this age group.
-     */
-    fun withAgeGroup(ageGroup: String, referenceSize: Double): Config {
-        groups[ageGroup] = referenceSize
-        return this
+        @JvmStatic fun newConfig(district: District) = Config(district)
     }
 }
