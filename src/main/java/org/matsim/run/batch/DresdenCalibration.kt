@@ -217,6 +217,25 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atFullEffect(factorSeriouslySickVector)
                         .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
+
+        vaccinationConfig.getOrAddParams(VaccinationType.subunit)
+                .setDaysBeforeFullEffect(fullEffectVector)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectVector - 7, effectivnessVector / 2.0)
+                        .atFullEffect(effectivnessVector)
+                        .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorShowingSymptomsVector) / 2.0))
+                        .atFullEffect(factorShowingSymptomsVector)
+                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorSeriouslySickVector) / 2.0))
+                        .atFullEffect(factorSeriouslySickVector)
+                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+
 //        val vaccinationCompliance = hashMapOf<Integer, Double>()
 //        for (i in 0 until 12) vaccinationCompliance.put(i, 0.0);
 //        for (int i = 12; i < 18; i++) vaccinationCompliance.put(i, 0.7);
@@ -330,7 +349,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(0.8, 0.9)
+        @Parameter(0.8)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -339,7 +358,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
 
-        @Parameter(3.0, 3.5, 4.0, 4.5, 5.0, 5.5)
+        @Parameter(3.0)
         var OMI_inf = 0.0
 
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
@@ -360,7 +379,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @Parameter(0.7)
         var deltaVacEffect = 0.0
 
-        @Parameter(0.25, 0.5, 0.75)
+        @Parameter(0.25)
         var summerImportFactor = 0.0
 
 //		@Parameter({0.25})
