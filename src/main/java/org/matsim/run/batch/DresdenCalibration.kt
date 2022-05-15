@@ -349,7 +349,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(0.08,0.8)
+        @Parameter(0.1,0.2,0.3,0.4)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -358,7 +358,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
 
-        @Parameter(2.0,3.0)
+        @Parameter(3.0)
         var OMI_inf = 0.0
 
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
