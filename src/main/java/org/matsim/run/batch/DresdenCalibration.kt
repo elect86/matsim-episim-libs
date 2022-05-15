@@ -89,7 +89,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.policy = builder.build()
 
         val importMap = HashMap<LocalDate, Int>()
-        val importFactorBeforeJune = 4.0
+        val importFactorBeforeJune = 0.0
         val imprtFctMult = 1.0
         val importOffset = 0L
         val dresdenFactor = 0.5
@@ -133,7 +133,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-05-01") to 1)
 
-        val importFactor = 4.0
+        val importFactor = 0.0
         SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
                 LocalDate("2021-06-21").plusDays(0), 1.0, 0.5 * importFactor * 1.6)
         SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-21").plusDays(0),
@@ -349,7 +349,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(0.8)
+        @Parameter(0.08,0.8)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -358,7 +358,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
 
-        @Parameter(3.0)
+        @Parameter(2.0,3.0)
         var OMI_inf = 0.0
 
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
