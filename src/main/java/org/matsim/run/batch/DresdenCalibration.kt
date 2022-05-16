@@ -354,13 +354,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(1)
+        @GenerateSeeds(2)
         var seed = 0L
 
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(1.1,1.2,1.3)
+        @Parameter(1.2)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -374,7 +374,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.4,1.5,1.6,1.7,1.8,1.9,2.0)
+        @Parameter(1.4,1.45,1.5)
         var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
@@ -382,7 +382,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-09-21", "2020-09-28", "2020-10-05")
+        @StringParameter("2020-09-14","2020-09-21", "2020-09-28")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
