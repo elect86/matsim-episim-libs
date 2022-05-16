@@ -63,7 +63,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             progressionConfig = progressionConfig(params, Transition.config()).build()
             daysInfectious = Integer.MAX_VALUE
 //            calibrationParameter *= 0.83 * params.thetaFactor
-            calibrationParameter = 1.56E-5 * 0.2 * params.thetaFactor
+            calibrationParameter = 1.56E-5 * 0.2 *0.2* params.thetaFactor
         }
 
         //restrictions
@@ -349,7 +349,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(0.1,0.2,0.3,0.4)
+        @Parameter(1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
