@@ -87,27 +87,27 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        }, "leisure")
 
         episimConfig.policy = builder.build()
-
-        val importMap = HashMap<LocalDate, Int>()
-        val importFactorBeforeJune = 0.0
-        val imprtFctMult = 1.0
-        val importOffset = 0L
-        val dresdenFactor = 0.5
-
-        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-                LocalDate("2020-02-24").plusDays(importOffset),
-                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
-        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-                LocalDate("2020-03-09").plusDays(importOffset),
-                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
-        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-                LocalDate("2020-03-23").plusDays(importOffset),
-                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
-
-        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
-        importMap[LocalDate("2020-08-09")] = 1
-
-        episimConfig.setInfections_pers_per_day(importMap)
+//
+//        val importMap = HashMap<LocalDate, Int>()
+//        val importFactorBeforeJune = 0.0
+//        val imprtFctMult = 1.0
+//        val importOffset = 0L
+//        val dresdenFactor = 0.5
+//
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-02-24").plusDays(importOffset),
+//                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-03-09").plusDays(importOffset),
+//                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-03-23").plusDays(importOffset),
+//                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
+//
+//        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
+//        importMap[LocalDate("2020-08-09")] = 1
+//
+//        episimConfig.setInfections_pers_per_day(importMap)
 
         //weather model
 //        episimConfig.leisureOutdoorFraction = EpisimUtils.getOutDoorFractionFromDateAndTemp2(
@@ -119,38 +119,47 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
         val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
 
+        val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+                LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-04-02") to 0,
+                LocalDate.parse("2020-10-01") to 1,
+                LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
+        episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+
+
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
+//                LocalDate.parse("2020-09-21") to 1)
                 LocalDate(params.alphaDate) to 1)
-        episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)
+        episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.7
-            factorSeriouslySick = 1.0
+            infectiousness = params.alphaInf   //1.7
+//            factorSeriouslySick = 1.0
         }
 
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
-                LocalDate("2021-05-01") to 1)
+                LocalDate("2021-07-01") to 1)
 
-        val importFactor = 0.0
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
-                LocalDate("2021-06-21").plusDays(0), 1.0, 0.5 * importFactor * 1.6)
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-21").plusDays(0),
-                LocalDate("2021-06-28").plusDays(0), 1.6, 2.8)
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-28").plusDays(0),
-                LocalDate("2021-07-05").plusDays(0), 2.8, 4.6)
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-05").plusDays(0),
-                LocalDate("2021-07-12").plusDays(0), 4.6, 5.9)
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-12").plusDays(0),
-                LocalDate("2021-07-19").plusDays(0), 5.9, 7.3)
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-19").plusDays(0),
-                LocalDate("2021-07-26").plusDays(0), 7.3, 10.2)
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-26").plusDays(0),
-                LocalDate("2021-08-02").plusDays(0), 10.2, 13.2)
-
-        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-08-09").plusDays(0),
-                LocalDate("2021-08-31").plusDays(0), 0.5 * importFactor * 13.2, 1.0)
+//        val importFactor = 0.0
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
+//                LocalDate("2021-06-21").plusDays(0), 1.0, 0.5 * importFactor * 1.6)
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-21").plusDays(0),
+//                LocalDate("2021-06-28").plusDays(0), 1.6, 2.8)
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-28").plusDays(0),
+//                LocalDate("2021-07-05").plusDays(0), 2.8, 4.6)
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-05").plusDays(0),
+//                LocalDate("2021-07-12").plusDays(0), 4.6, 5.9)
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-12").plusDays(0),
+//                LocalDate("2021-07-19").plusDays(0), 5.9, 7.3)
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-19").plusDays(0),
+//                LocalDate("2021-07-26").plusDays(0), 7.3, 10.2)
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-26").plusDays(0),
+//                LocalDate("2021-08-02").plusDays(0), 10.2, 13.2)
+//
+//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-08-09").plusDays(0),
+//                LocalDate("2021-08-31").plusDays(0), 0.5 * importFactor * 13.2, 1.0)
 
 
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
@@ -171,6 +180,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
                 .getOrAddParams(VirusStrain.OMICRON).infectiousness = params.OMI_inf
+
+
 
         val effectivnessMRNA = params.deltaVacEffect
         val factorShowingSymptomsMRNA = 0.12 / (1 - effectivnessMRNA)
@@ -349,7 +360,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9)
+        @Parameter(1.1,1.2,1.3)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -361,26 +372,30 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @Parameter(3.0)
         var OMI_inf = 0.0
 
+
+
+        @Parameter(1.4,1.5,1.6,1.7,1.8,1.9,2.0)
+        var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
 
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-12-15")
+        @StringParameter("2020-09-21", "2020-09-28", "2020-10-05")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
 //        var alpha = 0.0
 
-        @Parameter(2.2)
+        @Parameter(2.0)
         var deltaInf = 0.0
 
         @Parameter(0.7)
         var deltaVacEffect = 0.0
 
-        @Parameter(0.25)
-        var summerImportFactor = 0.0
+//        @Parameter(0.25)
+//        var summerImportFactor = 0.0
 
 //		@Parameter({0.25})
 //		double tesRateLeisureWork;

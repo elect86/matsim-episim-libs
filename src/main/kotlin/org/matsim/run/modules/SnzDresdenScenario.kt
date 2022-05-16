@@ -266,12 +266,12 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             // setInfections_pers_per_day(mapOf(LocalDate.EPOCH to 1)) // base case import
 
 
-            val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                    LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
-                    LocalDate.parse("2020-04-02") to 0,
-                    LocalDate.parse("2020-10-01") to 1,
-                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
-            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+//            val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+//                    LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
+//                    LocalDate.parse("2020-04-02") to 0,
+//                    LocalDate.parse("2020-10-01") to 1,
+//                    LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
+//            episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
             //inital infections and import
 
