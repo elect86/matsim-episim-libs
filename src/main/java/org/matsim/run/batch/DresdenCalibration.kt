@@ -120,7 +120,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
 
         val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                LocalDate.parse("2020-02-24") to 1, //    LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-02-24") to 2, //    LocalDate.parse("2020-01-01") to 0,
                 LocalDate.parse("2020-04-02") to 0,
                 LocalDate.parse("2020-10-01") to 1,
                 LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
@@ -374,7 +374,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.4,1.45,1.5)
+        @Parameter(1.40,1.41,1.42,1.43,1.44,1.45)
         var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
