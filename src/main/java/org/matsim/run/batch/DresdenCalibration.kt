@@ -104,8 +104,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-03-23").plusDays(importOffset),
                 LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
 
-        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
-        importMap[LocalDate("2020-08-09")] = 1
+//        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
+//        importMap[LocalDate("2020-08-09")] = 1
 //
         episimConfig.setInfections_pers_per_day(importMap)
 
@@ -130,7 +130,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
 //                LocalDate.parse("2020-09-21") to 1)
-                LocalDate(params.alphaDate) to 1)
+                LocalDate(params.alphaDate) to 1,
+                LocalDate("2020-03-01") to 2)
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
@@ -354,7 +355,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(2)
+        @GenerateSeeds(10)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -394,8 +395,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @Parameter(0.7)
         var deltaVacEffect = 0.0
 
-        @Parameter(0.1,0.2,0.3,0.4,0.5)
-        var summerImportFactor = 0.0
+//        @Parameter(0.1,0.2,0.3,0.4,0.5)
+//        var summerImportFactor = 0.0
 
 //		@Parameter({0.25})
 //		double tesRateLeisureWork;
