@@ -87,27 +87,27 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        }, "leisure")
 
         episimConfig.policy = builder.build()
+
+        val importMap = HashMap<LocalDate, Int>()
+        val importFactorBeforeJune = 1.0
+        val imprtFctMult = 1.0
+        val importOffset = 0L
+        val dresdenFactor = 1
 //
-//        val importMap = HashMap<LocalDate, Int>()
-//        val importFactorBeforeJune = 0.0
-//        val imprtFctMult = 1.0
-//        val importOffset = 0L
-//        val dresdenFactor = 0.5
+        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+                LocalDate("2020-02-24").plusDays(importOffset),
+                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
+        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+                LocalDate("2020-03-09").plusDays(importOffset),
+                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
+        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+                LocalDate("2020-03-23").plusDays(importOffset),
+                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
+
+        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
+        importMap[LocalDate("2020-08-09")] = 1
 //
-//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-//                LocalDate("2020-02-24").plusDays(importOffset),
-//                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
-//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-//                LocalDate("2020-03-09").plusDays(importOffset),
-//                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
-//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-//                LocalDate("2020-03-23").plusDays(importOffset),
-//                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
-//
-//        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
-//        importMap[LocalDate("2020-08-09")] = 1
-//
-//        episimConfig.setInfections_pers_per_day(importMap)
+        episimConfig.setInfections_pers_per_day(importMap)
 
         //weather model
 //        episimConfig.leisureOutdoorFraction = EpisimUtils.getOutDoorFractionFromDateAndTemp2(
@@ -118,14 +118,14 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //mutations and vaccinations
         val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
         val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
-
-        val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-                LocalDate.parse("2020-02-24") to 4, //    LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2020-04-02") to 0,
-                LocalDate.parse("2020-10-01") to 1,
-                LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
-        episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
-
+//
+//        val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+//                LocalDate.parse("2020-02-24") to 4, //    LocalDate.parse("2020-01-01") to 0,
+//                LocalDate.parse("2020-04-02") to 0,
+//                LocalDate.parse("2020-10-01") to 1,
+//                LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
+//        episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+//
 
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
@@ -354,7 +354,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(2)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -374,7 +374,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.41,1.42)
+        @Parameter(1.42)
         var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
@@ -382,7 +382,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-09-21", "2020-09-28")
+        @StringParameter("2020-09-28")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
@@ -394,8 +394,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @Parameter(0.7)
         var deltaVacEffect = 0.0
 
-//        @Parameter(0.25)
-//        var summerImportFactor = 0.0
+        @Parameter(0.1,0.2,0.3,0.4,0.5)
+        var summerImportFactor = 0.0
 
 //		@Parameter({0.25})
 //		double tesRateLeisureWork;
