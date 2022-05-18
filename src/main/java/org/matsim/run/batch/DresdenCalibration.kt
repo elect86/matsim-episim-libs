@@ -94,20 +94,20 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val importOffset = 0L
         val dresdenFactor = 1
 //
-        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-                LocalDate("2020-02-24").plusDays(importOffset),
-                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
-        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-                LocalDate("2020-03-09").plusDays(importOffset),
-                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
-        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
-                LocalDate("2020-03-23").plusDays(importOffset),
-                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
-
-//        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
-//        importMap[LocalDate("2020-08-09")] = 1
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-02-24").plusDays(importOffset),
+//                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-03-09").plusDays(importOffset),
+//                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-03-23").plusDays(importOffset),
+//                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
 //
-        episimConfig.setInfections_pers_per_day(importMap)
+////        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
+////        importMap[LocalDate("2020-08-09")] = 1
+////
+//        episimConfig.setInfections_pers_per_day(importMap)
 
         //weather model
 //        episimConfig.leisureOutdoorFraction = EpisimUtils.getOutDoorFractionFromDateAndTemp2(
@@ -118,14 +118,14 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //mutations and vaccinations
         val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
         val virusStrainConfigGroup = ConfigUtils.addOrGetModule(config, VirusStrainConfigGroup::class.java)
-//
-//        val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
-//                LocalDate.parse("2020-02-24") to 4, //    LocalDate.parse("2020-01-01") to 0,
-//                LocalDate.parse("2020-04-02") to 0,
-//                LocalDate.parse("2020-10-01") to 1,
-//                LocalDate.parse("2020-10-15") to 2) // "2020-10-01")
-//        episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
-//
+
+        val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
+                LocalDate.parse("2020-02-24") to 4, //    LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2020-04-02") to 0,
+                LocalDate.parse("2020-10-01") to 1,
+                LocalDate.parse("2020-09-28") to 0) // "2020-10-01")
+        episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
+
 
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
