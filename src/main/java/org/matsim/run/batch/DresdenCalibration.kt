@@ -358,7 +358,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,)
+        @Parameter(1.0)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
@@ -372,7 +372,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.42)
+        @Parameter(1.42,1.43,1.44,1.45,1.46,1.47,1.48,1.49,1.50,1.55)
         var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
