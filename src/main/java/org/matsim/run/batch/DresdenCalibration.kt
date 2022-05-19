@@ -121,17 +121,15 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayBase: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-02-24") to 4, //    LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2020-04-02") to 0,
-                LocalDate.parse("2020-10-01") to 1,
-                LocalDate.parse("2020-09-28") to 0) // "2020-10-01")
+                LocalDate.parse("2020-04-02") to 0) // "2020-10-01")
         episimConfig.setInfections_pers_per_day(VirusStrain.SARS_CoV_2, infPerDayBase)
 
 
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
 //                LocalDate.parse("2020-09-21") to 1)
-                LocalDate(params.alphaDate) to 1,
-                LocalDate("2020-03-01") to 2)
+                LocalDate(params.alphaDate) to 2,
+                LocalDate("2021-03-01") to 2)
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
