@@ -352,13 +352,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(10)
+        @GenerateSeeds(1)
         var seed = 0L
 
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(1.0)
+        @Parameter(0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,)
         var thetaFactor = 0.0
 
         @Parameter(1.0)
