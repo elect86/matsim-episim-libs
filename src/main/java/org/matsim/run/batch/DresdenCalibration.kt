@@ -372,7 +372,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.45,1.5)
+        @Parameter(1.45)
         var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
@@ -380,7 +380,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-09-21")
+        @StringParameter("2020-09-14","2020-09-21")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
