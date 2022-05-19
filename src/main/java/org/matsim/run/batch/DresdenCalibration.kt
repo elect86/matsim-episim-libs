@@ -88,11 +88,11 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         episimConfig.policy = builder.build()
 
-        val importMap = HashMap<LocalDate, Int>()
-        val importFactorBeforeJune = 1.0
-        val imprtFctMult = 1.0
-        val importOffset = 0L
-        val dresdenFactor = 1
+//        val importMap = HashMap<LocalDate, Int>()
+//        val importFactorBeforeJune = 1.0
+//        val imprtFctMult = 1.0
+//        val importOffset = 0L
+//        val dresdenFactor = 1
 //
 //        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
 //                LocalDate("2020-02-24").plusDays(importOffset),
@@ -352,7 +352,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(1)
+        @GenerateSeeds(5)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -372,7 +372,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.42,1.43,1.44,1.45,1.46,1.47,1.48,1.49,1.50,1.55)
+        @Parameter(1.45,1.5)
         var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
@@ -380,7 +380,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-09-28")
+        @StringParameter("2020-09-21")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
