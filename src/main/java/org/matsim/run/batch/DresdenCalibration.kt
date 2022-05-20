@@ -380,7 +380,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-09-14","2020-09-21")
+        @StringParameter("2020-09-07","2020-09-14")
         lateinit var alphaDate: String
 
 //        @Parameter(1.0)
