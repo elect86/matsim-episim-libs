@@ -5,6 +5,7 @@ import org.matsim.episim.BatchRun
 import org.matsim.episim.EpisimConfigGroup
 import org.matsim.core.config.ConfigUtils
 import org.matsim.episim.BatchRun.GenerateSeeds
+import org.matsim.episim.BatchRun.IntParameter
 import org.matsim.episim.BatchRun.Parameter
 import org.matsim.episim.BatchRun.StringParameter
 import org.matsim.episim.EpisimPerson
@@ -129,7 +130,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
 //                LocalDate("2021-01-01") to 0,
-                LocalDate("2021-01-01") to 3 )
+                LocalDate(params.alphaDate) to params.importB117 )
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
@@ -357,7 +358,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(10)
+        @GenerateSeeds(1)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -375,6 +376,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @Parameter(3.0)
         var OMI_inf = 0.0
 
+        @IntParameter(0,1,2,3, 4,5,6)
+        val  importB117 = 0
+        @StringParameter("2021-02-01","2021-02-07","2021-02-14","2021-02-21","2021-02-28")
+        lateinit var alphaDate: String
+
+
+
 
 
 //        @Parameter(1.45)
@@ -385,8 +393,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-//        @StringParameter("2020-09-07","2020-09-14")
-//        lateinit var alphaDate: String
+
 
 //        @Parameter(1.0)
 //        var alpha = 0.0
