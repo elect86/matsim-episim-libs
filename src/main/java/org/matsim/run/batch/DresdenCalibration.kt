@@ -127,12 +127,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
-//                LocalDate.parse("2020-09-21") to 1)
-                LocalDate(params.alphaDate) to 2)
+                LocalDate("2020-09-07") to 2,
+                LocalDate("2020-03-01") to 1)
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = params.alphaInf   //1.7
+            infectiousness = 1.45
 //            factorSeriouslySick = 1.0
         }
 
@@ -226,24 +226,28 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atFullEffect(factorSeriouslySickVector)
                         .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
+        val effectivnesssubunit = params.deltaVacEffect * 0.5 / 0.7
+        val factorShowingSymptomssubunit = 0.32 / (1 - effectivnesssubunit)
+        val factorSeriouslySicksubunit = 0.15 / ((1 - effectivnesssubunit) * factorShowingSymptomssubunit)
+        val fullEffectsubunit = 10 * 7; //second shot after 9 weeks, full effect one week after second sho
 
         vaccinationConfig.getOrAddParams(VaccinationType.subunit)
-                .setDaysBeforeFullEffect(fullEffectVector)
+                .setDaysBeforeFullEffect(fullEffectsubunit)
                 .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
                         .atDay(1, 0.0)
-                        .atDay(fullEffectVector - 7, effectivnessVector / 2.0)
-                        .atFullEffect(effectivnessVector)
-                        .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                        .atDay(fullEffectsubunit - 7, effectivnesssubunit / 2.0)
+                        .atFullEffect(effectivnesssubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
                 .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
                         .atDay(1, 1.0)
-                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorShowingSymptomsVector) / 2.0))
-                        .atFullEffect(factorShowingSymptomsVector)
-                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                        .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorShowingSymptomssubunit) / 2.0))
+                        .atFullEffect(factorShowingSymptomssubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
                 .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.MUTB)
                         .atDay(1, 1.0)
-                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorSeriouslySickVector) / 2.0))
-                        .atFullEffect(factorSeriouslySickVector)
-                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                        .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorSeriouslySicksubunit) / 2.0))
+                        .atFullEffect(factorSeriouslySicksubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
 //        val vaccinationCompliance = hashMapOf<Integer, Double>()
 //        for (i in 0 until 12) vaccinationCompliance.put(i, 0.0);
@@ -352,7 +356,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(10)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -372,16 +376,16 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(1.45)
-        var alphaInf = 0.0
+//        @Parameter(1.45)
+//        var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
 //		String leisureNightly;
 
 //		@Parameter({0.25, 0.3, 0.35})
 //		double leisureOffset;
 
-        @StringParameter("2020-09-07","2020-09-14")
-        lateinit var alphaDate: String
+//        @StringParameter("2020-09-07","2020-09-14")
+//        lateinit var alphaDate: String
 
 //        @Parameter(1.0)
 //        var alpha = 0.0
