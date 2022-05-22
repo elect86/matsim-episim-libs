@@ -128,9 +128,9 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
-                LocalDate("2020-09-07") to params.importB117_1,
+                LocalDate("2020-09-07") to 3,
 //                LocalDate("2021-01-01") to 0,
-                LocalDate(params.alphaDate) to params.importB117_2 )
+                LocalDate(params.alphaDate) to params.importB117 )
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
@@ -359,7 +359,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(1)
+        @GenerateSeeds(5)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -376,11 +376,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         @Parameter(3.0)
         var OMI_inf = 0.0
-        @IntParameter(0,1,2,3,4,5,6,7)
-        val  importB117_2 = 0
 
-        @IntParameter(0,1,2,3,4,5,6,7)
-        val  importB117_1 = 0
+
+
+        @IntParameter(1,2,3,4,5,6,7)
+        val  importB117 = 0
+
         @StringParameter("2021-03-01")
         lateinit var alphaDate: String
 
