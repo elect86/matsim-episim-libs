@@ -130,7 +130,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
                 LocalDate(params.alpha_zero) to 0,
-                LocalDate(params.alphaDate) to params.importB117 )
+                LocalDate("2021-03-14") to 5 )
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
@@ -141,7 +141,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
-                LocalDate("2021-10-01") to 2)
+                LocalDate("2021-10-01") to 5)
 
 //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
@@ -174,7 +174,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2021-12-10") to 2) // 1 person  //Need to change the date
+                LocalDate.parse("2022-01-01") to 5) // 1 person  //Need to change the date
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
 
@@ -359,7 +359,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(10)
         var seed = 0L
 
         //		@Parameter({4.0})
@@ -379,13 +379,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @IntParameter(3)
-        val  importB117 = 0
+//        @IntParameter(3)
+//        val  importB117 = 0
 
-        @StringParameter("2021-03-14")
-        lateinit var alphaDate: String
+//        @StringParameter("2021-03-14")
+//        lateinit var alphaDate: String
 
-        @StringParameter("2020-12-21","2020-12-14","2021-01-01","2021-01-07","2021-01-14", "2021-01-21" )
+        @StringParameter("2020-12-21","2021-01-01", "2021-01-21" )
         lateinit var  alpha_zero: String
 
 
@@ -405,7 +405,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(1.0)
 //        var alpha = 0.0
 
-        @Parameter(2.5)
+        @Parameter(3.0)
         var deltaInf = 0.0
 
         @Parameter(0.7)
