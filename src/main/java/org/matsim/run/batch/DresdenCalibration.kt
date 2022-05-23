@@ -129,8 +129,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
-                LocalDate(params.alpha_zero) to 0,
-                LocalDate("2021-03-14") to 5 )
+                LocalDate("2021-01-21") to 0,
+                LocalDate("2021-03-14") to params.summerAlpha )  // summer import
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
@@ -141,7 +141,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
-                LocalDate("2021-10-01") to 5)
+                LocalDate("2021-10-01") to 3,
+                LocalDate("2021-12-01") to 0)
 
 //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
@@ -174,7 +175,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-01-01") to 5) // 1 person  //Need to change the date
+                LocalDate.parse("2022-02-01") to 5) // 1 person  //Need to change the date
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
 
@@ -379,14 +380,14 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-//        @IntParameter(3)
-//        val  importB117 = 0
+        @IntParameter(1,5,10,15)
+        val  summerAlpha = 0
 
 //        @StringParameter("2021-03-14")
 //        lateinit var alphaDate: String
 
-        @StringParameter("2020-12-21","2021-01-01", "2021-01-21" )
-        lateinit var  alpha_zero: String
+//        @StringParameter( "2021-01-21" )
+//        lateinit var  alpha_zero: String
 
 
 
