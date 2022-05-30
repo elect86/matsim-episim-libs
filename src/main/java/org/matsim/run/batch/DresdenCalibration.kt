@@ -131,7 +131,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-09-07") to 3,
                 LocalDate("2021-01-21") to 0,
                 LocalDate("2021-03-14") to 1, // summer import
-                LocalDate("2021-06-1") to 0)
+                LocalDate("2021-06-01") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
