@@ -29,7 +29,7 @@ import java.time.LocalDate
 class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
     override fun getBindings(id: Int, params: Params?): SnzDresdenScenario = SnzDresdenScenario.Builder().run {
-        scale = params?.scale ?: 1.0
+        scale = 1.0  //params?.scale ?: 1.0
         setActivityHandling(EpisimConfigGroup.ActivityHandling.startOfDay)
 //				.setLeisureOffset( params == null ? 0d : params.leisureOffset)
 //				.setLeisureNightly(leisureNightly)
@@ -64,7 +64,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             progressionConfig = progressionConfig(params, Transition.config()).build()
             daysInfectious = Integer.MAX_VALUE
 //            calibrationParameter *= 0.83 * params.thetaFactor
-            calibrationParameter = 1.56E-5 * 0.2 *0.2* params.thetaFactor
+            calibrationParameter = 1.56E-5 * 0.2 *0.2* 1.0
         }
 
         //restrictions
@@ -130,7 +130,9 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
                 LocalDate("2021-01-21") to 0,
-                LocalDate("2021-03-14") to params.summerAlpha )  // summer import
+                LocalDate("2021-03-14") to 1, // summer import
+                LocalDate("2021-06-1") to 0)
+
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
@@ -141,7 +143,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
-                LocalDate("2021-10-01") to 3,
+//                LocalDate("2021-10-01") to 3,
                 LocalDate("2021-12-01") to 0)
 
 //        val importFactor = 0.0
@@ -175,7 +177,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-02-01") to 5) // 1 person  //Need to change the date
+                LocalDate.parse("2022-01-01") to 1,
+                LocalDate("2022-02-01") to 0) // 1 person  //Need to change the date
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
 
@@ -185,7 +188,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        val effectivnessMRNA = params.deltaVacEffect
+        val effectivnessMRNA = 0.85 //params.deltaVacEffect
         val factorShowingSymptomsMRNA = 0.12 / (1 - effectivnessMRNA)
         val factorSeriouslySickMRNA = 0.02 / ((1 - effectivnessMRNA) * factorShowingSymptomsMRNA)
         val fullEffectMRNA = 7 * 7; //second shot after 6 weeks, full effect one week after second shot
@@ -206,8 +209,24 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atDay(fullEffectMRNA - 7, 1.0 - ((1.0 - factorSeriouslySickMRNA) / 2.0))
                         .atFullEffect(factorSeriouslySickMRNA)
                         .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectMRNA - 7, effectivnessMRNA / 2.0)
+                        .atFullEffect(effectivnessMRNA)
+                        .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectMRNA - 7, 1.0 - ((1.0 - factorShowingSymptomsMRNA) / 2.0))
+                        .atFullEffect(factorShowingSymptomsMRNA)
+                        .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectMRNA - 7, 1.0 - ((1.0 - factorSeriouslySickMRNA) / 2.0))
+                        .atFullEffect(factorSeriouslySickMRNA)
+                        .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
-        val effectivnessVector = params.deltaVacEffect * 0.5 / 0.7
+
+        val effectivnessVector = 0.6 //params.deltaVacEffect * 0.5 / 0.7
         val factorShowingSymptomsVector = 0.32 / (1 - effectivnessVector)
         val factorSeriouslySickVector = 0.15 / ((1 - effectivnessVector) * factorShowingSymptomsVector)
         val fullEffectVector = 10 * 7; //second shot after 9 weeks, full effect one week after second sho
@@ -229,8 +248,24 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorSeriouslySickVector) / 2.0))
                         .atFullEffect(factorSeriouslySickVector)
                         .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectVector - 7, effectivnessVector / 2.0)
+                        .atFullEffect(effectivnessVector)
+                        .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorShowingSymptomsVector) / 2.0))
+                        .atFullEffect(factorShowingSymptomsVector)
+                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorSeriouslySickVector) / 2.0))
+                        .atFullEffect(factorSeriouslySickVector)
+                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
-        val effectivnesssubunit = params.deltaVacEffect * 0.5 / 0.7
+
+        val effectivnesssubunit = 0.86 //params.deltaVacEffect * 0.5 / 0.7
         val factorShowingSymptomssubunit = 0.32 / (1 - effectivnesssubunit)
         val factorSeriouslySicksubunit = 0.15 / ((1 - effectivnesssubunit) * factorShowingSymptomssubunit)
         val fullEffectsubunit = 10 * 7; //second shot after 9 weeks, full effect one week after second sho
@@ -252,6 +287,22 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorSeriouslySicksubunit) / 2.0))
                         .atFullEffect(factorSeriouslySicksubunit)
                         .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectsubunit - 7, effectivnesssubunit / 2.0)
+                        .atFullEffect(effectivnesssubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorShowingSymptomssubunit) / 2.0))
+                        .atFullEffect(factorShowingSymptomssubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorSeriouslySicksubunit) / 2.0))
+                        .atFullEffect(factorSeriouslySicksubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+
 
 //        val vaccinationCompliance = hashMapOf<Integer, Double>()
 //        for (i in 0 until 12) vaccinationCompliance.put(i, 0.0);
@@ -360,28 +411,37 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(10)
+        @GenerateSeeds(5)
         var seed = 0L
+
+
+        @Parameter(3.0)
+        var OMI_inf = 0.0
+        @Parameter(2.0)
+        var deltaSeriouslySick = 0.0
+        @Parameter(2.0)
+        var deltaInf = 0.0
+
+//        @Parameter(0.7)
+//        var deltaVacEffect = 0.0
+
+
 
         //		@Parameter({4.0})
 //		double importFactor;
 
-        @Parameter(1.0)
-        var thetaFactor = 0.0
+//        @Parameter(1.0)
+//        var thetaFactor = 0.0
 
-        @Parameter(1.0)
-        var scale = 1.0
+//        @Parameter(1.0)
+//        var scale = 1.0
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
 
-        @Parameter(3.0)
-        var OMI_inf = 0.0
 
-
-
-        @IntParameter(1,5,10,15)
-        val  summerAlpha = 0
+//        @IntParameter(1,5,10,15)
+//        val  summerAlpha = 0
 
 //        @StringParameter("2021-03-14")
 //        lateinit var alphaDate: String
@@ -406,11 +466,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(1.0)
 //        var alpha = 0.0
 
-        @Parameter(3.0)
-        var deltaInf = 0.0
 
-        @Parameter(0.7)
-        var deltaVacEffect = 0.0
 
 //        @Parameter(0.1,0.2,0.3,0.4,0.5)
 //        var summerImportFactor = 0.0
@@ -430,8 +486,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		@StringParameter({"2021-05-01"})
 //		String deltaDate;
 
-        @Parameter(2.0)
-        var deltaSeriouslySick = 0.0
+
     }
 
     companion object {
