@@ -130,21 +130,21 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
                 LocalDate("2021-01-01") to 0,
-                LocalDate("2021-03-14") to 1, // summer import
+                LocalDate("2021-03-14") to 5, // summer import
                 LocalDate("2021-06-01") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.40 //1.45
+            infectiousness = params.alphainf  //1.40
 //            factorSeriouslySick = 1.0
         }
 
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
-                LocalDate("2021-07-01") to 3,
+                LocalDate("2021-07-01") to 2,
 //                LocalDate("2021-10-01") to 3,
-                LocalDate("2021-12-01") to 0)
+                LocalDate("2021-10-01") to 2)
 
 //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
@@ -411,15 +411,17 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(1)
         var seed = 0L
+        @Parameter(1.40,1.41,1.42,1.43,1.44,1.45)
+        var alphainf = 0.0
 
 
         @Parameter(3.5)
         var OMI_inf = 0.0
         @Parameter(2.0)
         var deltaSeriouslySick = 0.0
-        @Parameter(2.5)
+        @Parameter(3.0)
         var deltaInf = 0.0
 
 //        @Parameter(0.7)
