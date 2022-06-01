@@ -136,7 +136,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.44
+            infectiousness = 1.435
 //            factorSeriouslySick = 1.0
         }
 
