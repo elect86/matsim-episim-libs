@@ -417,7 +417,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-        @Parameter(4)
+        @Parameter(4.0)
         var OMI_inf = 0.0
         @Parameter(2.0)
         var deltaSeriouslySick = 0.0
