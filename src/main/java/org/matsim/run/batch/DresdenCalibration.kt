@@ -129,9 +129,9 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
-                LocalDate(params.alpha_zero) to 0,  //"2020-12-01"
-                LocalDate("2021-03-01") to 10, // summer import
-                LocalDate("2021-05-14") to 0)
+                LocalDate("2020-11-14") to 0,
+                LocalDate(params.summer_alpha) to 10, // summer import "2021-03-01"
+                LocalDate("2021-05-21") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
@@ -144,7 +144,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
 //                LocalDate("2021-10-01") to 3,
-                LocalDate("2021-10-01") to 10,
+                LocalDate("2021-10-01") to 12,
                 LocalDate(params.MUTB_zero) to 0 )
 
 //        val importFactor = 0.0
@@ -178,8 +178,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-02-01") to 2,
-                LocalDate("2022-02-15") to 0) // 1 person
+                LocalDate.parse("2022-02-14") to 5,
+                LocalDate("2022-03-15") to 0) // 1 person
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
@@ -415,10 +415,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @GenerateSeeds(1)
         var seed = 0L
 
-        @StringParameter( "2020-12-01","2020-11-21","2020-11-14","2020-11-07","2020-11-01" )
-        lateinit var  alpha_zero: String
+        @StringParameter("2021-02-21","2021-03-01", "2021-03-07", "2021-03-14" )
+        lateinit var  summer_alpha: String
 
-        @StringParameter( "2021-10-07","2021-10-14","2021-10-21","2021-10-28","2021-11-07" )
+        @StringParameter("2021-11-01", "2021-11-07","2021-11-14" )
         lateinit var  MUTB_zero: String
 
 
