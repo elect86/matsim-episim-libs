@@ -129,8 +129,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
-                LocalDate(params.alpha_zero) to 0, //"2020-11-14"
-                LocalDate(params.summer_alpha) to 10, // summer import "2021-03-01"
+                LocalDate("2020-11-14") to 0, //"2020-11-14"
+                LocalDate("2021-03-21") to 10, // summer import "2021-03-01"
                 LocalDate("2021-05-21") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
@@ -145,7 +145,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2021-07-01") to 1,
 //                LocalDate("2021-10-01") to 3,
                 LocalDate("2021-10-01") to 12,
-                LocalDate(params.MUTB_zero) to 0 )
+                LocalDate("2021-11-14") to 0 )
 
 //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
@@ -412,17 +412,17 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(1)
+        @GenerateSeeds(10)
         var seed = 0L
 
-        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
-        lateinit var  summer_alpha: String
+//        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
+//        lateinit var  summer_alpha: String
 
-        @StringParameter("2021-11-21","2021-11-14" )
-        lateinit var  MUTB_zero: String
-
-        @StringParameter("2020-11-14","2020-11-07" )
-        lateinit var  alpha_zero: String
+//        @StringParameter("2021-11-21", )
+//        lateinit var  MUTB_zero: String
+//
+//        @StringParameter("2020-11-14","2020-11-07" )
+//        lateinit var  alpha_zero: String
 
 
         @Parameter(3.5)
