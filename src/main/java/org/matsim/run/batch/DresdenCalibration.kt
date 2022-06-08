@@ -129,8 +129,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
-                LocalDate("2020-11-14") to 0, //"2020-11-14"
-                LocalDate("2021-03-21") to 20, // summer import "2021-03-01"
+                LocalDate("2020-10-14") to 0, //"2020-11-14"
+                LocalDate("2021-03-21") to 20, //
                 LocalDate("2021-05-21") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
@@ -144,7 +144,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
 //                LocalDate("2021-10-01") to 3,
-                LocalDate("2021-11-01") to 5, //"2021-10-01"
+                LocalDate("2021-09-01") to 5, //"2021-10-01"
                 LocalDate("2021-12-14") to 0 ) // "2021-12-14"
 
 //        val importFactor = 0.0
@@ -184,7 +184,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
             infectiousness = params.OMI_inf
-            factorSeriouslySick = 2.2
+            factorSeriouslySick = 0.0 //2.2
         }
 
 
@@ -425,7 +425,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        lateinit var  alpha_zero: String
 
 
-        @Parameter(4.0)
+        @Parameter(0.0)
         var OMI_inf = 0.0
 
 
