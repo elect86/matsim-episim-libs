@@ -129,7 +129,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-09-07") to 3,
-                LocalDate("2020-10-14") to 0, //"2020-11-14"
+                LocalDate("2020-09-14") to 0, //"2020-10-14"
                 LocalDate("2021-03-01") to 20, // "2021-03-21"
                 LocalDate("2021-05-21") to 0)
 
@@ -144,7 +144,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
 //                LocalDate("2021-10-01") to 3,
-                LocalDate("2021-09-01") to 1, //"2021-10-01"
+                LocalDate("2021-09-01") to 4, //"2021-10-01"
                 LocalDate("2021-12-14") to 0 ) // "2021-12-14"
 
 //        val importFactor = 0.0
