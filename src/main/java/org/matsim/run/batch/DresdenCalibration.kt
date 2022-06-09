@@ -136,7 +136,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = 1.5
+            infectiousness = params.alphaInf//1.5
 //            factorSeriouslySick = 1.0
         }
 
@@ -144,7 +144,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-07-01") to 1,
 //                LocalDate("2021-10-01") to 3,
-                LocalDate("2021-09-01") to 1, //"2021-10-01"
+                LocalDate("2021-09-01") to 0, //"2021-10-01"
                 LocalDate("2021-12-14") to 0 ) // "2021-12-14"
 
 //        val importFactor = 0.0
@@ -183,7 +183,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
-            infectiousness = params.OMI_inf
+            infectiousness = 0.0  //params.OMI_inf
             factorSeriouslySick = 0.0 //2.2
         }
 
@@ -412,8 +412,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(10)
+        @GenerateSeeds(5)
         var seed = 0L
+
+        @Parameter(1.5,1.4,1.3)
+        var alphaInf = 0.0
+
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
 //        lateinit var  summer_alpha: String
@@ -425,8 +429,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        lateinit var  alpha_zero: String
 
 
-        @Parameter(0.0)
-        var OMI_inf = 0.0
+//        @Parameter(0.0)
+//        var OMI_inf = 0.0
 
 
 
