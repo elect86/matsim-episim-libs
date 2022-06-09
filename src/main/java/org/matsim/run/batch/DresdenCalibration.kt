@@ -412,7 +412,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(10)
         var seed = 0L
 
         @Parameter(1.5,1.4,1.3)
