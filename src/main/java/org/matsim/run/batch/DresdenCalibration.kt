@@ -136,7 +136,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
 
         virusStrainConfigGroup.getOrAddParams(VirusStrain.B117).apply {
-            infectiousness = params.alphaInf//1.5
+            infectiousness = 1.45
 //            factorSeriouslySick = 1.0
         }
 
@@ -170,7 +170,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness = 3.5
-            factorSeriouslySick = 3.5
+            factorSeriouslySick = 3.0
         }
 
 
@@ -415,8 +415,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @GenerateSeeds(10)
         var seed = 0L
 
-        @Parameter(1.5,1.4,1.3)
-        var alphaInf = 0.0
+
 
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
