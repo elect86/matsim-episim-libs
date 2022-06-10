@@ -143,7 +143,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             activityHandling = this@SnzDresdenScenario.activityHandling
             // Calibration parameter
 //            calibrationParameter = 1.56E-5 * 0.2
-            setStartDate("2020-02-10") // "2020-02-24"
+            setStartDate("2020-02-01") // "2020-02-24"
             facilitiesHandling = EpisimConfigGroup.FacilitiesHandling.snz
             sampleSize = sample / 100.0
             hospitalFactor = 0.5

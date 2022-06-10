@@ -130,7 +130,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2020-08-21") to 3, // "2020-09-07"
                 LocalDate("2020-10-21") to 0, //"2020-10-14"
-                LocalDate("2021-03-01") to 20, // "2021-03-21"
+                LocalDate("2021-03-01") to 15, // "2021-03-21"
                 LocalDate("2021-05-21") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
@@ -169,8 +169,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-            infectiousness = 3.5
-            factorSeriouslySick = 3.0
+            infectiousness = 3.2
+            factorSeriouslySick = 2.0
         }
 
 
