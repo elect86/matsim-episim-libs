@@ -145,7 +145,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2021-08-01") to 1,
 //                LocalDate("2021-10-01") to 3,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
-                LocalDate("2021-09-01") to 0 ) // "2021-12-14"
+                LocalDate("2021-10-01") to 0 ) // "2021-12-14"
 
 //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
