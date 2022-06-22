@@ -143,7 +143,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-08-01") to 1,
-                LocalDate("2021-10-01") to params.MUTB,
+                LocalDate("2021-10-01") to 4,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
                 LocalDate("2021-10-14") to 0 ) // "2021-12-10"
 
@@ -169,7 +169,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-            infectiousness =3.5
+            infectiousness =params.MUTBInf
             factorSeriouslySick = 3.5
         }
 
@@ -178,7 +178,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-03-01") to  1, //3
+                LocalDate.parse("2022-03-01") to  0, //3
                 LocalDate("2022-04-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
@@ -412,14 +412,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(6)
         var seed = 0L
 
 
 
 
-        @IntParameter(4,6,8)
-        val MUTB = 0
+
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
 //        lateinit var  summer_alpha: String
@@ -439,9 +438,9 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @Parameter(2.1,2.3,2.5)
 //        var deltaSeriouslySick = 0.0
-//        @Parameter(3.0)
-//        var deltaInf = 0.0
-//
+        @Parameter(3.5, 3.6,3.8)
+        var MUTBInf = 0.0
+
 //        @IntParameter(0,1,3)
 //        val  importMUTB = 0
 
