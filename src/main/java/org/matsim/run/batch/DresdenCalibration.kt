@@ -145,7 +145,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2021-08-01") to 1,
                 LocalDate("2021-10-01") to 4,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
-                LocalDate("2021-12-01") to 0 ) // "2021-12-14"
+                LocalDate(params.MUTBZero) to 0 ) // "2021-12-10"
 
 //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
@@ -412,7 +412,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(10)
+        @GenerateSeeds(5)
         var seed = 0L
 
 
@@ -427,8 +427,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @StringParameter("2021-11-21", )
 //        lateinit var  MUTB_zero: String
 //
-//        @StringParameter("2020-11-14","2020-11-07" )
-//        lateinit var  alpha_zero: String
+        @StringParameter("2021-10-14","2021-10-28","2021-11-14")
+        lateinit var  MUTBZero: String
 
 
 //        @Parameter(0.0)
