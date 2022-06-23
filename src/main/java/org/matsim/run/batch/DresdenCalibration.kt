@@ -140,14 +140,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //            factorSeriouslySick = 1.0
         }
 
-        val infPerDayMUTB = hashMapOf<LocalDate, Int>(
-                LocalDate("2020-01-01") to 0,
-                LocalDate("2021-08-01") to 1,
-                LocalDate("2021-10-01") to 4,
-//                LocalDate("2021-09-01") to 0, //"2021-10-01"
-                LocalDate("2021-10-14") to 0 ) // "2021-12-10"
 
-//        val importFactor = 0.0
+        //        val importFactor = 0.0
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
 //                LocalDate("2021-06-21").plusDays(0), 1.0, 0.5 * importFactor * 1.6)
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-21").plusDays(0),
@@ -166,7 +160,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-08-09").plusDays(0),
 //                LocalDate("2021-08-31").plusDays(0), 0.5 * importFactor * 13.2, 1.0)
 
-
+        val infPerDayMUTB = hashMapOf<LocalDate, Int>(
+                LocalDate("2020-01-01") to 0,
+                LocalDate("2021-08-01") to 1,
+                LocalDate("2021-10-01") to 4,
+//                LocalDate("2021-09-01") to 0, //"2021-10-01"
+                LocalDate("2021-12-01") to 0 ) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness =params.MUTBInf
@@ -412,7 +411,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(6)
+        @GenerateSeeds(8)
         var seed = 0L
 
 
@@ -438,7 +437,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @Parameter(2.1,2.3,2.5)
 //        var deltaSeriouslySick = 0.0
-        @Parameter(3.5, 3.6,3.8)
+        @Parameter(3.5,3.8)
         var MUTBInf = 0.0
 
 //        @IntParameter(0,1,3)
