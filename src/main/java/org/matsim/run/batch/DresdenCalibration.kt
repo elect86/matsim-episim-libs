@@ -430,9 +430,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(0.0)
 //        var OMI_inf = 0.0
 
-
-
-
 //        @Parameter(2.1,2.3,2.5)
 //        var deltaSeriouslySick = 0.0
         @IntParameter(4,6,10)
@@ -440,7 +437,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @IntParameter(0,1,3)
 //        val  importMUTB = 0
-
 
 //        @Parameter(0.7)
 //        var deltaVacEffect = 0.0
