@@ -163,13 +163,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-08-01") to 1,
-                LocalDate("2021-10-01") to 4,
+                LocalDate("2021-10-01") to params.MUTBImport,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
-                LocalDate("2021-11-01") to 0 ) // "2021-12-10"
+                LocalDate("2021-10-15") to 0 ) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-            infectiousness =params.MUTBInf
-            factorSeriouslySick = 3.5
+            infectiousness =3.5
+//            factorSeriouslySick = 3.5
         }
 
 
@@ -384,8 +384,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		eduTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestEdu);
 //		workTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestWork);
 //		leisureTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestLeis);
-
-
 //		eduTestsPCR.put(LocalDate.parse("2021-08-06"), 0.1);
 
         pcrTest.setTestingRatePerActivityAndDate(mapOf(
@@ -411,7 +409,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(10)
+        @GenerateSeeds(5)
         var seed = 0L
 
 
@@ -437,8 +435,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @Parameter(2.1,2.3,2.5)
 //        var deltaSeriouslySick = 0.0
-        @Parameter(3.5)
-        var MUTBInf = 0.0
+        @IntParameter(4,6,10)
+        val MUTBImport = 0
 
 //        @IntParameter(0,1,3)
 //        val  importMUTB = 0
