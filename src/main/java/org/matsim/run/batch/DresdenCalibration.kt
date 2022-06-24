@@ -165,7 +165,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2021-08-01") to 1,
                 LocalDate("2021-10-01") to 4,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
-                LocalDate("2021-12-01") to 0 ) // "2021-12-10"
+                LocalDate("2021-11-01") to 0 ) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness =params.MUTBInf
@@ -411,7 +411,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(8)
+        @GenerateSeeds(10)
         var seed = 0L
 
 
@@ -437,7 +437,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @Parameter(2.1,2.3,2.5)
 //        var deltaSeriouslySick = 0.0
-        @Parameter(3.5,3.8)
+        @Parameter(3.5)
         var MUTBInf = 0.0
 
 //        @IntParameter(0,1,3)
