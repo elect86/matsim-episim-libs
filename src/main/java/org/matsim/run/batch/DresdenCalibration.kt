@@ -169,7 +169,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness =3.5
-//            factorSeriouslySick = 3.5
+            factorSeriouslySick = 2.5
         }
 
 
