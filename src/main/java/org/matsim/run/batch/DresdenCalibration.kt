@@ -425,7 +425,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(0.0)
 //        var OMI_inf = 0.0
 
-        @Parameter(2.0,2.5,3.0,3.5)
+        @Parameter(2.5,3.0,3.5)
         var MUTB_hos = 0.0
 
         @Parameter(2.5,3.0,3.5,4.0)
