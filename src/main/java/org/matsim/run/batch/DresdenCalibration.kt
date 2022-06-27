@@ -168,8 +168,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2021-10-15") to 0 ) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-            infectiousness =3.5
-            factorSeriouslySick = 2.5
+            infectiousness = params.MUTB_inf   //3.5
+            factorSeriouslySick = params.MUTB_hos   //2.5
         }
 
 
@@ -412,11 +412,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @GenerateSeeds(5)
         var seed = 0L
 
-
-
-
-
-
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
 //        lateinit var  summer_alpha: String
 
@@ -430,9 +425,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(0.0)
 //        var OMI_inf = 0.0
 
-//        @Parameter(2.1,2.3,2.5)
-//        var deltaSeriouslySick = 0.0
-        @IntParameter(4,6,10)
+        @Parameter(2.0,2.5,3.0,3.5)
+        var MUTB_hos = 0.0
+
+        @Parameter(2.5,3.0,3.5,4.0)
+        var MUTB_inf = 0.0
+        @IntParameter(10,15,20)
         val MUTBImport = 0
 
 //        @IntParameter(0,1,3)
