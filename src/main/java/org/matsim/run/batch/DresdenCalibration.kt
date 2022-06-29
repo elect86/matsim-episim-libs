@@ -425,12 +425,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(0.0)
 //        var OMI_inf = 0.0
 
-        @Parameter(2.5,3.0,3.5)
+        @Parameter(2.5,3.0)
         var MUTB_hos = 0.0
 
-        @Parameter(2.5,3.0,3.5,4.0)
+        @Parameter(3.0,3.5)
         var MUTB_inf = 0.0
-        @IntParameter(10,15,20)
+        @IntParameter(15,40)
         val MUTBImport = 0
 
 //        @IntParameter(0,1,3)
