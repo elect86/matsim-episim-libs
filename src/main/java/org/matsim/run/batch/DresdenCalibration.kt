@@ -128,9 +128,9 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayB117 = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
-                LocalDate("2020-08-21") to 3, // "2020-09-07"
-                LocalDate("2020-10-21") to 0, //"2020-10-14"
-                LocalDate("2021-03-01") to 18, // "2021-03-21"
+                LocalDate("2020-08-01") to 3, // "2020-08-21"
+                LocalDate("2020-10-21") to 0,
+                LocalDate("2021-03-01") to 18,
                 LocalDate("2021-05-21") to 0)
 
         episimConfig.setInfections_pers_per_day(VirusStrain.B117, infPerDayB117)   // Alpha variant (UK VAriant)
@@ -163,7 +163,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-08-01") to 1,
-                LocalDate("2021-10-01") to params.MUTBImport,
+                LocalDate("2021-10-01") to 35,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
                 LocalDate("2021-10-15") to 0 ) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
@@ -175,8 +175,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-03-01") to  0, //3
-                LocalDate("2022-04-15") to 0) //
+                LocalDate.parse("2022-03-01") to  10, //3
+                LocalDate("2022-03-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
@@ -420,17 +420,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        lateinit var  MUTBZero: String
 
 
-//        @Parameter(0.0)
-//        var OMI_inf = 0.0
-
-//        @Parameter(2.5,)
-//        var MUTB_hos = 0.0
-//
-//        @Parameter(3.0,3.5)
-//        var MUTB_inf = 0.0
-
-        @IntParameter(20,25,30,35)
-        val MUTBImport = 0
+//        @IntParameter(20,25,30,35)
+//        val MUTBImport = 0
 
 //        @IntParameter(0,1,3)
 //        val  importMUTB = 0
@@ -438,16 +429,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(0.7)
 //        var deltaVacEffect = 0.0
 
-
-
-        //		@Parameter({4.0})
-//		double importFactor;
-
-//        @Parameter(1.0)
-//        var thetaFactor = 0.0
-
-//        @Parameter(1.0)
-//        var scale = 1.0
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
@@ -481,8 +462,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
 
-//        @Parameter(0.1,0.2,0.3,0.4,0.5)
-//        var summerImportFactor = 0.0
+
 
 //		@Parameter({0.25})
 //		double tesRateLeisureWork;
