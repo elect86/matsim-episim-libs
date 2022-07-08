@@ -140,26 +140,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //            factorSeriouslySick = 1.0
         }
 
-
-        //        val importFactor = 0.0
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-06-14").plusDays(0),
-//                LocalDate("2021-06-21").plusDays(0), 1.0, 0.5 * importFactor * 1.6)
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-21").plusDays(0),
-//                LocalDate("2021-06-28").plusDays(0), 1.6, 2.8)
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-06-28").plusDays(0),
-//                LocalDate("2021-07-05").plusDays(0), 2.8, 4.6)
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-05").plusDays(0),
-//                LocalDate("2021-07-12").plusDays(0), 4.6, 5.9)
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-12").plusDays(0),
-//                LocalDate("2021-07-19").plusDays(0), 5.9, 7.3)
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-19").plusDays(0),
-//                LocalDate("2021-07-26").plusDays(0), 7.3, 10.2)
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 0.5 * importFactor, LocalDate("2021-07-26").plusDays(0),
-//                LocalDate("2021-08-02").plusDays(0), 10.2, 13.2)
-//
-//        SnzDresdenScenario.interpolateImport(infPerDayMUTB, 1.0, LocalDate("2021-08-09").plusDays(0),
-//                LocalDate("2021-08-31").plusDays(0), 0.5 * importFactor * 13.2, 1.0)
-
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-08-01") to 1,
@@ -175,13 +155,24 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-03-01") to  params.OMICRON, //3
+                LocalDate.parse("2022-03-01") to  40, //3
                 LocalDate("2022-03-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
-            infectiousness = params.OMI_Inf //3.0
+            infectiousness = 3.2 //3.0
             factorSeriouslySick = 1.5 //
+        }
+
+        val infPerDayOMICRONBA5: MutableMap<LocalDate, Int> = hashMapOf(
+                LocalDate.parse("2020-01-01") to 0,
+                LocalDate.parse("2022-04-01") to  params.OMICRON_BA5_Import  , //3
+                LocalDate("2022-04-15") to 0) //
+
+        episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON_BA5, infPerDayOMICRONBA5)
+        virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON_BA5).apply {
+            infectiousness = params.OMICRON_BA5_Inf//3.0
+            factorSeriouslySick = 1.5//
         }
 
 
@@ -218,6 +209,21 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atFullEffect(factorShowingSymptomsMRNA)
                         .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
                 .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectMRNA - 7, 1.0 - ((1.0 - factorSeriouslySickMRNA) / 2.0))
+                        .atFullEffect(factorSeriouslySickMRNA)
+                        .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectMRNA - 7, effectivnessMRNA / 2.0)
+                        .atFullEffect(effectivnessMRNA)
+                        .atDay(fullEffectMRNA + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectMRNA - 7, 1.0 - ((1.0 - factorShowingSymptomsMRNA) / 2.0))
+                        .atFullEffect(factorShowingSymptomsMRNA)
+                        .atDay(fullEffectMRNA + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
                         .atDay(1, 1.0)
                         .atDay(fullEffectMRNA - 7, 1.0 - ((1.0 - factorSeriouslySickMRNA) / 2.0))
                         .atFullEffect(factorSeriouslySickMRNA)
@@ -261,6 +267,21 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorSeriouslySickVector) / 2.0))
                         .atFullEffect(factorSeriouslySickVector)
                         .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectVector - 7, effectivnessVector / 2.0)
+                        .atFullEffect(effectivnessVector)
+                        .atDay(fullEffectVector + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorShowingSymptomsVector) / 2.0))
+                        .atFullEffect(factorShowingSymptomsVector)
+                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectVector - 7, 1.0 - ((1.0 - factorSeriouslySickVector) / 2.0))
+                        .atFullEffect(factorSeriouslySickVector)
+                        .atDay(fullEffectVector + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
 
         val effectivnesssubunit = 0.86 //params.deltaVacEffect * 0.5 / 0.7
@@ -300,6 +321,22 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorSeriouslySicksubunit) / 2.0))
                         .atFullEffect(factorSeriouslySicksubunit)
                         .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setEffectiveness(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 0.0)
+                        .atDay(fullEffectsubunit - 7, effectivnesssubunit / 2.0)
+                        .atFullEffect(effectivnesssubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 0.0)) //10% reduction every 6 months (source: TC)
+                .setFactorShowingSymptoms(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorShowingSymptomssubunit) / 2.0))
+                        .atFullEffect(factorShowingSymptomssubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+                .setFactorSeriouslySick(VaccinationConfigGroup.forStrain(VirusStrain.OMICRON_BA5)
+                        .atDay(1, 1.0)
+                        .atDay(fullEffectsubunit - 7, 1.0 - ((1.0 - factorSeriouslySicksubunit) / 2.0))
+                        .atFullEffect(factorSeriouslySicksubunit)
+                        .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
+
 
 
 //        val vaccinationCompliance = hashMapOf<Integer, Double>()
@@ -423,11 +460,11 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @IntParameter(20,25,30,35)
 //        val MUTBImport = 0
 
-        @IntParameter(15,30,40)
-        val  OMICRON = 0
+        @IntParameter(5,10,15,20,25,30)
+        val  OMICRON_BA5_Import = 0
 
-        @Parameter(3.0, 3.2, 3.5,4.0)
-        var OMI_Inf = 0.0
+        @Parameter(2.5,2.8,3.0, 3.2,3.4)
+        var OMICRON_BA5_Inf = 0.0
 
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)

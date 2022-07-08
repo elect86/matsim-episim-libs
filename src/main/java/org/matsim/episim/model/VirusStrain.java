@@ -34,5 +34,8 @@ public enum VirusStrain {
 	/**
 	 * VoC B.1.1.529, first reported to WHO from South Africa on 24 November 2021
 	 */
-	OMICRON
+	OMICRON,
+
+
+	OMICRON_BA5
 }
