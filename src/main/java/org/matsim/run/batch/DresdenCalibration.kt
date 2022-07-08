@@ -64,7 +64,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             progressionConfig = progressionConfig(params, Transition.config()).build()
             daysInfectious = Integer.MAX_VALUE
 //            calibrationParameter *= 0.83 * params.thetaFactor
-            calibrationParameter = 1.56E-5 * 0.2 *0.2* 1.0
+            calibrationParameter = 1.56E-5 * 0.2 * 0.2 * 1.0
         }
 
         //restrictions
@@ -145,7 +145,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate("2021-08-01") to 1,
                 LocalDate("2021-10-01") to 35,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
-                LocalDate("2021-10-15") to 0 ) // "2021-12-10"
+                LocalDate("2021-10-15") to 0) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
             infectiousness = 3.0
@@ -155,26 +155,25 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-03-01") to  40, //3
+                LocalDate.parse("2022-03-01") to 40, //3
                 LocalDate("2022-03-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
-        virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
+        val omicron = virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
             infectiousness = 3.2 //3.0
             factorSeriouslySick = 1.5 //
         }
 
         val infPerDayOMICRONBA5: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-04-01") to  params.OMICRON_BA5_Import  , //3
+                LocalDate.parse("2022-04-01") to params.OMICRON_BA5_Import, //3
                 LocalDate("2022-04-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON_BA5, infPerDayOMICRONBA5)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON_BA5).apply {
-            infectiousness = params.OMICRON_BA5_Inf//3.0
+            infectiousness = omicron.infectiousness * params.OMICRON_BA5_Inf//3.0
             factorSeriouslySick = 1.5//
         }
-
 
 
         val effectivnessMRNA = 0.85 //params.deltaVacEffect
@@ -338,7 +337,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                         .atDay(fullEffectsubunit + 5 * 365, 1.0)) //10% reduction every 6 months (source: TC)
 
 
-
 //        val vaccinationCompliance = hashMapOf<Integer, Double>()
 //        for (i in 0 until 12) vaccinationCompliance.put(i, 0.0);
 //        for (int i = 12; i < 18; i++) vaccinationCompliance.put(i, 0.7);
@@ -460,10 +458,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @IntParameter(20,25,30,35)
 //        val MUTBImport = 0
 
-        @IntParameter(5,10,15,20,25,30)
-        val  OMICRON_BA5_Import = 0
+        @IntParameter(5, 10, 15, 20, 25)
+        val OMICRON_BA5_Import = 0
 
-        @Parameter(2.5,2.8,3.0, 3.2,3.4)
+        @Parameter(0.8,0.9,1.0,1.1,1.2, 1.3, 1.4,1.5,2.0)
         var OMICRON_BA5_Inf = 0.0
 
 
@@ -481,9 +479,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        lateinit var  alpha_zero: String
 
 
-
-
-
 //        @Parameter(1.45)
 //        var alphaInf = 0.0
 //		@StringParameter({"true-1.0", "true-1.1", "true-1.2", "true-1.3", "true-1.4", "false"})
@@ -493,12 +488,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		double leisureOffset;
 
 
-
 //        @Parameter(1.0)
 //        var alpha = 0.0
-
-
-
 
 
 //		@Parameter({0.25})
