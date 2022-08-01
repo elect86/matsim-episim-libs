@@ -42,6 +42,7 @@ import org.matsim.episim.policy.FixedPolicy
 import org.matsim.episim.policy.Restriction
 import org.matsim.episim.policy.ShutdownPolicy
 import org.matsim.run.batch.DresdenCalibration
+import java.io.File
 import java.net.URL
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -377,12 +378,23 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         return config
     }
 
+//    fun synthetizeMobilityData(): File {
+//
+//        val weekdays = "$berlinMobilityData/LK_mobilityData_weekdays.csv"
+//        val weekends = "$berlinMobilityData/LK_mobilityData_weekends.csv"
+////        val data
+//        val wd: List<List<String>> = csvReader().readAll(URL(weekdays).readText()).filter { it[1] == "Dresden" }
+//        wd
+//    }
+
     companion object {
         /**
          * Path pointing to the input folder. Needs to be adapted or set using the EPISIM_INPUT environment variable.
          */
         // public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
         val INPUT = EpisimUtils.resolveInputPath("dresden")
+
+        val berlinMobilityData = "https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/episim/mobilityData/landkreise"
 
         fun interpolateImport(importMap: HashMap<LocalDate, Int>, importFactor: Double, start: LocalDate, end: LocalDate, a: Double, b: Double) {
             val days = end.dayOfYear - start.dayOfYear
