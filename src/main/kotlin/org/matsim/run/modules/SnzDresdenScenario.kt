@@ -394,7 +394,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             }
         mobilityData += missing
         mobilityData.sortBy { it.first }
-        File("dresden/mobilityData.csv").writeText(buildString {
+        File("/bigdata/casus/matsim/matsim-episim-libs/dresden/mobilityData.csv").writeText(buildString {
             appendLine("date;Landkreis;percentageChangeComparedToBeforeCorona")
             mobilityData.forEach {
                 val date = it.first.format(formatter)
