@@ -46,6 +46,7 @@ import java.io.File
 import java.net.URL
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
@@ -187,8 +188,9 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             configureContactIntensities(episimConfig)
 
             // Policy, restrictions and masks
+            synthetizeMobilityData()
             val builder: FixedPolicy.ConfigBuilder = CreateRestrictionsFromCSV(episimConfig).run {
-                setInput(INPUT.resolve("DresdenSnzData_daily_until20210917.csv"))
+                setInput(INPUT.resolve("mobilityData.csv"))
                 setScale(this@SnzDresdenScenario.scale)
                 setLeisureAsNightly(this@SnzDresdenScenario.leisureNightly)
                 setNightlyScale(this@SnzDresdenScenario.leisureNightlyScale)
@@ -378,14 +380,62 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         return config
     }
 
-//    fun synthetizeMobilityData(): File {
-//
-//        val weekdays = "$berlinMobilityData/LK_mobilityData_weekdays.csv"
-//        val weekends = "$berlinMobilityData/LK_mobilityData_weekends.csv"
-////        val data
-//        val wd: List<List<String>> = csvReader().readAll(URL(weekdays).readText()).filter { it[1] == "Dresden" }
-//        wd
-//    }
+    fun synthetizeMobilityData() {
+        val weekdays = getMobilityData("${SnzDresdenScenario.berlinMobilityData}/LK_mobilityData_weekdays.csv")
+        val weekends = getMobilityData("${SnzDresdenScenario.berlinMobilityData}/LK_mobilityData_weekends.csv")
+        val mobilityData = (weekdays + weekends) as ArrayList<Pair<LocalDate, Int>>
+        mobilityData.sortBy { it.first }
+        val missing = ArrayList<Pair<LocalDate, Int>>()
+        for ((day, reduction) in mobilityData)
+            when (day.dayOfWeek) {
+                DayOfWeek.FRIDAY -> repeat(4) { missing += day.minusDays(1L + it) to reduction }
+                DayOfWeek.SUNDAY -> missing += day.minusDays(1) to reduction
+                else -> error("invalid day present: $day (${day.dayOfWeek})")
+            }
+        mobilityData += missing
+        mobilityData.sortBy { it.first }
+        File("dresden/mobilityData.csv").writeText(buildString {
+            appendLine("date;Landkreis;percentageChangeComparedToBeforeCorona")
+            mobilityData.forEach {
+                val date = it.first.format(formatter)
+                val percentageChange = it.second
+                appendLine("$date;Dresden;$percentageChange")
+            }
+        })
+    }
+
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    fun getMobilityData(csv: String): ArrayList<Pair<LocalDate, Int>> {
+        val days = csvReader().readAll(URL(csv).readText())
+                .map { it[0].split(';') }
+                .filter { it[1] == "Dresden" }
+                .map {
+                    val reduction = it.last()
+                    check('.' !in reduction && ',' !in reduction) { "reduction is not an integer!" }
+                    LocalDate.parse(it.first(), formatter) to reduction.toInt()
+                }.toCollection(ArrayList())
+        val missing = ArrayList<Pair<LocalDate, Int>>()
+        var prev = days.first().first
+        for (i in days.indices.drop(1)) {
+            val curr = days[i].first
+            val prevPlus7 = prev.plusDays(7)
+            if (prevPlus7 != curr) {
+                //            println("$prevPlus7 missing")
+                check(prevPlus7.plusDays(7) == curr) { "more then a week missing" }
+                check(i - 2 in days.indices && i + 2 in days.indices) {
+                    "too close to the end or the begin of data to calculate average of missing week"
+                }
+                val average = days.filterIndexed { index, _ -> index in i - 2..i + 2 }.map { it.second }.average().toInt()
+                missing += prevPlus7 to average
+                //            println("filled missing data with $prevPlus7 to $average")
+            }
+            prev = curr
+        }
+        days += missing
+        days.sortBy { it.first }
+        return days
+    }
+
 
     companion object {
         /**
