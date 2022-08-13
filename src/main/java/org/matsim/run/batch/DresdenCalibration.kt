@@ -447,13 +447,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
 //        lateinit var  summer_alpha: String
-
 //        @StringParameter("2021-11-21", )
 //        lateinit var  MUTB_zero: String
-//
 //        @StringParameter("2021-10-14","2021-10-28")
 //        lateinit var  MUTBZero: String
-
 //        @IntParameter(20,25,30,35)
 //        val MUTBImport = 0
 
