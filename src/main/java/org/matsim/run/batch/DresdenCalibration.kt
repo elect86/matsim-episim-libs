@@ -156,7 +156,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
                 LocalDate.parse("2022-02-01") to params.OMI_Import /*30*/, //"2022-02-01"
-                LocalDate("2022-03-15") to 0) //
+                LocalDate("2022-02-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         val omicron = virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
@@ -457,10 +457,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        val MUTBImport = 0
 
 
-        @IntParameter(10,15,20,25,30)
+        @IntParameter(10,15,20)
         val OMI_Import = 0
 
-        @Parameter(3.0,3.05,3.1,3.15,3.20,3.25)
+        @Parameter(3.1,3.15,3.20)
         var OMI_Inf = 0.0
 
 //        @IntParameter(5,10,15,20)
