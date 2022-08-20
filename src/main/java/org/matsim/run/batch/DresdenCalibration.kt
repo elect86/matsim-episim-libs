@@ -444,7 +444,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(4)
+        @GenerateSeeds(1)
         var seed = 0L
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
@@ -457,10 +457,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        val MUTBImport = 0
 
 
-        @IntParameter(10,15,20)
+        @IntParameter(10,15,20,30)
         val OMI_Import = 0
 
-        @Parameter(3.1,3.15,3.20)
+        @Parameter(3.20,3.22,3.24,3.25,3.28,3.30,3.4)
         var OMI_Inf = 0.0
 
 //        @IntParameter(5,10,15,20)
