@@ -155,12 +155,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-01-15") to params.OMI_Import /*30*/, //"2022-02-01"
+                LocalDate.parse("2022-01-15") to 30, /*30*/ //"2022-02-01"
                 LocalDate("2022-02-01") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         val omicron = virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
-            infectiousness = params.OMI_Inf // 3.25
+            infectiousness = 3.25
             factorSeriouslySick = 1.5 //
         }
 
@@ -168,12 +168,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRONBA5: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-06-01") to 10 /*params.OMICRON_BA5_Import*/, //3
+                LocalDate.parse("2022-06-01") to params.OMICRON_BA5_Import, //3
                 LocalDate("2022-06-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON_BA5, infPerDayOMICRONBA5)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON_BA5).apply {
-            infectiousness = 3.25 /*omicron.infectiousness * params.OMICRON_BA5_Inf*///3.0
+            infectiousness = omicron.infectiousness * params.OMICRON_BA5_Inf
             factorSeriouslySick = 1.5//
         }
 
@@ -457,17 +457,17 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        val MUTBImport = 0
 
 
-        @IntParameter(10,15,20,30)
-        val OMI_Import = 0
-
-        @Parameter(3.20,3.22,3.24,3.25,3.28,3.30,3.4)
-        var OMI_Inf = 0.0
-
-//        @IntParameter(5,10,15,20)
-//        val OMICRON_BA5_Import = 0
+//        @IntParameter(10,15,20,30)
+//        val OMI_Import = 0
 //
-//        @Parameter(0.8,0.9,1.0,1.1,1.2)
-//        var OMICRON_BA5_Inf = 0.0
+//        @Parameter(3.20,3.22,3.24,3.25,3.28,3.30,3.4)
+//        var OMI_Inf = 0.0
+
+        @IntParameter(5,10,15,20,25,30)
+        val OMICRON_BA5_Import = 0
+
+        @Parameter(0.8,0.9,1.0,1.1,1.2,1.3)
+        var OMICRON_BA5_Inf = 0.0
 
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
