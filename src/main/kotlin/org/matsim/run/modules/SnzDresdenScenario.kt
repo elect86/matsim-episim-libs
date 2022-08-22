@@ -269,9 +269,9 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
 
             //snapshot
 
-//             episimConfig.setSnapshotInterval(670); //
+             episimConfig.setSnapshotInterval(700); //
 
-            episimConfig.setStartFromSnapshot("/bigdata/casus/matsim/matsim-episim-libs/battery/v16/calibration/dresden/output-dresden-snapshot_670/seed_7564655870752979346-OMICRON_BA5_Import_5-OMICRON_BA5_Inf_1.0/episim-snapshot-670-2021-12-01.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
+//            episimConfig.setStartFromSnap/shot("/bigdata/casus/matsim/matsim-episim-libs/battery/v16/calibration/dresden/output-dresden-snapshot_670/seed_7564655870752979346-OMICRON_BA5_Import_5-OMICRON_BA5_Inf_1.0/episim-snapshot-670-2021-12-01.zip");  // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
                        // episimConfig.setSnapshotInterval();
 
