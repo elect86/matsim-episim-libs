@@ -200,10 +200,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
             // Policy, restrictions and masks
             val builder: FixedPolicy.ConfigBuilder = CreateRestrictionsFromCSV(episimConfig).run {
 //                setInput(INPUT.resolve("DresdenSnzData_daily_until20220824.csv")) // Updated
-                setInput(INPUT.resolve("  DresdenSnzData_daily_until20210917.csv"))
-
-
-
+                setInput(INPUT.resolve("DresdenSnzData_daily_until20210917.csv"))
                 setScale(this@SnzDresdenScenario.scale)
                 setLeisureAsNightly(this@SnzDresdenScenario.leisureNightly)
                 setNightlyScale(this@SnzDresdenScenario.leisureNightlyScale)
