@@ -199,7 +199,11 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
 
             // Policy, restrictions and masks
             val builder: FixedPolicy.ConfigBuilder = CreateRestrictionsFromCSV(episimConfig).run {
-                setInput(INPUT.resolve("DresdenSnzData_daily_until20220824.csv"))
+//                setInput(INPUT.resolve("DresdenSnzData_daily_until20220824.csv")) // Updated
+                setInput(INPUT.resolve("  DresdenSnzData_daily_until20210917.csv"))
+
+
+
                 setScale(this@SnzDresdenScenario.scale)
                 setLeisureAsNightly(this@SnzDresdenScenario.leisureNightly)
                 setNightlyScale(this@SnzDresdenScenario.leisureNightlyScale)
@@ -454,7 +458,7 @@ open class SnzDresdenScenario(builder: Builder = Builder()) : SnzProductionScena
         // public static final Path INPUT = EpisimUtils.resolveInputPath("../shared-svn/projects/episim/matsim-files/snz/Dresden/episim-input");
         val INPUT = EpisimUtils.resolveInputPath("dresden")
 
-        val berlinMobilityData = "https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/episim/mobilityData/landkreise"
+        //val berlinMobilityData = "https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/episim/mobilityData/landkreise"
 
         fun interpolateImport(importMap: HashMap<LocalDate, Int>, importFactor: Double, start: LocalDate, end: LocalDate, a: Double, b: Double) {
             val days = end.dayOfYear - start.dayOfYear
