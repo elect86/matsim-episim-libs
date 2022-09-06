@@ -143,24 +143,24 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val infPerDayMUTB = hashMapOf<LocalDate, Int>(
                 LocalDate("2020-01-01") to 0,
                 LocalDate("2021-08-01") to 1,
-                LocalDate("2021-10-01") to 35,
+                LocalDate("2021-10-01") to 40,
 //                LocalDate("2021-09-01") to 0, //"2021-10-01"
                 LocalDate("2021-10-15") to 0) // "2021-12-10"
         episimConfig.setInfections_pers_per_day(VirusStrain.MUTB, infPerDayMUTB)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.MUTB).apply {
-            infectiousness = 3.2
+            infectiousness = 3.0
             factorSeriouslySick = 2.5
         }
 
 
         val infPerDayOMICRON: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-01-15") to 30, /*30*/ //"2022-02-01"
+                LocalDate.parse("2022-01-15") to 35, /*30*/ //"2022-02-01"
                 LocalDate("2022-02-01") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         val omicron = virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
-            infectiousness = 3.35
+            infectiousness = 3.25
             factorSeriouslySick = 1.5 //
         }
 
