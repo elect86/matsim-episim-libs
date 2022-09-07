@@ -160,7 +160,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON, infPerDayOMICRON)
         val omicron = virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON).apply {
-            infectiousness = 3.35
+            infectiousness = 3.30
             factorSeriouslySick = 1.5 //
         }
 
