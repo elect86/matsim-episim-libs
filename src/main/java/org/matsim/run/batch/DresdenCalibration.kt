@@ -67,14 +67,14 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             calibrationParameter = 1.56E-5 * 0.2 * 0.2 * 1.0
         }
 
-//        episimConfig.snapshotPrefix = "snapshot_10" + params.seed
-//        episimConfig.snapshotInterval = 10; //
+        episimConfig.snapshotPrefix = "snapshot" + params.seed
+        episimConfig.snapshotInterval = 700; //
 
-        val snapshotDir = File("/bigdata/casus/matsim/matsim-episim-libs/battery/v16/calibration/dresden/output-dresden-snapshot-test-2022-09-08/seed_${params.seed}-OMICRON_BA5_Import_25-OMICRON_BA5_Inf_1.0")
-        println("snapshotDir exist: ${snapshotDir.exists()}")
-        snapshotDir.listFiles()!!.map { println(it) }
-        val snapshotFile = snapshotDir.listFiles()!!.first { it.name.startsWith("snapshot_10") }
-        episimConfig.startFromSnapshot = "${snapshotDir.absolutePath}/${snapshotFile.name}" // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
+//        val snapshotDir = File("/bigdata/casus/matsim/matsim-episim-libs/battery/v16/calibration/dresden/output-dresden-snapshot-test-2022-09-08/seed_${params.seed}-OMICRON_BA5_Import_25-OMICRON_BA5_Inf_1.0")
+//        println("snapshotDir exist: ${snapshotDir.exists()}")
+//        snapshotDir.listFiles()!!.map { println(it) }
+//        val snapshotFile = snapshotDir.listFiles()!!.first { it.name.startsWith("snapshot_10") }
+//        episimConfig.startFromSnapshot = "${snapshotDir.absolutePath}/${snapshotFile.name}" // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
         //restrictions
         val builder = FixedPolicy.parse(episimConfig.policy)
@@ -176,12 +176,12 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRONBA5: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-06-01") to params.OMICRON_BA5_Import, //3
+                LocalDate.parse("2022-06-01") to 25, //params.OMICRON_BA5_Import, //3
                 LocalDate("2022-06-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON_BA5, infPerDayOMICRONBA5)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON_BA5).apply {
-            infectiousness = omicron.infectiousness * params.OMICRON_BA5_Inf
+            infectiousness = omicron.infectiousness *1 // params.OMICRON_BA5_Inf
             factorSeriouslySick = 1.5//
         }
 
@@ -452,7 +452,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(50)
         var seed = 0L
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
@@ -473,13 +473,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         //        @IntParameter(5,10,15,20,25,30)
 //        val OMICRON_BA5_Import = 0
-        @IntParameter(25)
-        val OMICRON_BA5_Import = 0
-
-        //        @Parameter(0.9,1.0,1.1,1.2,1.3)
+//        @IntParameter(25)
+//        val OMICRON_BA5_Import = 0
+//
+//        //        @Parameter(0.9,1.0,1.1,1.2,1.3)
+////        var OMICRON_BA5_Inf = 0.0
+//        @Parameter(1.0)
 //        var OMICRON_BA5_Inf = 0.0
-        @Parameter(1.0)
-        var OMICRON_BA5_Inf = 0.0
 
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
