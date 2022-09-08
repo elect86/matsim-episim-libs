@@ -71,6 +71,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        episimConfig.snapshotInterval = 10; //
 
         val snapshotDir = File("/bigdata/casus/matsim/matsim-episim-libs/battery/v16/calibration/dresden/output-dresden-snapshot-test-2022-09-08/seed_${params.seed}-OMICRON_BA5_Import_5-OMICRON_BA5_Inf_1.0")
+        println("snapshotDir exist: ${snapshotDir.exists()}")
+        snapshotDir.listFiles()!!.map { println(it) }
         val snapshotFile = snapshotDir.listFiles()!!.first { it.name.startsWith("snapshot_10") }
         episimConfig.startFromSnapshot = "${snapshotDir.absolutePath}/${snapshotFile.name}" // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
