@@ -7,7 +7,6 @@ import org.matsim.core.config.ConfigUtils
 import org.matsim.episim.BatchRun.GenerateSeeds
 import org.matsim.episim.BatchRun.IntParameter
 import org.matsim.episim.BatchRun.Parameter
-import org.matsim.episim.BatchRun.StringParameter
 import org.matsim.episim.EpisimPerson
 import org.matsim.episim.TestingConfigGroup
 import org.matsim.episim.VaccinationConfigGroup
@@ -21,6 +20,7 @@ import org.matsim.episim.policy.Restriction
 import kotlin.jvm.JvmStatic
 import org.matsim.run.RunParallel
 import org.matsim.run.modules.SnzDresdenScenario
+import java.io.File
 import java.time.LocalDate
 
 /**
@@ -74,7 +74,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val snapshotFile = snapshotDir.listFiles()!!.first { it.name.startsWith("snapshot_10") }
         episimConfig.startFromSnapshot = "${snapshotDir.absolutePath}/${snapshotFile.name}" // 2020-12-27 put path as the argument zip file after creating episimConfig.setSnapshotInterval
 
-
         //restrictions
         val builder = FixedPolicy.parse(episimConfig.policy)
 
@@ -85,7 +84,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         val curfewCompliance = mapOf<LocalDate, Double>(
                 LocalDate("2021-04-17") to 1.0,
                 LocalDate("2021-05-31") to 0.0)
-        episimConfig.setCurfewCompliance(curfewCompliance);
+        episimConfig.setCurfewCompliance(curfewCompliance)
 
         builder.restrict(LocalDate("2021-10-18"), 1.0, "educ_higher")
         builder.restrict(LocalDate("2021-12-20"), 0.2, "educ_higher")
