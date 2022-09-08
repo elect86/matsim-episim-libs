@@ -67,6 +67,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             calibrationParameter = 1.56E-5 * 0.2 * 0.2 * 1.0
         }
 
+        episimConfig.snapshotPrefix = "snapshot_10" + params.seed
+        episimConfig.snapshotInterval = 10; //
+
+
         //restrictions
         val builder = FixedPolicy.parse(episimConfig.policy)
 
@@ -163,7 +167,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             infectiousness = 3.30
             factorSeriouslySick = 1.5 //
         }
-
 
 
         val infPerDayOMICRONBA5: MutableMap<LocalDate, Int> = hashMapOf(
@@ -444,7 +447,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(8)
+        @GenerateSeeds(5)
         var seed = 0L
 
 //        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
@@ -463,16 +466,15 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        @Parameter(3.20,3.22,3.24,3.25,3.28,3.30,3.4)
 //        var OMI_Inf = 0.0
 
-//        @IntParameter(5,10,15,20,25,30)
+        //        @IntParameter(5,10,15,20,25,30)
 //        val OMICRON_BA5_Import = 0
         @IntParameter(25)
         val OMICRON_BA5_Import = 0
 
-//        @Parameter(0.9,1.0,1.1,1.2,1.3)
+        //        @Parameter(0.9,1.0,1.1,1.2,1.3)
 //        var OMICRON_BA5_Inf = 0.0
         @Parameter(1.0)
         var OMICRON_BA5_Inf = 0.0
-
 
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
