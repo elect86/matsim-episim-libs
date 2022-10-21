@@ -26,7 +26,7 @@ import java.time.LocalDate
 /**
  * Calibration for Dresden scenario
  */
-class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
+class DresdenCalibration_Scenario1 : BatchRun<DresdenCalibration_Scenario1.Params?> {
 
     override fun getBindings(id: Int, params: Params?): SnzDresdenScenario = SnzDresdenScenario.Builder().run {
         scale = 1.0  //params?.scale ?: 1.0
@@ -176,15 +176,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
         val infPerDayOMICRONBA5: MutableMap<LocalDate, Int> = hashMapOf(
                 LocalDate.parse("2020-01-01") to 0,
-                LocalDate.parse("2022-06-01") to 15, //3
-                LocalDate("2022-06-15") to 0, //
-                LocalDate(params.winter_BA5) to params.OMICRON_BA5_Import_winter)
-
-
+                LocalDate.parse("2022-06-01") to params.OMICRON_BA5_Import, //3
+                LocalDate("2022-06-15") to 0) //
 
         episimConfig.setInfections_pers_per_day(VirusStrain.OMICRON_BA5, infPerDayOMICRONBA5)
         virusStrainConfigGroup.getOrAddParams(VirusStrain.OMICRON_BA5).apply {
-            infectiousness = omicron.infectiousness *1.1 //
+            infectiousness = omicron.infectiousness *params.OMICRON_BA5_Inf
+            factorSeriouslySick = 1.5//
         }
 
 
@@ -454,21 +452,34 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(3)
+        @GenerateSeeds(6)
         var seed = 0L
 
-        @BatchRun.StringParameter("2022-06-01","2022-07-01", "2022-08-14")
-        lateinit var  winter_BA5: String
-
-        @IntParameter(15,20,25,30)
-        val OMICRON_BA5_Import_winter = 0
-
+//        @StringParameter("2021-04-01","2021-03-21", "2021-04-07", "2021-04-14" )
+//        lateinit var  summer_alpha: String
 //        @StringParameter("2021-11-21", )
 //        lateinit var  MUTB_zero: String
 //        @StringParameter("2021-10-14","2021-10-28")
 //        lateinit var  MUTBZero: String
 //        @IntParameter(20,25,30,35)
 //        val MUTBImport = 0
+
+
+//        @IntParameter(10,15,20,30)
+//        val OMI_Import = 0
+//
+//        @Parameter(3.20,3.22,3.24,3.25,3.28,3.30,3.4)
+//        var OMI_Inf = 0.0
+
+        @IntParameter(10,15,20,25,30)
+        val OMICRON_BA5_Import = 0
+//        @IntParameter(25)
+//        val OMICRON_BA5_Import = 0
+
+        @Parameter(0.8,0.9,1.0,1.1,1.2,1.3)
+        var OMICRON_BA5_Inf = 0.0
+//        @Parameter(1.0)
+//        var OMICRON_BA5_Inf = 0.0
 
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
@@ -520,7 +531,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @JvmStatic
         fun main(args: Array<String>) {
             val args2 = arrayOf(
-                    RunParallel.OPTION_SETUP, DresdenCalibration::class.java.name,
+                    RunParallel.OPTION_SETUP, DresdenCalibration_Scenario1::class.java.name,
                     RunParallel.OPTION_PARAMS, Params::class.java.name,
                     RunParallel.OPTION_TASKS, 1.toString(),
                     RunParallel.OPTION_ITERATIONS, 5.toString(),
