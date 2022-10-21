@@ -9,6 +9,7 @@ public enum VaccinationType {
 	mRNA,
 	subunit,
 	vector,
+//	inactivated,
 
 	/**
 	 * Not a real vaccination, but used to describe the profile for persons that have been infected and gained a natural immunity.

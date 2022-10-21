@@ -53,8 +53,9 @@ object InfectionParamsBuilder {
 
 val String.vaxType: VaccinationType
     get() = when (this) {
-        "Comirnaty", "Moderna" -> VaccinationType.mRNA
-        "AstraZeneca", "Janssen" -> VaccinationType.vector
-        "Novavax" -> VaccinationType.subunit
+        "Comirnaty", "Moderna","Spikevax","Comirnaty bivalent (Original/Omikron)","Spikevax bivalent (Original/Omikron)" -> VaccinationType.mRNA
+        "AstraZeneca", "Janssen", "Vaxzevria","Jcovden","Valneva" -> VaccinationType.vector
+        "Novavax","Nuvaxovid" -> VaccinationType.subunit
+//        "Valneva" -> VaccinationType.inactivated
         else -> error("invalid $this")
     }
