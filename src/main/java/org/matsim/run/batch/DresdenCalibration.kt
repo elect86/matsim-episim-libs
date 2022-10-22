@@ -178,7 +178,8 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate.parse("2020-01-01") to 0,
                 LocalDate.parse("2022-06-01") to 15, //3
                 LocalDate("2022-06-15") to 0, //
-                LocalDate(params.winter_BA5) to params.OMICRON_BA5_Import_winter)
+                LocalDate(params.winter_BA5) to params.OMICRON_BA5_Import_winter,
+                LocalDate("2022-10-01") to 0)
 
 
 
@@ -454,10 +455,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(3)
+        @GenerateSeeds(4)
         var seed = 0L
 
-        @BatchRun.StringParameter("2022-06-01","2022-07-01", "2022-08-14")
+        @BatchRun.StringParameter("2022-08-25","2022-09-01", "2022-09-07", "2022-09-14")
         lateinit var  winter_BA5: String
 
         @IntParameter(15,20,25,30)
