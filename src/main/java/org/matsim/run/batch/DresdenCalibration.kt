@@ -4,6 +4,7 @@ import org.matsim.core.config.Config
 import org.matsim.core.config.ConfigUtils
 import org.matsim.episim.*
 import org.matsim.episim.BatchRun.GenerateSeeds
+import org.matsim.episim.BatchRun.Parameter
 import org.matsim.episim.BatchRun.StringParameter
 import org.matsim.episim.model.FaceMask
 import org.matsim.episim.model.Transition
@@ -88,28 +89,29 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 
     val schoolFac=1f
+        val restrictionDate = LocalDate.parse("2022-10-20")
 
         when (params.maskInActivities) {
             "MaskSchoolOnly" -> {
 
                 builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
-                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_higher", "educ_other")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_higher", "educ_other")
             }
 
             "MaskWorkOnly" -> {
                 builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "work")
-                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "work")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "work")
             }
 
             "MaskBusinessOnly" -> {
                 builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business")
-                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business")
 
             }
 
             "MaskAll" -> {
                 builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
-                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
 
             }
         }
