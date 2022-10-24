@@ -1,23 +1,17 @@
 package org.matsim.run.batch
 
 import org.matsim.core.config.Config
-import org.matsim.episim.BatchRun
-import org.matsim.episim.EpisimConfigGroup
 import org.matsim.core.config.ConfigUtils
+import org.matsim.episim.*
 import org.matsim.episim.BatchRun.GenerateSeeds
-import org.matsim.episim.BatchRun.IntParameter
-import org.matsim.episim.BatchRun.Parameter
-import org.matsim.episim.EpisimPerson
-import org.matsim.episim.TestingConfigGroup
-import org.matsim.episim.VaccinationConfigGroup
-import org.matsim.episim.VirusStrainConfigGroup
+import org.matsim.episim.BatchRun.StringParameter
+import org.matsim.episim.model.FaceMask
 import org.matsim.episim.model.Transition
 import org.matsim.episim.model.VaccinationType
 import org.matsim.episim.model.VirusStrain
 import org.matsim.episim.model.testing.TestType
 import org.matsim.episim.policy.FixedPolicy
 import org.matsim.episim.policy.Restriction
-import kotlin.jvm.JvmStatic
 import org.matsim.run.RunParallel
 import org.matsim.run.modules.SnzDresdenScenario
 import java.io.File
@@ -92,9 +86,55 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         builder.restrict(LocalDate("2021-12-20"), 0.2, "educ_higher")
         builder.restrict(LocalDate("2022-01-02"), 1.0, "educ_higher")
 
+
+    val schoolFac=1f
+
+        when (params.maskInActivities) {
+            "MaskSchoolOnly" -> {
+
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
+                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_higher", "educ_other")
+            }
+
+            "MaskWorkOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "work")
+                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "work")
+            }
+
+            "MaskBusinessOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business")
+                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business")
+
+            }
+
+            "MaskAll" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
+                builder.restrict(LocalDate.parse("2022-10-20"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
+
+            }
+        }
+
+
+
 //        builder.apply("2020-10-15", "2020-12-14", { d, e ->
 //            e["fraction"] = 1 - params.leisureFactor * (1 - e["fraction"] as Double)
 //        }, "leisure")
+
+//        builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other")
+//
+//        builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofMask(FaceMask.N95, 0.9 * schoolFac), "educ_primary", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other")
+//        builder.restrict(LocalDate.parse("2021-11-02"), Restriction.ofMask(FaceMask.N95, 0.0), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other")
+//        builder.restrict(LocalDate.parse("2021-12-02"), Restriction.ofMask(FaceMask.N95, 0.9 * schoolFac), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other")
+//
+//        if (params.school == "protected") {
+//            builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, 0.9), "educ_primary", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other")
+//            builder.restrict(restrictionDate, Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other")
+//        }
+//
+//        if (params.work == "protected") {
+//            builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, 0.9), "work", "business")
+//        }
+
 
         episimConfig.policy = builder.build()
 
@@ -178,7 +218,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate.parse("2020-01-01") to 0,
                 LocalDate.parse("2022-06-01") to 15, //3
                 LocalDate("2022-06-15") to 0, //
-                LocalDate(params.winter_BA5) to params.OMICRON_BA5_Import_winter,
+                LocalDate("2022-08-25") to 25,
                 LocalDate("2022-10-01") to 0)
 
 
@@ -455,14 +495,20 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(2)
         var seed = 0L
 
-        @BatchRun.StringParameter("2022-08-25","2022-08-30", "2022-08-20")
-        lateinit var  winter_BA5: String
+        @Parameter(0.0, 0.5, 0.6, 0.7, 0.8,0.9)
+        var maskCompliance = 0.0
 
-        @IntParameter(25,30,40)
-        val OMICRON_BA5_Import_winter = 0
+        @StringParameter("MaskSchoolOnly", "MaskWorkOnly", "MaskBusinessOnly", "MaskAll")
+        var maskInActivities: String? = null
+
+//        @BatchRun.StringParameter("2022-08-25","2022-08-30", "2022-08-20")
+//        lateinit var  winter_BA5: String
+//
+//        @IntParameter(25,30,40)
+//        val OMICRON_BA5_Import_winter = 0
 
 //        @StringParameter("2021-11-21", )
 //        lateinit var  MUTB_zero: String
@@ -474,8 +520,6 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 
 //        @Parameter(1.7, 1.8, 1.9, 2.0)
 //        var leisureFactor = 0.0
-
-
 //        @IntParameter(1,5,10,15)
 //        val  summerAlpha = 0
 
