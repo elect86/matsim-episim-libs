@@ -498,7 +498,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @GenerateSeeds(2)
         var seed = 0L
 
-        @Parameter(0.0, 0.5, 0.6, 0.7, 0.8,0.9)
+        @Parameter(0.0, 0.5, 0.7,0.9)
         var maskCompliance = 0.0
 
         @StringParameter("MaskSchoolOnly", "MaskWorkOnly", "MaskBusinessOnly", "MaskAll")
