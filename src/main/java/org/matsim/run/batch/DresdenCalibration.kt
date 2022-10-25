@@ -221,7 +221,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 LocalDate.parse("2022-06-01") to 15, //3
                 LocalDate("2022-06-15") to 0, //
                 LocalDate("2022-08-25") to 25,
-                LocalDate("2022-10-01") to 0)
+                LocalDate("2022-12-31") to 0)
 
 
 
@@ -497,7 +497,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(2)
+        @GenerateSeeds(5)
         var seed = 0L
 
         @Parameter(0.0, 0.5, 0.7,0.9)
