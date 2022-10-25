@@ -108,10 +108,20 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
                 builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business")
 
             }
+            "MaskLeisureOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "leisure")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "leisure")
+
+            }
+            "MaskShopOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "shop_daily","shop_other")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "shop_daily","shop_other")
+
+            }
 
             "MaskAll" -> {
-                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
-                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other","shop_daily","shop_other","leisure")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other","shop_daily","shop_other","leisure")
 
             }
         }
@@ -500,10 +510,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @GenerateSeeds(5)
         var seed = 0L
 
-        @Parameter(0.0, 0.5, 0.7,0.9)
+        @Parameter(0.2,0.5, 0.7,0.9)
         var maskCompliance = 0.0
 
-        @StringParameter("MaskSchoolOnly", "MaskWorkOnly", "MaskBusinessOnly", "MaskAll")
+        @StringParameter("MaskSchoolOnly", "MaskWorkOnly", "MaskBusinessOnly","MaskLeisureOnly","MaskShopOnly","MaskAll")
         var maskInActivities: String? = null
 
 //        @BatchRun.StringParameter("2022-08-25","2022-08-30", "2022-08-20")
