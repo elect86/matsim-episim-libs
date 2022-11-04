@@ -21,17 +21,31 @@ import java.time.LocalDate
 /**
  * Calibration for Dresden scenario
  */
-class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
+class DresdenCalibration_Scenario2 : BatchRun<DresdenCalibration_Scenario2.Params?> {
 
     override fun getBindings(id: Int, params: Params?): SnzDresdenScenario = SnzDresdenScenario.Builder().run {
         scale = 1.0  //params?.scale ?: 1.0
         setActivityHandling(EpisimConfigGroup.ActivityHandling.startOfDay)
+//
         build()
     }
 
     override fun getMetadata(): BatchRun.Metadata = BatchRun.Metadata.of("dresden", "calibration")
 
+    //	@Override
+    //	public int getOffset() {
+    //		return 10000;
+    //	}
     override fun prepareConfig(id: Int, params: Params?): Config? {
+//        val module = SnzDresdenScenario()
+//        val config = module.config()
+//        config.global().randomSeed = params.seed
+//        val episimConfig = ConfigUtils.addOrGetModule(config, EpisimConfigGroup::class.java)
+//        episimConfig.calibrationParameter = episimConfig.calibrationParameter * params.thetaFactor
+//        episimConfig.calibrationParameter = episimConfig.calibrationParameter * params.OMI_inf
+//
+//        //episimConfig.setHospitalFactor(); TODO
+//        return config
 
         val module = getBindings(id, params)
 
@@ -72,50 +86,94 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         builder.restrict(LocalDate("2022-01-02"), 1.0, "educ_higher")
 
 
-//    val schoolFac=1f
-//        val restrictionDate = LocalDate.parse("2022-10-20")
+    val schoolFac=1f
+        val restrictionDate = LocalDate.parse("2022-10-20")
+
+        when (params.maskInActivities) {
+            "MaskSchoolOnly" -> {
+
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_higher", "educ_other")
+            }
+
+            "MaskWorkOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "work")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "work")
+            }
+
+            "MaskBusinessOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business")
+
+            }
+            "MaskLeisureOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "leisure")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "leisure")
+
+            }
+            "MaskShopOnly" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "shop_daily","shop_other")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "shop_daily","shop_other")
+
+            }
+
+            "MaskAll" -> {
+                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other","shop_daily","shop_other","leisure")
+                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other","shop_daily","shop_other","leisure")
+
+            }
+        }
+
+
+
+//        builder.apply("2020-10-15", "2020-12-14", { d, e ->
+//            e["fraction"] = 1 - params.leisureFactor * (1 - e["fraction"] as Double)
+//        }, "leisure")
+
+//        builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other")
 //
-//        when (params.maskInActivities) {
-//            "MaskSchoolOnly" -> {
+//        builder.restrict(LocalDate.parse("2021-08-17"), Restriction.ofMask(FaceMask.N95, 0.9 * schoolFac), "educ_primary", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other")
+//        builder.restrict(LocalDate.parse("2021-11-02"), Restriction.ofMask(FaceMask.N95, 0.0), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other")
+//        builder.restrict(LocalDate.parse("2021-12-02"), Restriction.ofMask(FaceMask.N95, 0.9 * schoolFac), "educ_primary", "educ_secondary", "educ_tertiary", "educ_other")
 //
-//                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other")
-//                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_higher", "educ_other")
-//            }
-//
-//            "MaskWorkOnly" -> {
-//                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "work")
-//                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "work")
-//            }
-//
-//            "MaskBusinessOnly" -> {
-//                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business")
-//                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business")
-//
-//            }
-//            "MaskLeisureOnly" -> {
-//                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "leisure")
-//                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "leisure")
-//
-//            }
-//            "MaskShopOnly" -> {
-//                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "shop_daily","shop_other")
-//                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "shop_daily","shop_other")
-//
-//            }
-//
-//            "MaskAll" -> {
-//                builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, params.maskCompliance), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other","shop_daily","shop_other","leisure")
-//                builder.restrict(restrictionDate, Restriction.ofCiCorrection(1 - 0.5 * schoolFac), "business", "work", "educ_primary", "educ_secondary", "educ_kiga", "educ_higher", "educ_tertiary", "educ_other","shop_daily","shop_other","leisure")
-//
-//            }
+//        if (params.school == "protected") {
+//            builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, 0.9), "educ_primary", "educ_secondary", "educ_higher", "educ_tertiary", "educ_other")
+//            builder.restrict(restrictionDate, Restriction.ofCiCorrection(0.5), "educ_primary", "educ_kiga", "educ_secondary", "educ_tertiary", "educ_other")
 //        }
-
-
-
+//
+//        if (params.work == "protected") {
+//            builder.restrict(restrictionDate, Restriction.ofMask(FaceMask.N95, 0.9), "work", "business")
+//        }
 
 
         episimConfig.policy = builder.build()
 
+//        val importMap = HashMap<LocalDate, Int>()
+//        val importFactorBeforeJune = 1.0
+//        val imprtFctMult = 1.0
+//        val importOffset = 0L
+//        val dresdenFactor = 1
+//
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-02-24").plusDays(importOffset),
+//                LocalDate("2020-03-09").plusDays(importOffset), 0.9, 23.1)
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-03-09").plusDays(importOffset),
+//                LocalDate("2020-03-23").plusDays(importOffset), 23.1, 3.9)
+//        SnzDresdenScenario.interpolateImport(importMap, dresdenFactor * imprtFctMult * importFactorBeforeJune,
+//                LocalDate("2020-03-23").plusDays(importOffset),
+//                LocalDate("2020-04-13").plusDays(importOffset), 3.9, 0.1)
+//
+////        importMap[LocalDate("2020-07-19")] = (params.summerImportFactor * 32).toInt()
+////        importMap[LocalDate("2020-08-09")] = 1
+////
+//        episimConfig.setInfections_pers_per_day(importMap)
+
+        //weather model
+//        episimConfig.leisureOutdoorFraction = EpisimUtils.getOutDoorFractionFromDateAndTemp2(
+//                SnzDresdenScenario_test.INPUT.resolve("cologneWeather.csv").toFile(),
+//                SnzDresdenScenario_test.INPUT.resolve("weatherDataAvgCologne2000-2020.csv").toFile(),
+//                0.5, 18.5, 25.0, 18.5, 25.0, 5.0, params.alpha)
 
         //mutations and vaccinations
         val vaccinationConfig = ConfigUtils.addOrGetModule(config, VaccinationConfigGroup::class.java)
@@ -374,169 +432,66 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
             householdCompliance = 1.0
         }
 
-        val testingStartDate = LocalDate("2022-11-01")
+        val testingStartDate = LocalDate("2021-03-19")
 
-//        val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.5,
-//                LocalDate("2020-08-01") to 0.0)
+        val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
+        val workTests = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
+        val eduTests = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
 
-        when (params.testInActivities) {
-            "TestLeisureOnly" -> {
-                val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTests))
-            }
-            "TestWorkOnly" -> {
-                val workTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "work" to workTests
-                ))
-            }
-
-            "TestBusinessOnly" -> {
-                val businessTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "business" to businessTests
-                        ))
-            }
-
-
-            "TestEducationOnly" -> {
-                val eduTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "educ_kiga" to eduTests,
-                        "educ_primary" to eduTests,
-                        "educ_secondary" to eduTests,
-                        "educ_tertiary" to eduTests,
-                        "educ_higher" to eduTests,
-                        "educ_other" to eduTests))
-            }
-
-            "TestAll" -> {
-                val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val workTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val businessTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val eduTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-
-
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTests,
-                        "work" to workTests,
-                        "business" to businessTests,
-                        "educ_kiga" to eduTests,
-                        "educ_primary" to eduTests,
-                        "educ_secondary" to eduTests,
-                        "educ_tertiary" to eduTests,
-                        "educ_higher" to eduTests,
-                        "educ_other" to eduTests))
-
-            }
+        for (i in 1..31) {
+            val date = testingStartDate.plusDays(i.toLong())
+            leisureTests[date] = 0.25 * i / 31.0
+            workTests[date] = 0.25 * i / 31.0
+            eduTests[date] = 0.8 * i / 31.0
         }
 
 
-        when (params.testInActivities) {
-            "TestLeisureOnly" -> {
-                val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTestsPCR))
-            }
-            "TestWorkOnly" -> {
-                val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "work" to workTestsPCR
-                ))
-            }
-
-            "TestBusinessOnly" -> {
-                val businessTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "business" to businessTestsPCR
-                ))
-            }
+        eduTests[LocalDate("2021-06-24")] = 0.0
+        workTests[LocalDate("2021-06-04")] = 0.05
+//		workTests.put(LocalDate.parse("2021-09-06"),  params.rapidTestWork);
 
 
-            "TestEducationOnly" -> {
-                val eduTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "educ_kiga" to eduTestsPCR,
-                        "educ_primary" to eduTestsPCR,
-                        "educ_secondary" to eduTestsPCR,
-                        "educ_tertiary" to eduTestsPCR,
-                        "educ_higher" to eduTestsPCR,
-                        "educ_other" to eduTestsPCR))
-            }
+        leisureTests[LocalDate("2021-06-04")] = 0.05
+//		leisureTests.put(LocalDate.parse("2021-08-23"),  0.2);
 
-            "TestAll" -> {
-                val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val businessTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val eduTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
+//		leisureTests.put(LocalDate.parse("2021-09-06"),  params.rapidTestLeis);
 
 
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTestsPCR,
-                        "work" to workTestsPCR,
-                        "business" to businessTestsPCR,
-                        "educ_kiga" to eduTestsPCR,
-                        "educ_primary" to eduTestsPCR,
-                        "educ_secondary" to eduTestsPCR,
-                        "educ_tertiary" to eduTestsPCR,
-                        "educ_higher" to eduTestsPCR,
-                        "educ_other" to eduTestsPCR))
-
-            }
-        }
+        eduTests[LocalDate("2021-08-06")] = 0.6
+        eduTests[LocalDate("2021-08-30")] = 0.4
+//		eduTests.put(LocalDate.parse("2021-09-06"),  params.rapidTestEdu);
 
 
-//        for (i in 1..31) {
-//            val date = testingStartDate.plusDays(i.toLong())
-//            leisureTests[date] = 0.25 * i / 31.0
-//            workTests[date] = 0.25 * i / 31.0
-//            eduTests[date] = 0.8 * i / 31.0
-//        }
+        rapidTest.setTestingRatePerActivityAndDate(mapOf(
+                "leisure" to leisureTests,
+                "work" to workTests,
+                "business" to workTests,
+                "educ_kiga" to eduTests,
+                "educ_primary" to eduTests,
+                "educ_secondary" to eduTests,
+                "educ_tertiary" to eduTests,
+                "educ_higher" to eduTests,
+                "educ_other" to eduTests))
 
-//        rapidTest.setTestingRatePerActivityAndDate(mapOf(
-//                "leisure" to leisureTests,
-//                "work" to workTests,
-//                "business" to businessTests,
-//                "educ_kiga" to eduTests,
-//                "educ_primary" to eduTests,
-//                "educ_secondary" to eduTests,
-//                "educ_tertiary" to eduTests,
-//                "educ_higher" to eduTests,
-//                "educ_other" to eduTests))
+        val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
+        val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
+        val eduTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
 
-//        val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
-//        val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
-//        val eduTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.0)
-//
-//
-//
-//        pcrTest.setTestingRatePerActivityAndDate(mapOf(
-//                "leisure" to leisureTestsPCR,
-//                "work" to workTestsPCR,
-//                "business" to workTestsPCR,
-//                "educ_kiga" to eduTestsPCR,
-//                "educ_primary" to eduTestsPCR,
-//                "educ_secondary" to eduTestsPCR,
-//                "educ_tertiary" to eduTestsPCR,
-//                "educ_higher" to eduTestsPCR,
-//                "educ_other" to eduTestsPCR))
+//		eduTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestEdu);
+//		workTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestWork);
+//		leisureTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestLeis);
+//		eduTestsPCR.put(LocalDate.parse("2021-08-06"), 0.1);
+
+        pcrTest.setTestingRatePerActivityAndDate(mapOf(
+                "leisure" to leisureTestsPCR,
+                "work" to workTestsPCR,
+                "business" to workTestsPCR,
+                "educ_kiga" to eduTestsPCR,
+                "educ_primary" to eduTestsPCR,
+                "educ_secondary" to eduTestsPCR,
+                "educ_tertiary" to eduTestsPCR,
+                "educ_higher" to eduTestsPCR,
+                "educ_other" to eduTestsPCR))
 
         rapidTest.setTestingCapacity_pers_per_day(mapOf(
                 LocalDate.of(1970, 1, 1) to 0,
@@ -554,10 +509,35 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         var seed = 0L
 
         @Parameter(0.2,0.5, 0.7,0.9)
-        var testingRate = 0.0
+        var maskCompliance = 0.0
+
+        @StringParameter("MaskSchoolOnly", "MaskWorkOnly", "MaskBusinessOnly","MaskLeisureOnly","MaskShopOnly","MaskAll")
+        var maskInActivities: String? = null
+
+//        @BatchRun.StringParameter("2022-08-25","2022-08-30", "2022-08-20")
+//        lateinit var  winter_BA5: String
 //
-        @StringParameter("TestEducationOnly", "TestWorkOnly", "TestBusinessOnly","TestLeisureOnly","TestAll")
-        var testInActivities: String? = null
+//        @IntParameter(25,30,40)
+//        val OMICRON_BA5_Import_winter = 0
+
+//        @StringParameter("2021-11-21", )
+//        lateinit var  MUTB_zero: String
+//        @StringParameter("2021-10-14","2021-10-28")
+//        lateinit var  MUTBZero: String
+//        @IntParameter(20,25,30,35)
+//        val MUTBImport = 0
+
+
+//        @Parameter(1.7, 1.8, 1.9, 2.0)
+//        var leisureFactor = 0.0
+//        @IntParameter(1,5,10,15)
+//        val  summerAlpha = 0
+
+//        @StringParameter("2021-03-14")
+//        lateinit var alphaDate: String
+
+//        @StringParameter( "2021-01-21" )
+//        lateinit var  alpha_zero: String
 
 
 //        @Parameter(1.45)
@@ -569,7 +549,24 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //		double leisureOffset;
 
 
+//        @Parameter(1.0)
+//        var alpha = 0.0
 
+
+//		@Parameter({0.25})
+//		double tesRateLeisureWork;
+//
+//		@Parameter({0.05})
+//		double tesRateLeisureWork2;
+
+//		@StringParameter({"alpha", "0.5"})
+//		String delta1Vac;
+
+//		@StringParameter({"no"})
+//		String schoolMasks;
+
+//		@StringParameter({"2021-05-01"})
+//		String deltaDate;
 
 
     }
@@ -578,7 +575,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @JvmStatic
         fun main(args: Array<String>) {
             val args2 = arrayOf(
-                    RunParallel.OPTION_SETUP, DresdenCalibration::class.java.name,
+                    RunParallel.OPTION_SETUP, DresdenCalibration_Scenario2::class.java.name,
                     RunParallel.OPTION_PARAMS, Params::class.java.name,
                     RunParallel.OPTION_TASKS, 1.toString(),
                     RunParallel.OPTION_ITERATIONS, 5.toString(),
