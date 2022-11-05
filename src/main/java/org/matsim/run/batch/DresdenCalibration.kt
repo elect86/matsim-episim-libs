@@ -441,66 +441,66 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         }
 
 
-        when (params.testInActivities) {
-            "TestLeisureOnly" -> {
-                val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTestsPCR))
-            }
-            "TestWorkOnly" -> {
-                val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "work" to workTestsPCR
-                ))
-            }
-
-            "TestBusinessOnly" -> {
-                val businessTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "business" to businessTestsPCR
-                ))
-            }
-
-
-            "TestEducationOnly" -> {
-                val eduTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "educ_kiga" to eduTestsPCR,
-                        "educ_primary" to eduTestsPCR,
-                        "educ_secondary" to eduTestsPCR,
-                        "educ_tertiary" to eduTestsPCR,
-                        "educ_higher" to eduTestsPCR,
-                        "educ_other" to eduTestsPCR))
-            }
-
-            "TestAll" -> {
-                val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val businessTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val eduTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-
-
-                pcrTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTestsPCR,
-                        "work" to workTestsPCR,
-                        "business" to businessTestsPCR,
-                        "educ_kiga" to eduTestsPCR,
-                        "educ_primary" to eduTestsPCR,
-                        "educ_secondary" to eduTestsPCR,
-                        "educ_tertiary" to eduTestsPCR,
-                        "educ_higher" to eduTestsPCR,
-                        "educ_other" to eduTestsPCR))
-
-            }
-        }
+//        when (params.testInActivities) {
+//            "TestLeisureOnly" -> {
+//                val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                pcrTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "leisure" to leisureTestsPCR))
+//            }
+//            "TestWorkOnly" -> {
+//                val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                pcrTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "work" to workTestsPCR
+//                ))
+//            }
+//
+//            "TestBusinessOnly" -> {
+//                val businessTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                pcrTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "business" to businessTestsPCR
+//                ))
+//            }
+//
+//
+//            "TestEducationOnly" -> {
+//                val eduTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                pcrTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "educ_kiga" to eduTestsPCR,
+//                        "educ_primary" to eduTestsPCR,
+//                        "educ_secondary" to eduTestsPCR,
+//                        "educ_tertiary" to eduTestsPCR,
+//                        "educ_higher" to eduTestsPCR,
+//                        "educ_other" to eduTestsPCR))
+//            }
+//
+//            "TestAll" -> {
+//                val leisureTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                val workTestsPCR = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                val businessTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                val eduTestsPCR= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//
+//
+//                pcrTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "leisure" to leisureTestsPCR,
+//                        "work" to workTestsPCR,
+//                        "business" to businessTestsPCR,
+//                        "educ_kiga" to eduTestsPCR,
+//                        "educ_primary" to eduTestsPCR,
+//                        "educ_secondary" to eduTestsPCR,
+//                        "educ_tertiary" to eduTestsPCR,
+//                        "educ_higher" to eduTestsPCR,
+//                        "educ_other" to eduTestsPCR))
+//
+//            }
+//        }
 
 
 //        for (i in 1..31) {
