@@ -379,66 +379,66 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.5,
 //                LocalDate("2020-08-01") to 0.0)
 
-        when (params.testInActivities) {
-            "TestLeisureOnly" -> {
-                val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTests))
-            }
-            "TestWorkOnly" -> {
-                val workTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "work" to workTests
-                ))
-            }
-
-            "TestBusinessOnly" -> {
-                val businessTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "business" to businessTests
-                        ))
-            }
-
-
-            "TestEducationOnly" -> {
-                val eduTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "educ_kiga" to eduTests,
-                        "educ_primary" to eduTests,
-                        "educ_secondary" to eduTests,
-                        "educ_tertiary" to eduTests,
-                        "educ_higher" to eduTests,
-                        "educ_other" to eduTests))
-            }
-
-            "TestAll" -> {
-                val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val workTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val businessTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-                val eduTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
-                        LocalDate("2022-12-31") to 0.0)
-
-
-                rapidTest.setTestingRatePerActivityAndDate(mapOf(
-                        "leisure" to leisureTests,
-                        "work" to workTests,
-                        "business" to businessTests,
-                        "educ_kiga" to eduTests,
-                        "educ_primary" to eduTests,
-                        "educ_secondary" to eduTests,
-                        "educ_tertiary" to eduTests,
-                        "educ_higher" to eduTests,
-                        "educ_other" to eduTests))
-
-            }
-        }
+//        when (params.testInActivities) {
+//            "TestLeisureOnly" -> {
+//                val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                rapidTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "leisure" to leisureTests))
+//            }
+//            "TestWorkOnly" -> {
+//                val workTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                rapidTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "work" to workTests
+//                ))
+//            }
+//
+//            "TestBusinessOnly" -> {
+//                val businessTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                rapidTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "business" to businessTests
+//                        ))
+//            }
+//
+//
+//            "TestEducationOnly" -> {
+//                val eduTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                rapidTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "educ_kiga" to eduTests,
+//                        "educ_primary" to eduTests,
+//                        "educ_secondary" to eduTests,
+//                        "educ_tertiary" to eduTests,
+//                        "educ_higher" to eduTests,
+//                        "educ_other" to eduTests))
+//            }
+//
+//            "TestAll" -> {
+//                val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                val workTests = hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                val businessTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//                val eduTests= hashMapOf<LocalDate, Double>(LocalDate("2022-11-01") to params.testingRate,
+//                        LocalDate("2022-12-31") to 0.0)
+//
+//
+//                rapidTest.setTestingRatePerActivityAndDate(mapOf(
+//                        "leisure" to leisureTests,
+//                        "work" to workTests,
+//                        "business" to businessTests,
+//                        "educ_kiga" to eduTests,
+//                        "educ_primary" to eduTests,
+//                        "educ_secondary" to eduTests,
+//                        "educ_tertiary" to eduTests,
+//                        "educ_higher" to eduTests,
+//                        "educ_other" to eduTests))
+//
+//            }
+//        }
 
 
 //        when (params.testInActivities) {
@@ -553,11 +553,11 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
         @GenerateSeeds(5)
         var seed = 0L
 
-        @Parameter(0.2,0.5, 0.7,0.9)
-        var testingRate = 0.0
-//
-        @StringParameter("TestEducationOnly", "TestWorkOnly", "TestBusinessOnly","TestLeisureOnly","TestAll")
-        var testInActivities: String? = null
+//        @Parameter(0.2,0.5, 0.7,0.9)
+//        var testingRate = 0.0
+////
+//        @StringParameter("TestEducationOnly", "TestWorkOnly", "TestBusinessOnly","TestLeisureOnly","TestAll")
+//        var testInActivities: String? = null
 
 
 //        @Parameter(1.45)
