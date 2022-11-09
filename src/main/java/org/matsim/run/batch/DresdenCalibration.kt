@@ -448,7 +448,7 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //        return config
 //    }
 
-//        val testingStartDate = LocalDate("2021-03-19")
+        val testingStartDate = LocalDate("2021-03-19")
 //
 //
 ////        val leisureTests = hashMapOf<LocalDate, Double>(LocalDate("2020-01-01") to 0.5,
@@ -613,13 +613,13 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //                "educ_higher" to eduTestsPCR,
 //                "educ_other" to eduTestsPCR))
 
-//        rapidTest.setTestingCapacity_pers_per_day(mapOf(
-//                LocalDate.of(1970, 1, 1) to 0,
-//                testingStartDate to Integer.MAX_VALUE))
-//
-//        pcrTest.setTestingCapacity_pers_per_day(mapOf(
-//                LocalDate.of(1970, 1, 1) to 0,
-//                testingStartDate to Integer.MAX_VALUE))
+        rapidTest.setTestingCapacity_pers_per_day(mapOf(
+                LocalDate.of(1970, 1, 1) to 0,
+                testingStartDate to Integer.MAX_VALUE))
+
+        pcrTest.setTestingCapacity_pers_per_day(mapOf(
+                LocalDate.of(1970, 1, 1) to 0,
+                testingStartDate to Integer.MAX_VALUE))
 //
         return config
     }
