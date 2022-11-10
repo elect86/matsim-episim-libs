@@ -612,6 +612,64 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
 //                "educ_tertiary" to eduTestsPCR,
 //                "educ_higher" to eduTestsPCR,
 //                "educ_other" to eduTestsPCR))
+        val leisureTests = hashMapOf<LocalDate, Double>(DresdenCalibration_Scenario2.LocalDate("2020-01-01") to 0.0)
+        val workTests = hashMapOf<LocalDate, Double>(DresdenCalibration_Scenario2.LocalDate("2020-01-01") to 0.0)
+        val eduTests = hashMapOf<LocalDate, Double>(DresdenCalibration_Scenario2.LocalDate("2020-01-01") to 0.0)
+
+        for (i in 1..31) {
+            val date = testingStartDate.plusDays(i.toLong())
+            leisureTests[date] = 0.25 * i / 31.0
+            workTests[date] = 0.25 * i / 31.0
+            eduTests[date] = 0.8 * i / 31.0
+        }
+
+
+        eduTests[DresdenCalibration_Scenario2.LocalDate("2021-06-24")] = 0.0
+        workTests[DresdenCalibration_Scenario2.LocalDate("2021-06-04")] = 0.05
+//		workTests.put(LocalDate.parse("2021-09-06"),  params.rapidTestWork);
+
+
+        leisureTests[DresdenCalibration_Scenario2.LocalDate("2021-06-04")] = 0.05
+//		leisureTests.put(LocalDate.parse("2021-08-23"),  0.2);
+
+//		leisureTests.put(LocalDate.parse("2021-09-06"),  params.rapidTestLeis);
+
+
+        eduTests[DresdenCalibration_Scenario2.LocalDate("2021-08-06")] = 0.6
+        eduTests[DresdenCalibration_Scenario2.LocalDate("2021-08-30")] = 0.4
+//		eduTests.put(LocalDate.parse("2021-09-06"),  params.rapidTestEdu);
+
+
+        rapidTest.setTestingRatePerActivityAndDate(mapOf(
+                "leisure" to leisureTests,
+                "work" to workTests,
+                "business" to workTests,
+                "educ_kiga" to eduTests,
+                "educ_primary" to eduTests,
+                "educ_secondary" to eduTests,
+                "educ_tertiary" to eduTests,
+                "educ_higher" to eduTests,
+                "educ_other" to eduTests))
+
+        val leisureTestsPCR = hashMapOf<LocalDate, Double>(DresdenCalibration_Scenario2.LocalDate("2020-01-01") to 0.0)
+        val workTestsPCR = hashMapOf<LocalDate, Double>(DresdenCalibration_Scenario2.LocalDate("2020-01-01") to 0.0)
+        val eduTestsPCR = hashMapOf<LocalDate, Double>(DresdenCalibration_Scenario2.LocalDate("2020-01-01") to 0.0)
+
+//		eduTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestEdu);
+//		workTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestWork);
+//		leisureTestsPCR.put(LocalDate.parse("2021-09-06"),  params.pcrTestLeis);
+//		eduTestsPCR.put(LocalDate.parse("2021-08-06"), 0.1);
+
+        pcrTest.setTestingRatePerActivityAndDate(mapOf(
+                "leisure" to leisureTestsPCR,
+                "work" to workTestsPCR,
+                "business" to workTestsPCR,
+                "educ_kiga" to eduTestsPCR,
+                "educ_primary" to eduTestsPCR,
+                "educ_secondary" to eduTestsPCR,
+                "educ_tertiary" to eduTestsPCR,
+                "educ_higher" to eduTestsPCR,
+                "educ_other" to eduTestsPCR))
 
         rapidTest.setTestingCapacity_pers_per_day(mapOf(
                 LocalDate.of(1970, 1, 1) to 0,
@@ -625,10 +683,10 @@ class DresdenCalibration : BatchRun<DresdenCalibration.Params?> {
     }
 
     class Params {
-        @GenerateSeeds(5)
+        @GenerateSeeds(2)
         var seed = 0L
 
-        @Parameter(0.2,0.5,0.7,0.9 )
+        @Parameter(0.2,0.9 )
         var testingRate = 0.0
 //
         @StringParameter("TestEducationOnly", "TestWorkOnly", "TestBusinessOnly","TestLeisureOnly","TestAll")
